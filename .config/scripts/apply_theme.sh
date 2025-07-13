@@ -70,14 +70,6 @@ mv "$HOME/.config/hypr/colors_temp.conf" "$HOME/.config/hypr/colors.conf"
 hyprctl setcursor $cursor $size
 gsettings set org.gnome.desktop.interface gtk-theme $nautilus
 
-#exec >> "$HOME/.config/themes/theme_log.txt" 2>&1
-#echo "[$(date)] Script started"
-#echo "User: $(whoami)"
-#echo "icons: $icons"
-papirus-folders -C $icons --theme Papirus-Dark
-#sudo -n /usr/bin/papirus-folders -C "$icons" --theme "Papirus-Dark"
-#echo "Script finished"
-
 pkill waybar
 pkill hyprpaper
 sleep 0.5
@@ -86,4 +78,5 @@ hyprctl reload
 hyprpaper &
 waybar &
 kitty &
+papirus-folders -C $icons --theme Papirus-Dark
 

@@ -41,6 +41,7 @@ PACKAGES=(
     pipewire
     pipewire-alsa
     pipewire-audio
+    pipewire-pulse
     lib32-libpipewire
     lib32-pipewire
     pavucontrol
@@ -51,7 +52,9 @@ PACKAGES=(
     vulkan-icd-loader
     lib32-nvidia-utils
     lib32-vulkan-icd-loader
-    nvidia-settings  
+    nvidia-settings
+
+    linux-headers
 
     kitty
     waybar
@@ -142,13 +145,20 @@ fi
 
 # random stuff for papirus folder icons
 gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark'
-sudo chown -R $USER:$USER /var/lib/papirus-folders/
-sudo chown -R $USER:$USER /usr/share/icons/Papirus*/folders
+
 #random stuff for razer...
 sudo gpasswd -a $USER plugdev
 
+cp -r "$(pwd)/.config" "$HOME/"
+cp -r "$(pwd)/.bashrc" "$HOME/"
+echo "config files copied"
 
 echo "✅ Configuration complete."
+
+# Guide:
+echo "After reboot run these commands, for papirus"
+echo "sudo chown -R $USER:$USER /var/lib/papirus-folders/"
+echo "sudo chown -R $USER:$USER /usr/share/icons/Papirus*"
 
 # Ask to reboot
 read -p "🔁 Reboot now to apply changes? (y/N): " reboot_ans
