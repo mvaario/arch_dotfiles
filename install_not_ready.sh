@@ -6,12 +6,22 @@ if ! sudo -v; then
   exit 1
 fi
 
+echo "🔧 Copying custom pacman.conf with multilib enabled..."
+sudo cp pacman.conf /etc/pacman.conf
+
 
 echo "Updating system"
 sudo pacman -Syu
 
-echo "🚀 Starting Arch setup script..."
+if ! command -v yay &> /dev/null; then
+    echo "📥 Installing yay AUR helper..."
+    git clone https://aur.archlinux.org/yay.git
+    cd yay
+    makepkg -si --noconfirm
+    cd -
+fi
 
+echo "🚀 Starting Arch setup script..."
 PACKAGES=(
     git
     neovim
@@ -19,10 +29,22 @@ PACKAGES=(
     code
     hyprpolkitagent
     ufw
-    
+
+    noto-fonts
+    noto-fonts-emoji
+    ttf-dejavu
+    ttf-liberation
+    ttf-roboto
+    noto-fonts-cjk
+    papirus-icon-theme
+
     pipewire
+    pipewire-alsa
+    pipewire-audio
+    lib32-libpipewire
+    lib32-pipewire
     pavucontrol
-    
+
     nvidia
     libva-nvidia-driver
     nvidia-utils
@@ -32,6 +54,7 @@ PACKAGES=(
     nvidia-settings  
 
     kitty
+    waybar
     hyprland
     hyprpaper
     hyprlock
@@ -50,6 +73,7 @@ PACKAGES=(
     lutris
     gamemode
     openrgb
+    
 )
 
 # Package installation loop
@@ -64,6 +88,27 @@ for pkg in "${PACKAGES[@]}"; do
         esac
     fi
 done
+
+echo "📦 Installing AUR packages with yay..."
+
+AUR_PACKAGES=(
+    papirus-folders
+    openrazer-meta-git
+    ttf-jetbrains-mono-nerd
+)
+
+for aur_pkg in "${AUR_PACKAGES[@]}"; do
+    echo "📥 Installing $aur_pkg from AUR..."
+    if ! yay -S --noconfirm --needed "$aur_pkg"; then
+        echo "❌ Failed to install: $aur_pkg"
+        read -p "⚠️  Continue anyway? (y/N): " yn
+        case "$yn" in
+            [Yy]*) echo "⏩ Continuing...";;
+            *) echo "🛑 Exiting script."; exit 1;;
+        esac
+    fi
+done
+
 
 echo "✅ All packages processed."
 
@@ -94,6 +139,14 @@ LIBVA_DRIVER_NAME=nvidia
 __GLX_VENDOR_LIBRARY_NAME=nvidia
 EOF
 fi
+
+# random stuff for papirus folder icons
+gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark'
+sudo chown -R $USER:$USER /var/lib/papirus-folders/
+sudo chown -R $USER:$USER /usr/share/icons/Papirus*/folders
+#random stuff for razer...
+sudo gpasswd -a $USER plugdev
+
 
 echo "✅ Configuration complete."
 
