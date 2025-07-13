@@ -6,9 +6,11 @@ if ! sudo -v; then
   exit 1
 fi
 
-echo "🚀 Starting Arch setup script..."
 
+echo "Updating system"
 sudo pacman -Syu
+
+echo "🚀 Starting Arch setup script..."
 
 PACKAGES=(
     git
@@ -41,8 +43,13 @@ PACKAGES=(
     
     lact
     xed
-    gnome-disk-utils
+    gnome-disk-utility
     celluloid
+    steam
+    discord
+    lutris
+    gamemode
+    openrgb
 )
 
 # Package installation loop
@@ -86,6 +93,7 @@ if ! grep -q 'LIBVA_DRIVER_NAME=nvidia' /etc/environment; then
 LIBVA_DRIVER_NAME=nvidia
 __GLX_VENDOR_LIBRARY_NAME=nvidia
 EOF
+fi
 
 echo "✅ Configuration complete."
 
