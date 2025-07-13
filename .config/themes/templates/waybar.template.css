@@ -1,0 +1,88 @@
+* {
+  min-height: 0;
+  min-width: 0;
+  font-family: Lexend, "JetBrainsMono NFP";
+  font-size: 14px;
+  font-weight: 600;
+  color: #%foreground%;
+}
+
+window#waybar {
+    background: #%background%;
+    transition-property: background;
+    transition-duration: .5s;
+    /*border: 2px solid #%main%;*/
+    border-bottom: 2px solid #%main%;
+    border-radius: 10px;
+}
+
+#workspaces
+{
+  margin: 2px 1px 3px 1px;
+  padding: 0px 1px;
+  border-radius: 6px;
+}
+#workspaces button
+{
+  padding: 0px 5px;
+  margin: 4px 3px;
+  border-radius: 6px;
+}
+
+#clock,
+#pulseaudio,
+#custom-logo,
+#custom-power,
+#custom-spotify,
+#custom-notification,
+#custom-keylock,
+#custom-razer,
+#custom-theme,
+#cpu,
+#memory,
+#tray,
+#window {
+  padding: 0.3rem 0.3rem;
+  margin: 0.4rem 0.25rem;
+  border-radius: 6px;
+}
+
+#workspaces button {
+  color: transparent;
+}
+#workspaces button:hover {
+  background-color: #%highlight%;
+}
+#workspaces button.active {
+  background-color: #%main%;
+}
+
+window#waybar.empty #window {
+  background-color: transparent;
+}
+
+#pulseaudio.muted {
+  color: #282421;
+}
+
+#custom-logo {
+  color: #%highlight%;
+}
+
+#custom-power {
+  color: #%highlight%;
+}
+
+#custom-keylock.locked {
+  color: #%red%;
+}
+
+#custom-razer.critical {
+  color: #%red%;
+}
+
+
+tooltip {
+  background-color: #282421;
+  border: 2px solid #282421;
+}
