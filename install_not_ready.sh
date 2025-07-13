@@ -6,6 +6,9 @@ if ! sudo -v; then
   exit 1
 fi
 
+# Keep sudo alive until script ends
+while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+
 echo "🔧 Copying custom pacman.conf with multilib enabled..."
 sudo cp pacman.conf /etc/pacman.conf
 
