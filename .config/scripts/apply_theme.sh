@@ -77,6 +77,5 @@ hyprctl reload
 
 hyprpaper &
 waybar &
-kitty &
 papirus-folders -C $icons --theme Papirus-Dark
 

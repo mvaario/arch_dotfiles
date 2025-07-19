@@ -6,12 +6,8 @@ if ! sudo -v; then
   exit 1
 fi
 
-# Keep sudo alive until script ends
-while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
-
 echo "🔧 Copying custom pacman.conf with multilib enabled..."
 sudo cp pacman.conf /etc/pacman.conf
-
 
 echo "Updating system"
 sudo pacman -Syu
@@ -23,6 +19,8 @@ if ! command -v yay &> /dev/null; then
     makepkg -si --noconfirm
     cd -
 fi
+
+#------------------------------------------------------------------------
 
 echo "🚀 Starting Arch setup script..."
 PACKAGES=(
@@ -98,6 +96,8 @@ for pkg in "${PACKAGES[@]}"; do
     fi
 done
 
+#------------------------------------------------------------------------
+
 echo "📦 Installing AUR packages with yay..."
 
 AUR_PACKAGES=(
@@ -105,6 +105,7 @@ AUR_PACKAGES=(
     openrazer-meta-git
     ttf-jetbrains-mono-nerd
     nautilus-open-any-terminal
+    bibata-cursor-theme
 )
 
 for aur_pkg in "${AUR_PACKAGES[@]}"; do
@@ -119,8 +120,17 @@ for aur_pkg in "${AUR_PACKAGES[@]}"; do
     fi
 done
 
+#------------------------------------------------------------------------
+
+echo "📥 Installing Orchis theme..."
+git clone https://github.com/vinceliuice/Orchis-theme.git
+cd Orchis-theme
+./install.sh -d ~/.themes -t all -c dark -s standard --tweaks nord
+cd -
 
 echo "✅ All packages processed."
+
+#------------------------------------------------------------------------
 
 # Create or update modprobe config
 echo "💾 Writing /etc/modprobe.d/nvidia.conf..."
@@ -136,7 +146,8 @@ else
 fi
 
 # Rebuild initramfs
-echo "🛠 Rebuilding initramfs..."
+echo "🛠️ Rebuilding initramfs..."
+
 sudo mkinitcpio -P
 
 # Update /etc/environment
@@ -149,6 +160,9 @@ LIBVA_DRIVER_NAME=nvidia
 __GLX_VENDOR_LIBRARY_NAME=nvidia
 EOF
 fi
+
+#------------------------------------------------------------------------
+echo "🧰 Applying configuration settings"
 
 # random stuff for papirus folder icons
 gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark'
@@ -166,12 +180,13 @@ echo "config files copied"
 # Performance mode
 echo 'governor="performance"' | sudo tee /etc/default/cpupower
 
+papirus-folders -C orange --theme Papirus-Dark
+sudo chown -R $USER:$USER /var/lib/papirus-folders/
+sudo chown -R $USER:$USER /usr/share/icons/Papirus*
+
 echo "✅ Configuration complete."
 
-# Guide:
-echo "After reboot run these commands, for papirus"
-echo "sudo chown -R $USER:$USER /var/lib/papirus-folders/"
-echo "sudo chown -R $USER:$USER /usr/share/icons/Papirus*"
+#------------------------------------------------------------------------
 
 # Ask to reboot
 read -p "🔁 Reboot now to apply changes? (y/N): " reboot_ans
@@ -179,4 +194,16 @@ case "$reboot_ans" in
     [Yy]*) echo "♻️ Rebooting..."; sudo reboot;;
     *) echo "❗ Reboot skipped. Please reboot manually later.";;
 esac
+
+
+
+
+
+
+
+
+
+
+
+
 
