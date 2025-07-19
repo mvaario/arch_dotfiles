@@ -32,6 +32,7 @@ PACKAGES=(
     code
     hyprpolkitagent
     ufw
+    pacman-contrib
 
     noto-fonts
     noto-fonts-emoji
@@ -79,6 +80,8 @@ PACKAGES=(
     lutris
     gamemode
     openrgb
+
+    cpupower
     
 )
 
@@ -101,6 +104,7 @@ AUR_PACKAGES=(
     papirus-folders
     openrazer-meta-git
     ttf-jetbrains-mono-nerd
+    nautilus-open-any-terminal
 )
 
 for aur_pkg in "${AUR_PACKAGES[@]}"; do
@@ -149,12 +153,18 @@ fi
 # random stuff for papirus folder icons
 gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark'
 
+#set terminal for nautilus
+gsettings set com.github.stunkymonkey.nautilus-open-any-terminal kitty
+
 #random stuff for razer...
 sudo gpasswd -a $USER plugdev
 
 cp -r "$(pwd)/.config" "$HOME/"
 cp -r "$(pwd)/.bashrc" "$HOME/"
 echo "config files copied"
+
+# Performance mode
+echo 'governor="performance"' | sudo tee /etc/default/cpupower
 
 echo "✅ Configuration complete."
 
