@@ -32,9 +32,9 @@ export wallpaper='$HOME/.config/themes/wallpapers/hive.jpg'
 
 # For nautilus and cursor
 export cursor='catppuccin-mocha-sky-cursors'
-export size='24'
+export size='20'
 export nautilus='Orchis-Teal-Dark-Nord'
 export icons='cyan'
 
 # For waybar
-export waybar_background="$($HOME/.config/themes/colors/hex_to_rgb.sh "$background")"
+export waybar_background=$($HOME/.config/themes/colors/hex_to_rgb.sh "$background")

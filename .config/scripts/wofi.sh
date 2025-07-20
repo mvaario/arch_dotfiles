@@ -17,28 +17,35 @@ fi
 #save if
 wofi_pid=$!
 
-outside_start=0
-
-
-# using temp file to because stupid things
+# keyboard temp flag
 key_flag_file="$HOME/.config/wofi/wofi_keypress_flag"
 echo "false" > "$key_flag_file"
-
-# getting keyboard inputs (will probably cause some memory leak but cba)
+# getting keyboard inputs
 libinput debug-events --device /dev/input/event2 | while read -r line; do
-    if echo "$line" | grep -q "KEY_ESC.*pressed"; then
-        kill "$wofi_pid"
-        exit 0
-    elif echo "$line" | grep -q "KEY.*pressed"; then
+    if echo "$line" | grep -q "KEY.*pressed"; then
         echo "true" > "$key_flag_file"
+        echo "keyboard pressed"
     fi
 done &
-libinput_pid=$!
+keyboard_pid=$!
+
+# mouse temp flag
+mouse_flag_file="$HOME/.config/wofi/wofi_mouse_flag"
+echo "false" > "$mouse_flag_file"
+# check mouse inputs
+libinput debug-events --device /dev/input/event8 | while read -r line; do
+    if echo "$line" | grep -q "BTN_LEFT.*pressed"; then
+        echo "true" > "$mouse_flag_file"
+        echo "right click pressed"
+    fi
+done &
+mouse_pid=$!
+
 
 # trap lister, no idea how it works if it even does
-trap 'kill "$libinput_pid"' EXIT INT TERM
-
-
+trap 'kill "$keyboard_pid"' EXIT INT TERM
+trap 'kill "$mouse_pid"' EXIT INT TERM
+outside_start=0
 while true; do
     sleep 0.2
     # read wofi window position
@@ -56,30 +63,45 @@ while true; do
         key_flag="false"
     fi
 
+    # check if mouse is pressed
+    if [[ -f $mouse_flag_file ]]; then
+        mouse_flag=$(cat "$mouse_flag_file")
+    else
+        mouse_flag="false"
+    fi
+
+
     # reset time
     if [[ "$key_flag" == "true" ]]; then
         outside_start=0
         echo "false" > "$key_flag_file"
     fi
 
+
     # if cursor inside wofi
     if (( cx < x || cx > x2 || cy < y || cy > y2 )); then
         if (( outside_start == 0 )); then
             outside_start=$(date +%s%3N)
+            echo "time reset"
         else
             now=$(date +%s%3N)  # current time in milliseconds
             elapsed=$(( now - outside_start ))
             echo "$elapsed"
-            #echo "$now"
-            #echo "$outside_start"
-            if (( elapsed >= 1000 )); then  # 2000 ms = 2.0 seconds
+            #
+            if (( elapsed >= 1000 )) || [[ "$mouse_flag" == "true" ]]; then
                 kill "$wofi_pid"
-                kill "$libinput_pid"
+                kill "$keyboard_pid"  2>/dev/null
+                kill "$mouse_pid" 2>/dev/null
                 break
             fi
+
         fi
     else
         outside_start=0
     fi
 
+
 done
+kill "$wofi_pid"
+kill "$keyboard_pid"  2>/dev/null
+kill "$mouse_pid" 2>/dev/null

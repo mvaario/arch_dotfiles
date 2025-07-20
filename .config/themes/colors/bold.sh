@@ -36,6 +36,5 @@ export size='20'
 export nautilus='Orchis-Green-Dark-Nord'
 export icons='teal'
 
-
 # For waybar
 export waybar_background=$($HOME/.config/themes/colors/hex_to_rgb.sh "$background")

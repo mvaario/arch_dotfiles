@@ -177,6 +177,9 @@ cp -r "$(pwd)/.config" "$HOME/"
 cp -r "$(pwd)/.bashrc" "$HOME/"
 echo "config files copied"
 
+# Enable ufw
+sudo systemctl enable ufw
+
 # Performance mode
 echo 'governor="performance"' | sudo tee /etc/default/cpupower
 

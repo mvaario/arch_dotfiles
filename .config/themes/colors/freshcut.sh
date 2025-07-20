@@ -32,7 +32,7 @@ export wallpaper='$HOME/.config/themes/wallpapers/freshcut.jpg'
 
 # For nautilus and cursor
 export cursor='catppuccin-mocha-light-cursors'
-export size='24'
+export size='20'
 export nautilus='Orchis-Green-Dark-Nord'
 export icons='white'
 

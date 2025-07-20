@@ -32,7 +32,7 @@ export wallpaper='$HOME/.config/themes/wallpapers/codecourse.jpg'
 
 # For nautilus and cursor
 export cursor='catppuccin-mocha-blue-cursors'
-export size='24'
+export size='20'
 export nautilus='Orchis-Green-Dark-Nord'
 export icons='blue'
 

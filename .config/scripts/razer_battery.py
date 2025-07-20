@@ -11,13 +11,12 @@ def get_battery():
             icon = get_icon(level)
             css_class = get_class(level)
             text = f"{icon} {int(level)}%"
-            #print(f"{icon} {int(level)}%")
-            print(json.dumps({
-                "text": text,
-                "class": css_class,
-                "tooltip": device.name
-            }))
-
+            if int(level) != 0: # Do not show empty battery
+                print(json.dumps({
+                    "text": text,
+                    "class": css_class,
+                    "tooltip": device.name
+                }))
             return
         else:
             print(json.dumps({
@@ -28,7 +27,7 @@ def get_battery():
     print(json.dumps({
         "text": " N/A",
         "class": "unknown",
-        "tooltip": "No battery info"
+        "tooltip": "No device info"
         }))
 
 def get_icon(level):
