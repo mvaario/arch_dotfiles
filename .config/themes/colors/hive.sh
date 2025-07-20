@@ -32,7 +32,7 @@ export wallpaper='$HOME/.config/themes/wallpapers/hive.jpg'
 
 
 # For nautilus and cursor
-export cursor='Bibata-Original-Ice'
+export cursor='catppuccin-mocha-sapphire-cursors'
 export size='24'
 export nautilus='Orchis-Teal-Dark-Nord'
 export icons='cyan'

@@ -31,7 +31,7 @@ export bfastfetch='31e996'
 export wallpaper='$HOME/.config/themes/wallpapers/penitent.jpg'
 
 # For nautilus and cursor
-export cursor='Bibata-Original-Classic'
+export cursor='catppuccin-mocha-sapphire-cursors'
 export size='24'
 export nautilus='Orchis-Green-Dark-Nord'
 export icons='green'

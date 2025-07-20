@@ -32,7 +32,7 @@ export wallpaper='$HOME/.config/themes/wallpapers/comrade.png'
 
 
 # For nautilus and cursor
-export cursor='Bibata-Original-Classic'
+export cursor='catppuccin-mocha-sapphire-cursors'
 export size='24'
 export nautilus='Orchis-Green-Dark-Nord'
 export icons='red'

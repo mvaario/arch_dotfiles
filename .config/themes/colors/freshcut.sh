@@ -31,7 +31,7 @@ export bfastfetch='b4d960'
 export wallpaper='$HOME/.config/themes/wallpapers/freshcut.jpg'
 
 # For nautilus and cursor
-export cursor='Bibata-Original-Classic'
+export cursor='catppuccin-mocha-sapphire-cursors'
 export size='24'
 export nautilus='Orchis-Green-Dark-Nord'
 export icons='white'

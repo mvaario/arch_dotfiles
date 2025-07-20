@@ -105,7 +105,7 @@ AUR_PACKAGES=(
     openrazer-meta-git
     ttf-jetbrains-mono-nerd
     nautilus-open-any-terminal
-    bibata-cursor-theme
+    catppuccin-cursors-mocha
 )
 
 for aur_pkg in "${AUR_PACKAGES[@]}"; do

@@ -28,11 +28,10 @@ export bwhite='e3e3e3'
 export fastfetch='3b3937'
 export bfastfetch='635e5c'
 
-
 export wallpaper='$HOME/.config/themes/wallpapers/carbonight.png'
 
 # For nautilus and cursor
-export cursor='Bibata-Original-Classic'
+export cursor='catppuccin-mocha-sapphire-cursors'
 export size='24'
 export nautilus='Orchis-Green-Dark-Nord'
 export icons='black'

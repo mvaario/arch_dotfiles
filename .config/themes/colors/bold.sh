@@ -31,7 +31,7 @@ export bfastfetch='71c0c3'
 export wallpaper='$HOME/.config/themes/wallpapers/bold.png'
 
 # For nautilus and cursor
-export cursor='Bibata-Original-Ice'
+export cursor='catppuccin-mocha-sapphire-cursors'
 export size='24'
 export nautilus='Orchis-Green-Dark-Nord'
 export icons='teal'

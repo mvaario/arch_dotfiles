@@ -39,12 +39,10 @@ libinput_pid=$!
 trap 'kill "$libinput_pid"' EXIT INT TERM
 
 
-
 while true; do
     sleep 0.2
-
     # read wofi window position
-    read -r x y w h <<< "$(hyprctl layers | grep 'namespace: wofi' | sed -n 's/.*xywh: \([0-9 ]*\), namespace.*/\1/p')"
+    read -r x y w h <<< "$(hyprctl layers | grep 'namespace: wofi' | sed -n 's/.*xywh: \([-0-9 ]*\), namespace.*/\1/p')"
     x2=$(( x + w ))
     y2=$(( y + h ))
 

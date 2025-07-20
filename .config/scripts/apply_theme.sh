@@ -66,7 +66,6 @@ done
 #hyprland temp file to not show errors when loading themes
 mv "$HOME/.config/hypr/colors_temp.conf" "$HOME/.config/hypr/colors.conf"
 
-
 hyprctl setcursor $cursor $size
 gsettings set org.gnome.desktop.interface gtk-theme $nautilus
 
@@ -77,5 +76,6 @@ hyprctl reload
 
 hyprpaper &
 waybar &
-papirus-folders -C $icons --theme Papirus-Dark
+
+/usr/bin/papirus-folders -C $icons --theme Papirus-Dark >> /tmp/papirus.log 2>&1
 

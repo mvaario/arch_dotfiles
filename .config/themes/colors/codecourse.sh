@@ -31,7 +31,7 @@ export bfastfetch='83cffd'
 export wallpaper='$HOME/.config/themes/wallpapers/codecourse.jpg'
 
 # For nautilus and cursor
-export cursor='Bibata-Original-Ice'
+export cursor='catppuccin-mocha-sapphire-cursors'
 export size='24'
 export nautilus='Orchis-Green-Dark-Nord'
 export icons='blue'

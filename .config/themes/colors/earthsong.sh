@@ -33,7 +33,7 @@ export wallpaper='$HOME/.config/themes/wallpapers/earthsong.png'
 
 
 # For nautilus and cursor
-export cursor='Bibata-Original-Amber'
+export cursor='catppuccin-mocha-sapphire-cursors'
 export size='24'
 export nautilus='Orchis-Orange-Dark-Nord'
 export icons='orange'
