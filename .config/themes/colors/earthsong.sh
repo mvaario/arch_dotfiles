@@ -28,12 +28,13 @@ export bwhite='ffffff'
 export fastfetch='b4d960'
 export bfastfetch='ecb8a2'
 
-
 export wallpaper='$HOME/.config/themes/wallpapers/earthsong.png'
 
-
 # For nautilus and cursor
-export cursor='catppuccin-mocha-sapphire-cursors'
-export size='24'
+export cursor='catppuccin-mocha-peach-cursors'
+export size='20'
 export nautilus='Orchis-Orange-Dark-Nord'
 export icons='orange'
+
+# For waybar
+export waybar_background=$($HOME/.config/themes/colors/hex_to_rgb.sh "$background")

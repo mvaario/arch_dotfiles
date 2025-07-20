@@ -31,7 +31,10 @@ export bfastfetch='b4d960'
 export wallpaper='$HOME/.config/themes/wallpapers/freshcut.jpg'
 
 # For nautilus and cursor
-export cursor='catppuccin-mocha-sapphire-cursors'
+export cursor='catppuccin-mocha-light-cursors'
 export size='24'
 export nautilus='Orchis-Green-Dark-Nord'
 export icons='white'
+
+# For waybar
+export waybar_background=$($HOME/.config/themes/colors/hex_to_rgb.sh "$background")

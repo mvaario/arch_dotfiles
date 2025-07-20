@@ -31,7 +31,8 @@ declare -A files=(
 for template in "${!files[@]}"; do
     dest="${files[$template]}"
     # Use sed to find and replace placeholders
-    sed -e "s,%background%,$background,g" \
+    sed -e "s|%waybar_background%|$waybar_background|g" \
+        -e "s,%background%,$background,g" \
         -e "s,%backerground%,$backerground,g" \
         -e "s,%foreground%,$foreground,g" \
         -e "s,%main%,$main,g" \

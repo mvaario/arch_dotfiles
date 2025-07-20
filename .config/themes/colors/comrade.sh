@@ -30,9 +30,11 @@ export bfastfetch='dc9997'
 
 export wallpaper='$HOME/.config/themes/wallpapers/comrade.png'
 
-
 # For nautilus and cursor
-export cursor='catppuccin-mocha-sapphire-cursors'
+export cursor='catppuccin-mocha-red-cursors'
 export size='24'
 export nautilus='Orchis-Green-Dark-Nord'
 export icons='red'
+
+# For waybar
+export waybar_background=$($HOME/.config/themes/colors/hex_to_rgb.sh "$background")
