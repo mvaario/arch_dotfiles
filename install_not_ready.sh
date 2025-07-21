@@ -7,6 +7,9 @@ if ! sudo -v; then
   exit 1
 fi
 
+# Define user for auto-login
+read -p "Enter your username: " USER
+
 # Start a background sudo keep-alive loop
 ( while true; do
     sudo -n true
@@ -228,9 +231,21 @@ papirus-folders -C orange --theme Papirus-Dark
 sudo chown -R $USER:$USER /var/lib/papirus-folders/
 sudo chown -R $USER:$USER /usr/share/icons/Papirus*
 
-# Link nautilus compare using meld
+# Autolog in file
+if [ ! -d "/etc/systemd/system/getty@tty1.service.d" ]; then
+    echo "Creating directory for systemd override: /etc/systemd/system/getty@tty1.service.d"
+    sudo mkdir -p "/etc/systemd/system/getty@tty1.service.d"
+fi
+
+echo "[Service]
+ExecStart=
+ExecStart=-/usr/bin/agetty --autologin $USER --noclear %I $TERM" | sudo tee "/etc/systemd/system/getty@tty1.service.d/override.conf" > /dev/null
+
+
+# Link nautilus compare using meld (did not work :( )
 [ -e "$HOME/.local/share/nautilus/scripts/Compare with Meld" ] || \
 ln -s "$HOME/.config/scripts/nautilus_compare.sh" "$HOME/.local/share/nautilus/scripts/Compare with Meld"
+
 
 echo "✅ Configuration complete."
 echo ""
