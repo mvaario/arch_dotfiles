@@ -1,16 +1,39 @@
 #!/bin/bash
 set -e
 
+# Ask for sudo privileges once at the beginning
 if ! sudo -v; then
   echo "❌ This script requires sudo privileges."
   exit 1
 fi
 
-echo "🔧 Copying custom pacman.conf with multilib enabled..."
-sudo cp pacman.conf /etc/pacman.conf
+# Start a background sudo keep-alive loop
+( while true; do
+    sudo -n true
+    sleep 60
+    kill -0 "$$" || exit
+  done 2>/dev/null &
+) &
 
-echo "Updating system"
+echo "🔧 Enabling [multilib] repo in /etc/pacman.conf..."
+sudo awk '
+BEGIN { in_multilib = 0 }
+/^#\s*\[multilib\]/ { print substr($0, 2); in_multilib = 1; next }
+/^\s*\[multilib\]/ { print; in_multilib = 1; next }
+in_multilib && /^\s*#/ && /Include\s*=\s*\/etc\/pacman.d\/mirrorlist/ {
+    # uncomment line by removing leading #
+    sub(/^#/, "")
+    print
+    next
+}
+in_multilib && /^\s*\[/ { in_multilib = 0 }
+{ print }
+' /etc/pacman.conf | sudo tee /etc/pacman.conf.tmp > /dev/null
+sudo mv /etc/pacman.conf.tmp /etc/pacman.conf
+
+echo "🔄 Updating system"
 sudo pacman -Syu
+
 
 if ! command -v yay &> /dev/null; then
     echo "📥 Installing yay AUR helper..."
@@ -70,7 +93,6 @@ PACKAGES=(
     fastfetch
     
     lact
-    xed
     gnome-disk-utility
     celluloid
     steam
@@ -78,6 +100,9 @@ PACKAGES=(
     lutris
     gamemode
     openrgb
+
+	mousepad
+	meld
 
     cpupower
     
@@ -103,6 +128,7 @@ echo "📦 Installing AUR packages with yay..."
 AUR_PACKAGES=(
     papirus-folders
     openrazer-meta-git
+    gitkraken
     ttf-jetbrains-mono-nerd
     nautilus-open-any-terminal
     catppuccin-cursors-mocha
@@ -123,13 +149,13 @@ done
 #------------------------------------------------------------------------
 
 echo "📥 Installing Orchis theme..."
-git clone https://github.com/vinceliuice/Orchis-theme.git
+[ -d Orchis-theme ] || git clone https://github.com/vinceliuice/Orchis-theme.git
 cd Orchis-theme
 ./install.sh -d ~/.themes -t all -c dark -s standard --tweaks nord
 cd -
 
 echo "✅ All packages processed."
-
+echo " "
 #------------------------------------------------------------------------
 
 # Create or update modprobe config
@@ -145,10 +171,24 @@ else
   echo "MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)" | sudo tee -a /etc/mkinitcpio.conf
 fi
 
+# Update HOOKS line
+if grep -q '^HOOKS=' /etc/mkinitcpio.conf; then
+  sudo sed -i 's/^HOOKS=.*/HOOKS=(base autodetect udev microcode block filesystems keyboard)/' /etc/mkinitcpio.conf
+else
+  echo 'HOOKS=(base autodetect udev microcode block filesystems keyboard)' | sudo tee -a /etc/mkinitcpio.conf
+fi
+
+# Set COMPRESSION="cat"
+if grep -q '^COMPRESSION=' /etc/mkinitcpio.conf; then
+  sudo sed -i 's/^COMPRESSION=.*/COMPRESSION="cat"/' /etc/mkinitcpio.conf
+else
+  echo 'COMPRESSION="cat"' | sudo tee -a /etc/mkinitcpio.conf
+fi
+
 # Rebuild initramfs
 echo "🛠️ Rebuilding initramfs..."
-
 sudo mkinitcpio -P
+
 
 # Update /etc/environment
 echo "🌱 Adding environment variables to /etc/environment..."
@@ -164,18 +204,18 @@ fi
 #------------------------------------------------------------------------
 echo "🧰 Applying configuration settings"
 
+# copy config files
+cp -r "$(pwd)/.config" "$HOME/"
+cp -r "$(pwd)/.bashrc" "$HOME/"
+
 # random stuff for papirus folder icons
 gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark'
 
-#set terminal for nautilus
-gsettings set com.github.stunkymonkey.nautilus-open-any-terminal kitty
+# Set terminal for nautilus
+gsettings set com.github.stunkymonkey.nautilus-open-any-terminal terminal kitty
 
-#random stuff for razer...
+# Random stuff for razer...
 sudo gpasswd -a $USER plugdev
-
-cp -r "$(pwd)/.config" "$HOME/"
-cp -r "$(pwd)/.bashrc" "$HOME/"
-echo "config files copied"
 
 # Enable ufw
 sudo systemctl enable ufw
@@ -183,12 +223,17 @@ sudo systemctl enable ufw
 # Performance mode
 echo 'governor="performance"' | sudo tee /etc/default/cpupower
 
+# Enable theme
 papirus-folders -C orange --theme Papirus-Dark
 sudo chown -R $USER:$USER /var/lib/papirus-folders/
 sudo chown -R $USER:$USER /usr/share/icons/Papirus*
 
-echo "✅ Configuration complete."
+# Link nautilus compare using meld
+[ -e "$HOME/.local/share/nautilus/scripts/Compare with Meld" ] || \
+ln -s "$HOME/.config/scripts/nautilus_compare.sh" "$HOME/.local/share/nautilus/scripts/Compare with Meld"
 
+echo "✅ Configuration complete."
+echo ""
 #------------------------------------------------------------------------
 
 # Ask to reboot
