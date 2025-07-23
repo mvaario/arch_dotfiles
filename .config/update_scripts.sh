@@ -9,12 +9,7 @@ echo "-------------------------------"
 sudo -v
 
 echo "🔄 Updating official packages..."
-sudo pacman -Syu
-
-if command -v yay &>/dev/null; then
-    echo "🔁 Updating AUR packages..."
-    yay -Sua --noconfirm
-fi
+sudo yay -Syu
 
 echo "🧹 Removing orphan packages..."
 sudo pacman -Rns $(pacman -Qdtq) || echo "No orphans to remove."

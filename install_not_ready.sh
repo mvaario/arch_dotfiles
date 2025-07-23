@@ -18,6 +18,7 @@ read -p "Enter your username: " USER
   done 2>/dev/null &
 ) &
 
+echo " "
 echo "🔧 Enabling [multilib] repo in /etc/pacman.conf..."
 sudo awk '
 BEGIN { in_multilib = 0 }
@@ -34,9 +35,9 @@ in_multilib && /^\s*\[/ { in_multilib = 0 }
 ' /etc/pacman.conf | sudo tee /etc/pacman.conf.tmp > /dev/null
 sudo mv /etc/pacman.conf.tmp /etc/pacman.conf
 
+echo " "
 echo "🔄 Updating system"
 sudo pacman -Syu
-
 
 if ! command -v yay &> /dev/null; then
     echo "📥 Installing yay AUR helper..."
@@ -47,12 +48,11 @@ if ! command -v yay &> /dev/null; then
 fi
 
 #------------------------------------------------------------------------
-
+echo " "
 echo "🚀 Starting Arch setup script..."
 PACKAGES=(
     git
     neovim
-    firefox
     code
     hyprpolkitagent
     ufw
@@ -125,7 +125,7 @@ for pkg in "${PACKAGES[@]}"; do
 done
 
 #------------------------------------------------------------------------
-
+echo " "
 echo "📦 Installing AUR packages with yay..."
 
 AUR_PACKAGES=(
@@ -146,11 +146,41 @@ for aur_pkg in "${AUR_PACKAGES[@]}"; do
             [Yy]*) echo "⏩ Continuing...";;
             *) echo "🛑 Exiting script."; exit 1;;
         esac
-    fi
+	fi
 done
 
 #------------------------------------------------------------------------
+if [ ! -f ~/.local/opt/zen/zen ]; then
+	echo " "
+	echo "📥 Installing latest Zen Browser..."
+	mkdir -p ~/.local/opt/zen
+	mkdir -p ~/.local/share/applications
 
+	# Download the latest  browser
+	curl -L https://zen-browser.app/download/linux -o /tmp/zen-latest.tar.xz
+
+	# Extract
+	tar xf /tmp/zen-latest.tar.xz -C ~/.local/opt/zen --strip-components=1
+
+	# Create desktop entry for wofi
+	cat > ~/.local/share/applications/zen.desktop <<EOF
+	[Desktop Entry]
+	Version=1.0
+	Type=Application
+	Name=Zen Browser
+	Comment=Web browser
+	Exec=/home/$USER/.local/opt/zen/zen %U
+	Icon=/home/$USER/.local/opt/zen/browser/chrome/icons/default/default128.png
+	Terminal=false
+	Categories=Network;WebBrowser;
+	EOF
+
+	chmod +x ~/.local/share/applications/zen.desktop
+	update-desktop-database ~/.local/share/applications/
+fi
+#------------------------------------------------------------------------
+
+echo " "
 echo "📥 Installing Orchis theme..."
 [ -d Orchis-theme ] || git clone https://github.com/vinceliuice/Orchis-theme.git
 cd Orchis-theme
@@ -245,6 +275,13 @@ ExecStart=-/usr/bin/agetty --autologin $USER --noclear %I $TERM" | sudo tee "/et
 # Link nautilus compare using meld (did not work :( )
 [ -e "$HOME/.local/share/nautilus/scripts/Compare with Meld" ] || \
 ln -s "$HOME/.config/scripts/nautilus_compare.sh" "$HOME/.local/share/nautilus/scripts/Compare with Meld"
+
+# set mousepad theme
+gsettings set org.xfce.mousepad.preferences.window always-show-tabs true
+gsettings set org.xfce.mousepad.preferences.view show-line-numbers true
+gsettings set org.xfce.mousepad.preferences.view font-name 'JetBrainsMonoNL Nerd Font Mono 10'
+gsettings set org.xfce.mousepad.preferences.view color-scheme 'oblivion'
+gsettings set org.xfce.mousepad.preferences.view tab-width uint32 4
 
 
 echo "✅ Configuration complete."
