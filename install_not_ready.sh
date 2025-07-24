@@ -302,12 +302,12 @@ ExecStart=-/usr/bin/agetty --autologin $USER --noclear %I $TERM" | sudo tee "/et
 [ -e "$HOME/.local/share/nautilus/scripts/Compare with Meld" ] || \
 ln -s "$HOME/.config/scripts/nautilus_compare.sh" "$HOME/.local/share/nautilus/scripts/Compare with Meld"
 
-# set mousepad theme
-gsettings set org.xfce.mousepad.preferences.window always-show-tabs true
-gsettings set org.xfce.mousepad.preferences.view show-line-numbers true
-gsettings set org.xfce.mousepad.preferences.view font-name 'JetBrainsMonoNL Nerd Font Mono 10'
 gsettings set org.xfce.mousepad.preferences.view color-scheme 'oblivion'
 gsettings set org.xfce.mousepad.preferences.view tab-width uint32 4
+gsettings set org.xfce.mousepad.preferences.view font-name 'JetBrainsMonoNL Nerd Font Mono 10'
+gsettings set org.xfce.mousepad.preferences.view show-line-numbers true
+gsettings set org.xfce.mousepad.preferences.window always-show-tabs true
+# set mousepad theme
 
 
 echo "✅ Configuration complete."
