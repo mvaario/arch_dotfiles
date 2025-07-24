@@ -131,7 +131,6 @@ echo "📦 Installing AUR packages with yay..."
 AUR_PACKAGES=(
     papirus-folders
     openrazer-meta-git
-    gitkraken
     ttf-jetbrains-mono-nerd
     nautilus-open-any-terminal
     catppuccin-cursors-mocha
@@ -156,7 +155,7 @@ if [ ! -f ~/.local/opt/zen/zen ]; then
 	mkdir -p ~/.local/opt/zen
 	mkdir -p ~/.local/share/applications
 
-	# Download the latest  browser
+	# Download the latest version
 	curl -L https://zen-browser.app/download/linux -o /tmp/zen-latest.tar.xz
 
 	# Extract
@@ -164,22 +163,49 @@ if [ ! -f ~/.local/opt/zen/zen ]; then
 
 	# Create desktop entry for wofi
 	cat > ~/.local/share/applications/zen.desktop <<EOF
-	[Desktop Entry]
-	Version=1.0
-	Type=Application
-	Name=Zen Browser
-	Comment=Web browser
-	Exec=/home/$USER/.local/opt/zen/zen %U
-	Icon=/home/$USER/.local/opt/zen/browser/chrome/icons/default/default128.png
-	Terminal=false
-	Categories=Network;WebBrowser;
-	EOF
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Zen Browser
+Exec=/home/$USER/.local/opt/zen/zen %U
+Icon=/home/$USER/.local/opt/zen/browser/chrome/icons/default/default128.png
+Terminal=false
+Categories=Network;WebBrowser;
+EOF
 
 	chmod +x ~/.local/share/applications/zen.desktop
 	update-desktop-database ~/.local/share/applications/
 fi
 #------------------------------------------------------------------------
+if [ ! -f ~/.local/opt/gitkraken/gitkraken ]; then
+	echo " "
+	echo "📥 Installing latest GitKranker..."
+	mkdir ~/.local/opt/gitkraken
 
+	# Download the latest version
+	curl -L https://release.gitkraken.com/linux/gitkraken-amd64.tar.gz -o /tmp/gitkraken.tar.gz
+
+	# Extract
+	tar -xzf /tmp/gitkraken.tar.gz -C ~/.local/opt/gitkraken --strip-components=1
+	
+	# Create desktop entry for wofi
+	cat > ~/.local/share/applications/gitkraken.desktop <<EOF
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=GitKraken
+Exec=/home/$USER/.local/opt/gitkraken/gitkraken
+Icon=/home/$USER/.local/opt/gitkraken/gitkraken.png	
+Terminal=false
+Categories=Development;Git;
+EOF
+
+	chmod +x ~/.local/share/applications/gitkraken.desktop
+	update-desktop-database ~/.local/share/applications/
+
+fi
+
+#------------------------------------------------------------------------
 echo " "
 echo "📥 Installing Orchis theme..."
 [ -d Orchis-theme ] || git clone https://github.com/vinceliuice/Orchis-theme.git
