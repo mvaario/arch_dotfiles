@@ -129,6 +129,7 @@ echo " "
 echo "📦 Installing AUR packages with yay..."
 
 AUR_PACKAGES=(
+	wlogout
     papirus-folders
     openrazer-meta-git
     ttf-jetbrains-mono-nerd

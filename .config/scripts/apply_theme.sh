@@ -31,7 +31,7 @@ declare -A files=(
 for template in "${!files[@]}"; do
     dest="${files[$template]}"
     # Use sed to find and replace placeholders
-    sed -e "s|%waybar_background%|$waybar_background|g" \
+    sed -e "s|%waybar_background%|$background_rgb_str|g" \
         -e "s,%background%,$background,g" \
         -e "s,%backerground%,$backerground,g" \
         -e "s,%foreground%,$foreground,g" \
@@ -63,12 +63,15 @@ for template in "${!files[@]}"; do
         "$template" > "$dest"
 done
 
-
 #hyprland temp file to not show errors when loading themes
 mv "$HOME/.config/hypr/colors_temp.conf" "$HOME/.config/hypr/colors.conf"
+echo "✅ Hyprland done"
 
 hyprctl setcursor $cursor $size
+echo "✅ Cursor changes"
+
 gsettings set org.gnome.desktop.interface gtk-theme $nautilus
+echo "✅ Nautilus changes"
 
 pkill waybar
 pkill hyprpaper
@@ -78,5 +81,13 @@ hyprctl reload
 hyprpaper &
 waybar &
 
-/usr/bin/papirus-folders -C $icons --theme Papirus-Dark >> /tmp/papirus.log 2>&1
+# Make blurred background for wlogout
+python3 blur_wallpaper.py $wallpaper $background_rgb_str
+echo "✅ wlogout wallpaper done"
 
+
+# Changes folder theme (takes a while....)
+/usr/bin/papirus-folders -C $icons --theme Papirus-Dark >> /tmp/papirus.log 2>&1
+echo "✅ Folder theme changes"
+
+echo "✅ all done"

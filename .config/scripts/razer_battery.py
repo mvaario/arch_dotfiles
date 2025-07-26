@@ -1,29 +1,32 @@
 #!/usr/bin/env python3
 import openrazer.client
+import os
 import json
+
+CACHE_FILE = os.path.expanduser("~/.config/waybar/razer_battery_level")
 
 def get_battery():
     client = openrazer.client.DeviceManager()
     devices = client.devices
     for device in devices:
         level = device.battery_level
+        if level is not None and int(level) != 0:
+            write_cache_level(level)
+        else:
+            level = read_cache_level()
+
+
         if level is not None:
             icon = get_icon(level)
             css_class = get_class(level)
             text = f"{icon} {int(level)}%"
-            if int(level) != 0: # Do not show empty battery
-                print(json.dumps({
-                    "text": text,
-                    "class": css_class,
-                    "tooltip": device.name
-                }))
-            return
-        else:
             print(json.dumps({
-                "text": " N/A",
-                "class": "unknown",
-                "tooltip": "No battery info"
-                }))
+                "text": text,
+                "class": css_class,
+                "tooltip": device.name
+            }))
+            return
+
     print(json.dumps({
         "text": " N/A",
         "class": "unknown",
@@ -50,22 +53,21 @@ def get_class(level):
         return "good"
 
 
-def set_dpi_stage(device_index=0, dpi_x=600, dpi_y=600):
-    client = openrazer.client.DeviceManager()
-    devices = client.devices
-    if len(devices) <= device_index:
-        print("Device index out of range")
-        return
-
-    device = devices[device_index]
-    print(f"Current DPI (X, Y): {device.dpi}")
-
+def write_cache_level(level):
     try:
-        device.dpi = (dpi_x, dpi_y)
-        print(f"DPI set to X: {dpi_x}, Y: {dpi_y}")
-    except Exception as e:
-        print("Error setting DPI:", e)
+        with open(CACHE_FILE, "w") as f:
+            f.write(str(level))
+    except:
+        pass
+
+def read_cache_level():
+    try:
+        with open(CACHE_FILE, "r") as f:
+            return int(f.read().strip())
+    except:
+        return None
+
 
 if __name__ == "__main__":
+    
     get_battery()
-    #set_dpi_stage()

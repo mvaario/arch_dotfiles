@@ -8,12 +8,14 @@
 }
 
 window#waybar {
-    background: rgba(%waybar_background%,0.6);
+    background: rgba(%waybar_background%,0.1);
     transition-property: background;
     transition-duration: .5s;
-    /*border: 2px solid #%main%;*/
-    border-bottom: 2px solid #%main%;
-    border-radius: 10px;
+    /*border: 1px solid #%main%;
+    border-left: 1px solid #%main%;
+    border-right: 1px solid #%main%;*/
+    border-bottom: 1px solid #%main%;
+    border-radius: 50px;
 }
 
 #workspaces
