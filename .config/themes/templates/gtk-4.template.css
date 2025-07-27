@@ -1,0 +1,106 @@
+/* Nautilus main window background */
+window.nautilus-window {
+    background-color: rgba(%waybar_background%,0.6);
+    background-image: none;
+    border: none;
+    box-shadow: none;
+    outline: none;
+}
+
+/* Make all internal widgets transparent by default */
+.nautilus-window * {
+    background-color: rgba(%waybar_background%,0);
+    background-image: none;
+    border: none;
+    box-shadow: none;
+    outline: none;
+}
+
+.nautilus-window popover,
+window > popover {
+    background-color: rgba(%waybar_background%,0.6);
+    border-radius: 6px;
+    border: 1px solid #%main%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+
+
+/* Orchis theme colors */
+.nautilus-window placessidebar {
+    background-color: rgba(36, 41, 50, 0.6);
+    border-right: 1px solid #%main%;
+    border-radius: 0;
+}
+.nautilus-window headerbar{
+    background-color: rgba(28, 31, 38, 0.6);
+    box-shadow: inset 0 -1px 0 0 #%main%;
+    border: none;
+}
+
+
+
+
+
+
+
+/*
+.nautilus-window popover menu,
+.nautilus-window popover menuitem,
+.nautilus-window popover menuitem * {
+    background-color: #000000;
+    color: white;
+}
+
+
+row.activatable:selected.has-open-popup,
+headerbar.selection-mode .activatable.has-open-popup.subtitle:link,
+headerbar.selection-mode button.activatable.has-open-popup.subtitle:visited, row.activatable:selected:hover,
+headerbar.selection-mode .activatable.subtitle:hover:link,
+headerbar.selection-mode button.activatable.subtitle:hover:visited {
+  background-color: rgba(28, 31, 38, 0.6); }
+
+window {
+  border-radius: 6px 6px 0 0;
+  border-width: 0px;
+  background-color: rgba(28, 31, 38, 0.6);;
+  margin: 0px; }
+  dialog.maximized,
+  window.maximized {
+    border-radius: 0; }
+  .maximized dialog, .fullscreen dialog, .tiled dialog, .maximized window, .fullscreen window, .tiled window {
+    border-radius: 0; }
+  .popup dialog, .popup window {
+    border-radius: 0.75mm;
+    box-shadow: 0px 3px 10px -4px rgba(0, 0, 0, 0.27), 0px 5px 8px -4px rgba(0, 0, 0, 0.17); }
+  .ssd dialog, .ssd window {
+    box-shadow: 0 2px 6px 1px rgba(0, 0, 0, 0.1); }
+  .csd dialog, .csd window {
+    border-radius: 6px; }
+    .csd dialog.popup, .csd window.popup {
+      box-shadow: 0px 3px 10px -4px rgba(0, 0, 0, 0.27), 0px 5px 8px -4px rgba(0, 0, 0, 0.17); }
+    .csd dialog.tooltip, .csd window.tooltip {
+      box-shadow: none; }
+    .csd dialog.message-dialog, .csd window.message-dialog {
+      box-shadow: 0 2px 6px 1px rgba(0, 0, 0, 0.5); }
+  .solid-csd dialog, .solid-csd window {
+    border-radius: 0;
+    margin: 0;
+    padding: 0px;
+    background-color: rgba(28, 31, 38, 0.6); 
+    box-shadow: none; }
+
+
+
+
+*/
+
+
+/* selected row 
+row.activatable.has-open-popup, row.activatable:hover {
+    background-color: rgba(28, 31, 38, 0.6); 
+    box-shadow: inset 0 -1px 0 0 #db784d;
+    border: none; 
+}
+
+*/

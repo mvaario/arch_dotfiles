@@ -24,6 +24,7 @@ declare -A files=(
     ["$HOME/.config/themes/templates/hyprland.template.conf"]="$HOME/.config/hypr/colors_temp.conf"
     ["$HOME/.config/themes/templates/fastfetch.template.conf"]="$HOME/.config/fastfetch/colors.conf"
     ["$HOME/.config/themes/templates/windows.template.conf"]="$HOME/.config/hypr/conf/window_theme.conf"
+    ["$HOME/.config/themes/templates/gtk-4.template.css"]="$HOME/.config/gtk-4.0/gtk.css"
     #["$HOME/.config/themes/templates/startup_theme.template.conf"]="$HOME/.config/hypr/conf/startup_theme.conf"
 )
 
@@ -73,6 +74,7 @@ echo "✅ Cursor changes"
 gsettings set org.gnome.desktop.interface gtk-theme $nautilus
 echo "✅ Nautilus changes"
 
+pkill nautilus
 pkill waybar
 pkill hyprpaper
 sleep 0.5

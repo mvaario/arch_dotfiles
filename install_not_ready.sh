@@ -1,22 +1,22 @@
 #!/bin/bash
 set -e
 
-# Ask for sudo privileges once at the beginning
+# Ask for sudo password upfront
 if ! sudo -v; then
   echo "❌ This script requires sudo privileges."
   exit 1
 fi
 
-# Define user for auto-login
-read -p "Enter your username: " USER
+# Keep-alive: update sudo timestamp until script exits
+# Run this in background, kill when parent exits
+while true; do
+  sudo -n true
+  sleep 60
+  kill -0 "$$" 2>/dev/null || exit
+done 2>/dev/null &
 
-# Start a background sudo keep-alive loop
-( while true; do
-    sudo -n true
-    sleep 60
-    kill -0 "$$" || exit
-  done 2>/dev/null &
-) &
+# Get user
+USER=$(logname)
 
 echo " "
 echo "🔧 Enabling [multilib] repo in /etc/pacman.conf..."
@@ -157,7 +157,7 @@ if [ ! -f ~/.local/opt/zen/zen ]; then
 	mkdir -p ~/.local/share/applications
 
 	# Download the latest version
-	curl -L https://zen-browser.app/download/linux -o /tmp/zen-latest.tar.xz
+	curl -L https://github.com/zen-browser/desktop/releases/latest/download/zen.linux-x86_64.tar.xz -o /tmp/zen-latest.tar.xz
 
 	# Extract
 	tar xf /tmp/zen-latest.tar.xz -C ~/.local/opt/zen --strip-components=1
@@ -176,6 +176,9 @@ EOF
 
 	chmod +x ~/.local/share/applications/zen.desktop
 	update-desktop-database ~/.local/share/applications/
+	
+	# Delete temp file
+	rm /tmp/zen-latest.tar.xz
 fi
 #------------------------------------------------------------------------
 if [ ! -f ~/.local/opt/gitkraken/gitkraken ]; then
@@ -204,15 +207,21 @@ EOF
 	chmod +x ~/.local/share/applications/gitkraken.desktop
 	update-desktop-database ~/.local/share/applications/
 
+	# Delete temp file
+	rm /tmp/gitkraken.tar.gz
+
 fi
 
 #------------------------------------------------------------------------
-echo " "
-echo "📥 Installing Orchis theme..."
-[ -d Orchis-theme ] || git clone https://github.com/vinceliuice/Orchis-theme.git
-cd Orchis-theme
-./install.sh -d ~/.themes -t all -c dark -s standard --tweaks nord
-cd -
+if [ ! -d /tmp/Orchis-theme ]; then
+	echo " "
+	echo "📥 Installing Orchis theme..."
+    git clone https://github.com/vinceliuice/Orchis-theme.git /tmp/Orchis-theme
+	cd /tmp/Orchis-theme
+	./install.sh -d ~/.themes -t all -c dark -s standard --tweaks nord
+	cd -
+	rm -rf /tmp/Orchis-theme
+fi
 
 echo "✅ All packages processed."
 echo " "
@@ -268,6 +277,8 @@ echo "🧰 Applying configuration settings"
 cp -r "$(pwd)/.config" "$HOME/"
 cp -r "$(pwd)/.bashrc" "$HOME/"
 
+
+
 # random stuff for papirus folder icons
 gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark'
 
@@ -283,8 +294,10 @@ sudo systemctl enable ufw
 # Performance mode
 echo 'governor="performance"' | sudo tee /etc/default/cpupower
 
-# Enable theme
-papirus-folders -C orange --theme Papirus-Dark
+# enable theme
+sudo ~/.config/scripts/apply_theme.sh earthsong.sh
+
+# Add permissions
 sudo chown -R $USER:$USER /var/lib/papirus-folders/
 sudo chown -R $USER:$USER /usr/share/icons/Papirus*
 
@@ -298,8 +311,8 @@ echo "[Service]
 ExecStart=
 ExecStart=-/usr/bin/agetty --autologin $USER --noclear %I $TERM" | sudo tee "/etc/systemd/system/getty@tty1.service.d/override.conf" > /dev/null
 
-
-# Link nautilus compare using meld (did not work :( )
+# Link nautilus compare using meld
+mkdir -p "$HOME/.local/share/nautilus/scripts"
 [ -e "$HOME/.local/share/nautilus/scripts/Compare with Meld" ] || \
 ln -s "$HOME/.config/scripts/nautilus_compare.sh" "$HOME/.local/share/nautilus/scripts/Compare with Meld"
 
