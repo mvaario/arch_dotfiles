@@ -84,7 +84,7 @@ hyprpaper &
 waybar &
 
 # Make blurred background for wlogout
-python3 blur_wallpaper.py $wallpaper $background_rgb_str
+python3 $HOME/.config/scripts/blur_wallpaper.py $wallpaper $background_rgb_str
 echo "✅ wlogout wallpaper done"
 
 

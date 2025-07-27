@@ -1,26 +1,18 @@
 #!/usr/bin/env python3
-
 from PIL import Image, ImageFilter, ImageEnhance
 import os
 import sys
 import time
 
 start = time.time()
+print("Creating blured wlogout image")
 
-# convert path to work with python
 input_path = sys.argv[1]
-abs_path = os.path.expandvars(input_path)
-home_config = os.path.expanduser("~/.config")
+img_path = os.path.expandvars(os.path.expanduser(input_path))
 
-wallpaper = os.path.relpath(abs_path, home_config)
-wallpaper = f'../{wallpaper}'
+img = Image.open(img_path).convert("RGB")
 
-
-
-# Open image and blur
-img = Image.open(wallpaper).convert("RGB")
 blurred = img.filter(ImageFilter.GaussianBlur(radius=4))
-
 
 # Create a solid color image with the kitty background color
 background_color_str = sys.argv[2]
@@ -33,7 +25,7 @@ overlay = Image.new("RGB", blurred.size, overlay_color)
 alpha = 0.1
 blended = Image.blend(blurred, overlay, alpha)
 
+output_path = os.path.expanduser("~/.config/wlogout/background/wallpaper.jpg")
+blended.save(output_path)
 
-blended.save("../wlogout/background/wallpaper.jpg")
-
-print(f"Image edition took: {time.time()-start}")
+print(f"Image edition done: {time.time()-start}")

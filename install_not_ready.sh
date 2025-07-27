@@ -1,23 +1,27 @@
 #!/bin/bash
 set -e
 
+# Edit these if nvidia or razer is used
+nvidia=false
+razer=false
+
+#------------------------------------------------------------------------
 # Ask for sudo password upfront
 if ! sudo -v; then
   echo "❌ This script requires sudo privileges."
   exit 1
 fi
 
-# Keep-alive: update sudo timestamp until script exits
-# Run this in background, kill when parent exits
-while true; do
-  sudo -n true
-  sleep 60
-  kill -0 "$$" 2>/dev/null || exit
-done 2>/dev/null &
+# Keep sudo alive in the background
+(
+  while true; do
+    sleep 30
+    sudo -n true
+    kill -0 "$$" || exit
+  done
+) 2>/dev/null &
 
-# Get user
-USER=$(logname)
-
+#------------------------------------------------------------------------
 echo " "
 echo "🔧 Enabling [multilib] repo in /etc/pacman.conf..."
 sudo awk '
@@ -35,6 +39,7 @@ in_multilib && /^\s*\[/ { in_multilib = 0 }
 ' /etc/pacman.conf | sudo tee /etc/pacman.conf.tmp > /dev/null
 sudo mv /etc/pacman.conf.tmp /etc/pacman.conf
 
+#------------------------------------------------------------------------
 echo " "
 echo "🔄 Updating system"
 sudo pacman -Syu
@@ -49,7 +54,7 @@ fi
 
 #------------------------------------------------------------------------
 echo " "
-echo "🚀 Starting Arch setup script..."
+echo "🚀 Downloading packages..."
 PACKAGES=(
     git
     neovim
@@ -73,15 +78,6 @@ PACKAGES=(
     lib32-libpipewire
     lib32-pipewire
     pavucontrol
-
-    nvidia
-    libva-nvidia-driver
-    nvidia-utils
-    vulkan-icd-loader
-    lib32-nvidia-utils
-    lib32-vulkan-icd-loader
-    nvidia-settings
-
     linux-headers
 
     kitty
@@ -126,12 +122,11 @@ done
 
 #------------------------------------------------------------------------
 echo " "
-echo "📦 Installing AUR packages with yay..."
+echo "📦 Downloading AUR packages..."
 
 AUR_PACKAGES=(
 	wlogout
     papirus-folders
-    openrazer-meta-git
     ttf-jetbrains-mono-nerd
     nautilus-open-any-terminal
     catppuccin-cursors-mocha
@@ -150,6 +145,20 @@ for aur_pkg in "${AUR_PACKAGES[@]}"; do
 done
 
 #------------------------------------------------------------------------
+# Setup nvidia
+if $nvidia; then
+	scripts/nvidia.sh
+fi
+
+# Setup razer
+if $razer; then
+	scripts/razer.sh
+fi
+
+#------------------------------------------------------------------------
+# Get user
+USER=$(logname)
+
 if [ ! -f ~/.local/opt/zen/zen ]; then
 	echo " "
 	echo "📥 Installing latest Zen Browser..."
@@ -180,6 +189,7 @@ EOF
 	# Delete temp file
 	rm /tmp/zen-latest.tar.xz
 fi
+
 #------------------------------------------------------------------------
 if [ ! -f ~/.local/opt/gitkraken/gitkraken ]; then
 	echo " "
@@ -213,7 +223,7 @@ EOF
 fi
 
 #------------------------------------------------------------------------
-if [ ! -d /tmp/Orchis-theme ]; then
+if [ ! -d "$HOME/.themes/Orchis-Dark-Nord" ]; then
 	echo " "
 	echo "📥 Installing Orchis theme..."
     git clone https://github.com/vinceliuice/Orchis-theme.git /tmp/Orchis-theme
@@ -223,23 +233,10 @@ if [ ! -d /tmp/Orchis-theme ]; then
 	rm -rf /tmp/Orchis-theme
 fi
 
-echo "✅ All packages processed."
+echo "✅ All packages installed."
 echo " "
+
 #------------------------------------------------------------------------
-
-# Create or update modprobe config
-echo "💾 Writing /etc/modprobe.d/nvidia.conf..."
-echo "options nvidia_drm modeset=1" | sudo tee /etc/modprobe.d/nvidia.conf > /dev/null
-
-
-# Modify mkinitcpio.conf
-echo "🧩 Updating /etc/mkinitcpio.conf..."
-if grep -q '^MODULES=' /etc/mkinitcpio.conf; then
-  sudo sed -i 's/^MODULES=.*/MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)/' /etc/mkinitcpio.conf
-else
-  echo "MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)" | sudo tee -a /etc/mkinitcpio.conf
-fi
-
 # Update HOOKS line
 if grep -q '^HOOKS=' /etc/mkinitcpio.conf; then
   sudo sed -i 's/^HOOKS=.*/HOOKS=(base autodetect udev microcode block filesystems keyboard)/' /etc/mkinitcpio.conf
@@ -255,29 +252,20 @@ else
 fi
 
 # Rebuild initramfs
+echo " "
 echo "🛠️ Rebuilding initramfs..."
 sudo mkinitcpio -P
 
-
-# Update /etc/environment
-echo "🌱 Adding environment variables to /etc/environment..."
-if ! grep -q 'LIBVA_DRIVER_NAME=nvidia' /etc/environment; then
-  sudo tee -a /etc/environment > /dev/null <<EOF
-
-# NVIDIA Wayland / VA-API support
-LIBVA_DRIVER_NAME=nvidia
-__GLX_VENDOR_LIBRARY_NAME=nvidia
-EOF
-fi
-
 #------------------------------------------------------------------------
+echo " "
 echo "🧰 Applying configuration settings"
 
 # copy config files
 cp -r "$(pwd)/.config" "$HOME/"
 cp -r "$(pwd)/.bashrc" "$HOME/"
 
-
+# Enable ufw
+sudo systemctl enable ufw
 
 # random stuff for papirus folder icons
 gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark'
@@ -285,17 +273,11 @@ gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark'
 # Set terminal for nautilus
 gsettings set com.github.stunkymonkey.nautilus-open-any-terminal terminal kitty
 
-# Random stuff for razer...
-sudo gpasswd -a $USER plugdev
-
-# Enable ufw
-sudo systemctl enable ufw
-
 # Performance mode
 echo 'governor="performance"' | sudo tee /etc/default/cpupower
 
 # enable theme
-sudo ~/.config/scripts/apply_theme.sh earthsong.sh
+~/.config/scripts/apply_theme.sh earthsong.sh
 
 # Add permissions
 sudo chown -R $USER:$USER /var/lib/papirus-folders/
@@ -316,18 +298,20 @@ mkdir -p "$HOME/.local/share/nautilus/scripts"
 [ -e "$HOME/.local/share/nautilus/scripts/Compare with Meld" ] || \
 ln -s "$HOME/.config/scripts/nautilus_compare.sh" "$HOME/.local/share/nautilus/scripts/Compare with Meld"
 
-gsettings set org.xfce.mousepad.preferences.view color-scheme 'oblivion'
-gsettings set org.xfce.mousepad.preferences.view tab-width uint32 4
-gsettings set org.xfce.mousepad.preferences.view font-name 'JetBrainsMonoNL Nerd Font Mono 10'
-gsettings set org.xfce.mousepad.preferences.view show-line-numbers true
-gsettings set org.xfce.mousepad.preferences.window always-show-tabs true
 # set mousepad theme
+export DISPLAY=:0
+export XDG_RUNTIME_DIR="/run/user/$(id -u)"
 
+sudo -u "$USER" DISPLAY=:0 XDG_RUNTIME_DIR="/run/user/$(id -u $USER)" gsettings set org.xfce.mousepad.preferences.view color-scheme 'oblivion'
+sudo -u "$USER" DISPLAY=:0 XDG_RUNTIME_DIR="/run/user/$(id -u $USER)" gsettings set org.xfce.mousepad.preferences.view tab-width 4
+sudo -u "$USER" DISPLAY=:0 XDG_RUNTIME_DIR="/run/user/$(id -u $USER)" gsettings set org.xfce.mousepad.preferences.view font-name 'JetBrainsMonoNL Nerd Font Mono 10'
+sudo -u "$USER" DISPLAY=:0 XDG_RUNTIME_DIR="/run/user/$(id -u $USER)" gsettings set org.xfce.mousepad.preferences.view show-line-numbers true
+sudo -u "$USER" DISPLAY=:0 XDG_RUNTIME_DIR="/run/user/$(id -u $USER)" gsettings set org.xfce.mousepad.preferences.window always-show-tabs true
 
 echo "✅ Configuration complete."
 echo ""
-#------------------------------------------------------------------------
 
+#------------------------------------------------------------------------
 # Ask to reboot
 read -p "🔁 Reboot now to apply changes? (y/N): " reboot_ans
 case "$reboot_ans" in
