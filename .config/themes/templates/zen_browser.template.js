@@ -1,0 +1,1 @@
+user_pref("mod.sameerasw.zen_transparency_color", "#%background%%alpha_hex%");

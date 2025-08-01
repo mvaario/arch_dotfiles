@@ -1,6 +1,6 @@
 /* Nautilus main window background */
 window.nautilus-window {
-    background-color: rgba(%waybar_background%,0.6);
+    background-color: rgba(%background_rgb_str%,%opacity%);
     background-image: none;
     border: none;
     box-shadow: none;
@@ -9,7 +9,7 @@ window.nautilus-window {
 
 /* Make all internal widgets transparent by default */
 .nautilus-window * {
-    background-color: rgba(%waybar_background%,0);
+    background-color: rgba(%background_rgb_str%,0);
     background-image: none;
     border: none;
     box-shadow: none;
@@ -18,7 +18,7 @@ window.nautilus-window {
 
 .nautilus-window popover,
 window > popover {
-    background-color: rgba(%waybar_background%,0.6);
+    background-color: rgba(%background_rgb_str%,%opacity%);
     border-radius: 6px;
     border: 1px solid #%main%;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
@@ -28,12 +28,12 @@ window > popover {
 
 /* Orchis theme colors */
 .nautilus-window placessidebar {
-    background-color: rgba(36, 41, 50, 0.6);
+    background-color: rgba(36, 41, 50, %opacity%);
     border-right: 1px solid #%main%;
     border-radius: 0;
 }
 .nautilus-window headerbar{
-    background-color: rgba(28, 31, 38, 0.6);
+    background-color: rgba(28, 31, 38, %opacity%);
     box-shadow: inset 0 -1px 0 0 #%main%;
     border: none;
 }

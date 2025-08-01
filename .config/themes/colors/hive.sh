@@ -1,32 +1,29 @@
 #!/bin/sh
+export opacity='0.6'
 
 export background='232633'
 export backerground='000000'
 export foreground='ffffff'
-export main='6e81a0'
-export highlight='7cb8ba'
+export main='00acc1'
+export highlight='66E4FF'
 
-export black='373c51'
-export red='ba0e2e'
-export green='7cb8ba'
-export yellow='6e81a0'
-export blue='ffffff'
-export magenta='7cb8ba'
-export cyan='6e81a0'
-export white='ffffff'
+export black='1a1a1a'     # dark neutral black
+export red='ba0e2e'       # strong true red (kept)
+export green='4caf50'     # classic soft green
+export yellow='ffb300'    # warm yellow-orange
+export blue='2196f3'      # true blue
+export magenta='9c27b0'   # proper magenta
+export cyan='00acc1'      # fresh cyan/teal
+export white='f1decb'     # keeping soft white for warmth
 
-export bblack='565e7f'
-export bred='f03e5f'
-export bgreen='bfdcdd'
-export byellow='acb7c8'
-export bblue='ffffff'
-export bmagenta='bfdcdd'
-export bcyan='acb7c8'
-export bwhite='ffffff'
-
-# For fastfetch animation
-export fastfetch='6e81a0'
-export bfastfetch='acb7c8'
+export bblack='2b2b2b'     # warm dark gray
+export bred='ba0e2e'       # muted red (kept)
+export bgreen='769958'     # muted olive green
+export byellow='c99a3a'    # deep goldenrod
+export bblue='54787d'      # desaturated slate blue
+export bmagenta='b56a8d'   # soft wine/pink
+export bcyan='569c9b'      # dusty teal
+export bwhite='f1decb'     # soft cream
 
 export wallpaper='$HOME/.config/themes/wallpapers/hive.jpg'
 
@@ -35,6 +32,7 @@ export cursor='catppuccin-mocha-sky-cursors'
 export size='20'
 export nautilus='Orchis-Teal-Dark-Nord'
 export icons='cyan'
+export name='cyan'
 
 # For waybar and wlogout
 export background_rgb_str=$($HOME/.config/scripts/hex_to_rgb.sh "$background")

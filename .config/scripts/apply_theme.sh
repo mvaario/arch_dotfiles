@@ -13,6 +13,11 @@ fi
 # Source the theme file to load the color variables
 source "$THEME_FILE"
 
+#create hex background with opacity
+hexopacity="$HOME/.config/scripts/hex_opacity.sh"
+alpha_hex=$("$hexopacity" "$opacity")
+
+
 # List of template files and their destination
 declare -A files=(
     #["$HOME/Documents/projects/rice_configs/chrome/userChrome.css.template"]="$HOME/.mozilla/firefox/3j5wjipw.new-default/chrome/userChrome.css"
@@ -23,8 +28,10 @@ declare -A files=(
     ["$HOME/.config/themes/templates/waybar.template.css"]="$HOME/.config/waybar/style.css"
     ["$HOME/.config/themes/templates/hyprland.template.conf"]="$HOME/.config/hypr/colors_temp.conf"
     ["$HOME/.config/themes/templates/fastfetch.template.conf"]="$HOME/.config/fastfetch/colors.conf"
+    ["$HOME/.config/themes/templates/fastfetch_config.template.jsonc"]="$HOME/.config/fastfetch/config.jsonc"
     ["$HOME/.config/themes/templates/windows.template.conf"]="$HOME/.config/hypr/conf/window_theme.conf"
     ["$HOME/.config/themes/templates/gtk-4.template.css"]="$HOME/.config/gtk-4.0/gtk.css"
+    ["$HOME/.config/themes/templates/zen_browser.template.js"]="$HOME/.zen/nt0xto0c.Default (release)/user.js"
     #["$HOME/.config/themes/templates/startup_theme.template.conf"]="$HOME/.config/hypr/conf/startup_theme.conf"
 )
 
@@ -32,7 +39,8 @@ declare -A files=(
 for template in "${!files[@]}"; do
     dest="${files[$template]}"
     # Use sed to find and replace placeholders
-    sed -e "s|%waybar_background%|$background_rgb_str|g" \
+    sed -e "s|%background_rgb_str%|$background_rgb_str|g" \
+        -e "s,%opacity%,$opacity,g" \
         -e "s,%background%,$background,g" \
         -e "s,%backerground%,$backerground,g" \
         -e "s,%foreground%,$foreground,g" \
@@ -55,12 +63,12 @@ for template in "${!files[@]}"; do
         -e "s,%bcyan%,$bcyan,g" \
         -e "s,%bwhite%,$bwhite,g" \
         -e "s,%wallpaper%,$wallpaper,g" \
-        -e "s,%bfastfetch%,$bfastfetch,g" \
-        -e "s,%fastfetch%,$fastfetch,g" \
         -e "s,%cursor%,$cursor,g" \
         -e "s,%size%,$size,g" \
         -e "s,%nautilus%,$nautilus,g" \
         -e "s,%icons%,$icons,g" \
+        -e "s,%name%,$name,g" \
+        -e "s,%alpha_hex%,$alpha_hex,g" \
         "$template" > "$dest"
 done
 
@@ -69,6 +77,8 @@ mv "$HOME/.config/hypr/colors_temp.conf" "$HOME/.config/hypr/colors.conf"
 echo "✅ Hyprland done"
 
 hyprctl setcursor $cursor $size
+gsettings set org.gnome.desktop.interface cursor-theme $cursor
+gsettings set org.gnome.desktop.interface cursor-size $size
 echo "✅ Cursor changes"
 
 gsettings set org.gnome.desktop.interface gtk-theme $nautilus

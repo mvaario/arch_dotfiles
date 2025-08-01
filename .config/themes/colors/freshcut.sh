@@ -1,4 +1,5 @@
 #!/bin/sh
+export opacity='0.6'
 
 export background='f2f2f2'
 export backerground='ffffff'
@@ -6,27 +7,27 @@ export foreground='2f3030'
 export main='83aa29'
 export highlight='008299'
 
-export black='ffffff'
-export red='ba0e2e'
-export green='3da09a'
-export yellow='008299'
-export blue='83aa29'
-export magenta='8e99a5'
-export cyan='3ba099'
-export white='3c3d3d'
+#export highlight='BA3EDD' 
+export highlight='C34AEE'
+#export highlight='D05CFF' 
 
-export bblack='ffffff'
-export bred='f03e5f'
-export bgreen='78cbc6'
-export byellow='00d9ff'
-export bblue='b4d960'
-export bmagenta='c7ccd2'
-export bcyan='75ccc6'
-export bwhite='616464'
+export black='1a1a1a'     # dark neutral black
+export red='ba0e2e'       # strong true red (kept)
+export green='4caf50'     # classic soft green
+export yellow='ffb300'    # warm yellow-orange
+export blue='2196f3'      # true blue
+export magenta='9c27b0'   # proper magenta
+export cyan='00acc1'      # fresh cyan/teal
+export white='f1decb'     # keeping soft white for warmth
 
-# For fastfetch animation
-export fastfetch='83aa29'
-export bfastfetch='b4d960'
+export bblack='2b2b2b'     # warm dark gray
+export bred='ba0e2e'       # muted red (kept)
+export bgreen='769958'     # muted olive green
+export byellow='c99a3a'    # deep goldenrod
+export bblue='54787d'      # desaturated slate blue
+export bmagenta='b56a8d'   # soft wine/pink
+export bcyan='569c9b'      # dusty teal
+export bwhite='f1decb'     # soft cream
 
 export wallpaper='$HOME/.config/themes/wallpapers/freshcut.jpg'
 

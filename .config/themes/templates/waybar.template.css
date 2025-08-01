@@ -8,7 +8,7 @@
 }
 
 window#waybar {
-    background: rgba(%waybar_background%,0.6);
+    background: rgba(%background_rgb_str%,%opacity%);
     transition-property: background;
     transition-duration: .5s;
     /*border: 1px solid #%main%;
@@ -53,7 +53,7 @@ window#waybar {
   color: transparent;
 }
 #workspaces button:hover {
-  background-color: #%highlight%;
+  background-color: #707070;
 }
 #workspaces button.active {
   background-color: #%main%;
@@ -68,11 +68,11 @@ window#waybar.empty #window {
 }
 
 #custom-logo {
-  color: #%highlight%;
+  color: #%main%;
 }
 
 #custom-power {
-  color: #%highlight%;
+  color: #%main%;
 }
 
 #custom-keylock.locked {
@@ -85,6 +85,6 @@ window#waybar.empty #window {
 
 
 tooltip {
-  background-color: #282421;
+  background-color: #%background%;
   border: 2px solid #282421;
 }

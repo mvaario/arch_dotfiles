@@ -1,40 +1,38 @@
 #!/bin/sh
+export opacity='0.6'
 
 export background='282421'
 export backerground='000000'
 export foreground='ebd1b7'
 export main='db784d'
-export highlight='95cc5e'
+export highlight='FF5C00'    # very hot
 
-export black='443E37'
-export red='BA0E2E'
-export green='95cc5e'
-export yellow='db784d'
-export blue='60a365'
-export magenta='db784d'
-export cyan='95cc5e'
-export white='f1decb'
+export black='1a1a1a'     # dark neutral black
+export red='ba0e2e'       # strong true red (kept)
+export green='4caf50'     # classic soft green
+export yellow='ffb300'    # warm yellow-orange
+export blue='2196f3'      # true blue
+export magenta='9c27b0'   # proper magenta
+export cyan='00acc1'      # fresh cyan/teal
+export white='f1decb'     # keeping soft white for warmth
 
-export bblack='6e645a'
-export bred='f03e5f'
-export bgreen='c8e5ab'
-export byellow='ecb8a2'
-export bblue='a1c8a4'
-export bmagenta='ecb8a2'
-export bcyan='c8e5ab'
-export bwhite='ffffff'
-
-# For fastfetch animation
-export fastfetch='b4d960'
-export bfastfetch='ecb8a2'
-
-export wallpaper='$HOME/.config/themes/wallpapers/earthsong.png'
+export bblack='2b2b2b'     # warm dark gray
+export bred='ba0e2e'       # muted red (kept)
+export bgreen='769958'     # muted olive green
+export byellow='c99a3a'    # deep goldenrod
+export bblue='54787d'      # desaturated slate blue
+export bmagenta='b56a8d'   # soft wine/pink
+export bcyan='569c9b'      # dusty teal
+export bwhite='f1decb'     # soft cream
 
 # For nautilus and cursor
 export cursor='catppuccin-mocha-peach-cursors'
 export size='20'
 export nautilus='Orchis-Orange-Dark-Nord'
 export icons='orange'
+export name='yellow'
 
 # For waybar and wlogout
 export background_rgb_str=$($HOME/.config/scripts/hex_to_rgb.sh "$background")
+
+export wallpaper='$HOME/.config/themes/wallpapers/earthsong.png'
