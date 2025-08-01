@@ -291,7 +291,7 @@ fi
 
 echo "[Service]
 ExecStart=
-ExecStart=-/usr/bin/agetty --autologin $USER --noclear %I $TERM" | sudo tee "/etc/systemd/system/getty@tty1.service.d/override.conf" > /dev/null
+ExecStart=-/usr/bin/agetty --autologin $USER --noclear %I xterm-kitty" | sudo tee "/etc/systemd/system/getty@tty1.service.d/override.conf" > /dev/null
 
 # Link nautilus compare using meld
 mkdir -p "$HOME/.local/share/nautilus/scripts"

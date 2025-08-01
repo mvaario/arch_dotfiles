@@ -112,6 +112,7 @@
   },
   "custom/theme": {
     "format": "",
+    "tooltip": false,
     "on-click": "~/.config/scripts/theme_picker.sh"
   },
   "custom/razer": {

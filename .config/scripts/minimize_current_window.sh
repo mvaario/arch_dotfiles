@@ -1,10 +1,12 @@
 #!/bin/bash
+# jq needs to be installed
 
 # Get the current active workspace
-CURRENT_WS=$(hyprctl monitors -j | jq -r '.[].activeWorkspace.name' | head -1)
+CURRENT_WS=$(hyprctl monitors -j | jq -r '.[] | select(.activeWorkspace != null) | .activeWorkspace.name' | head -1)
 
 # Get all minimized windows (on special:desktop)
 MINIMIZED_WINDOWS=$(hyprctl clients -j | jq -r '.[] | select(.workspace.name=="special:desktop") | .address')
+
 
 if [[ -n "$MINIMIZED_WINDOWS" ]]; then
   # Restore all minimized windows to current workspace
