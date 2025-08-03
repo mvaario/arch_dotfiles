@@ -2,14 +2,9 @@
 export opacity='0.6'
 
 export background='f2f2f2'
-export backerground='ffffff'
 export foreground='2f3030'
 export main='83aa29'
 export highlight='008299'
-
-#export highlight='BA3EDD' 
-export highlight='C34AEE'
-#export highlight='D05CFF' 
 
 export black='1a1a1a'     # dark neutral black
 export red='ba0e2e'       # strong true red (kept)
@@ -29,13 +24,14 @@ export bmagenta='b56a8d'   # soft wine/pink
 export bcyan='569c9b'      # dusty teal
 export bwhite='f1decb'     # soft cream
 
-export wallpaper='$HOME/.config/themes/wallpapers/freshcut.jpg'
-
 # For nautilus and cursor
 export cursor='catppuccin-mocha-light-cursors'
 export size='20'
 export nautilus='Orchis-Green-Dark-Nord'
 export icons='white'
+export name='white'
 
 # For waybar and wlogout
 export background_rgb_str=$($HOME/.config/scripts/hex_to_rgb.sh "$background")
+
+export wallpaper='$HOME/.config/themes/wallpapers/freshcut.jpg'

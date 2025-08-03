@@ -24,8 +24,6 @@ export bmagenta='b56a8d'   # soft wine/pink
 export bcyan='569c9b'      # dusty teal
 export bwhite='f1decb'     # soft cream
 
-export wallpaper='$HOME/.config/themes/wallpapers/codecourse.jpg'
-
 # For nautilus and cursor
 export cursor='catppuccin-mocha-blue-cursors'
 export size='20'
@@ -35,3 +33,5 @@ export name='blue'
 
 # For waybar and wlogout
 export background_rgb_str=$($HOME/.config/scripts/hex_to_rgb.sh "$background")
+
+export wallpaper='$HOME/.config/themes/wallpapers/codecourse.jpg'

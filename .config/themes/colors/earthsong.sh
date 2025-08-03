@@ -2,10 +2,9 @@
 export opacity='0.6'
 
 export background='282421'
-export backerground='000000'
 export foreground='ebd1b7'
 export main='db784d'
-export highlight='FF5C00'    # very hot
+export highlight='FF5C00'
 
 export black='1a1a1a'     # dark neutral black
 export red='ba0e2e'       # strong true red (kept)

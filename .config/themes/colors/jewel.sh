@@ -1,13 +1,10 @@
 #!/bin/sh
 export opacity='0.6'
 
-export background='2b282b'      # Waybar, kitty, nautilus
-export foreground='c0ccdb'      # Waybar, kitty, wofi, nautilus
-export main='9c27b0'            # hyprland, Waybar, wofi, nautilus
-
-#export highlight='BA3EDD' 
+export background='2b282b'     
+export foreground='c0ccdb'      
+export main='9c27b0'            
 export highlight='C34AEE'
-#export highlight='D05CFF' 
 
 export black='1a1a1a'     # dark neutral black
 export red='ba0e2e'       # strong true red (kept)

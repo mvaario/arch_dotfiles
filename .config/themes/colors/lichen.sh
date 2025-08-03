@@ -4,9 +4,7 @@ export opacity='0.6'
 export background='11181f'
 export foreground='9cadbc'
 export main='1a9d6b'
-
 export highlight='29E199'
-#export highlight='53DBA0'
 
 export black='1a1a1a'     # dark neutral black
 export red='ba0e2e'       # strong true red (kept)
@@ -26,8 +24,6 @@ export bmagenta='b56a8d'   # soft wine/pink
 export bcyan='569c9b'      # dusty teal
 export bwhite='f1decb'     # soft cream
 
-export wallpaper='$HOME/.config/themes/wallpapers/lichen.jpg'
-
 # For nautilus and cursor
 export cursor='catppuccin-mocha-green-cursors'
 export size='20'
@@ -37,3 +33,5 @@ export name='green'
 
 # For waybar and wlogout
 export background_rgb_str=$($HOME/.config/scripts/hex_to_rgb.sh "$background")
+
+export wallpaper='$HOME/.config/themes/wallpapers/lichen.jpg'

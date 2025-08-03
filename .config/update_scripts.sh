@@ -9,10 +9,10 @@ echo "-------------------------------"
 sudo -v
 
 echo "🔄 Updating official packages..."
-sudo yay -Syu
+yay -Syu --noconfirm --answerdiff None --answerclean None
 
 echo "🧹 Removing orphan packages..."
-sudo pacman -Rns $(pacman -Qdtq) || echo "No orphans to remove."
+sudo pacman -Rns --noconfirm $(pacman -Qdtq) 2>/dev/null || echo "No orphans to remove."
 
 echo "🗑️ Clearing pacman cache (keep 3 versions)..."
 sudo paccache -r -k3

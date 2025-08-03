@@ -2,14 +2,9 @@
 export opacity='0.6'
 
 export background='1d1a1a'
-export backerground='000000'
 export foreground='ffffff'
 export main='3d8e91'
-
 export highlight='4FCED4'
-#export highlight='2FF5FF'
-#export highlight='5CB8BA'
-#export highlight='40A1C4'
 
 export black='1a1a1a'     # dark neutral black
 export red='ba0e2e'       # strong true red (kept)
@@ -29,8 +24,6 @@ export bmagenta='b56a8d'   # soft wine/pink
 export bcyan='569c9b'      # dusty teal
 export bwhite='f1decb'     # soft cream
 
-export wallpaper='$HOME/.config/themes/wallpapers/bold.png'
-
 # For nautilus and cursor
 export cursor='catppuccin-mocha-teal-cursors'
 export size='20'
@@ -40,3 +33,5 @@ export name='cyan'
 
 # For waybar and wlogout
 export background_rgb_str=$($HOME/.config/scripts/hex_to_rgb.sh "$background")
+
+export wallpaper='$HOME/.config/themes/wallpapers/bold.png'
