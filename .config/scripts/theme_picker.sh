@@ -6,12 +6,14 @@ if pgrep -x wofi > /dev/null 2>&1; then
     exit 0
 fi
 
+#Remove cache so orders works
+rm ~/.cache/wofi-dmenu
+
 WALL_DIR="$HOME/.config/themes/wallpapers"
 COLOR_DIR="$HOME/.config/themes/colors"
 APPLY_SCRIPT="$HOME/.config/scripts/apply_theme.sh"
 
 list=""
-
 # Build list of theme entries
 for theme in "$COLOR_DIR"/*.sh; do
     filename=$(basename "$theme")

@@ -9,6 +9,7 @@ term=kitty
 hide_scroll=true
 insensitive=true
 prompt=
+sort_order=none
 
 columns=3
 image_size=150
