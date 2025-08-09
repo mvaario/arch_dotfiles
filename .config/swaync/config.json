@@ -1,0 +1,98 @@
+{
+    "positionX": "right",
+    "positionY": "top",
+    "cssPriority": "user",
+        
+    "layer": "overlay",
+    "control-center-layer": "top",
+    "layer-shell": true,
+    "layer-shell-cover-screen": false,
+
+    "control-center-width": 400,
+    "control-center-height": 850,
+    "control-center-margin-top": 10,
+    "control-center-margin-bottom": 10,
+    "control-center-margin-right": 10,
+    "control-center-margin-left": 0,
+
+    "notification-window-width": 380,
+    "notification-icon-size": 50,
+    "notification-body-image-height": 200,
+    "notification-body-image-width": 200,
+
+    "timeout": 8,
+    "timeout-low": 6,
+    "timeout-critical": 0,
+ 
+    "fit-to-screen": false,
+    "keyboard-shortcuts": true,
+    "image-visibility": "when-available",
+    "transition-time": 150,
+    "hide-on-clear": true,
+    "hide-on-action": true,
+    "text-empty": "No Notifications",
+    "script-fail-notify": true,
+    "notification-visibility": {
+        "example-name": {
+            "state": "muted",
+            "urgency": "Low",
+            "app-name": "Spotify"
+        }
+    },
+    "widgets": [
+        "buttons-grid",
+        "title",
+        "notifications"
+    ],
+    "widget-config": {
+        "title": {
+            "text": "Notifications Center",
+            "clear-all-button": true,
+            "button-text": " 󰆴 "
+        },
+        "buttons-grid": {
+            "actions": [
+                {
+                    "type": "toggle",
+                    "command": "sh -c 'if mullvad status | grep \"Connected\" > /dev/null; then mullvad disconnect; else mullvad connect; fi'",
+                    "update-command": "sh -c 'mullvad status | grep \"Connected\" > /dev/null && echo true || echo false'",
+                    "active": false,
+                    "label": ""
+                },
+                {
+                    "label": " ",
+                    "type": "toggle",
+                    "active": false,
+                    "command": "sh -c '[[ $SWAYNC_TOGGLE_STATE == true ]] && pactl set-source-mute @DEFAULT_SOURCE@ 1 || pactl set-source-mute @DEFAULT_SOURCE@ 0'",
+                    "update-command": "sh -c '[[ $(pactl get-source-mute @DEFAULT_SOURCE@) == *yes* ]] && echo true || echo false'"
+                },
+                {
+                    "label": " ",
+                    "type": "toggle",
+                    "active": false,
+                    "command": "sh -c '[[ $SWAYNC_TOGGLE_STATE == true ]] && pactl set-sink-mute @DEFAULT_SINK@ 1 || pactl set-sink-mute @DEFAULT_SINK@ 0'",
+                    "update-command": "sh -c '[[ $(pactl get-sink-mute @DEFAULT_SINK@) == *yes* ]] && echo true || echo false'"
+                },
+                {
+                    "label": " ",
+                    "type": "normal",
+                    "active": false,
+                    "command": "~/.config/scripts/theme_picker.sh"
+                },
+                {
+                    "label": " ",
+                    "type": "normal",
+                    "active": false,
+                    "command": "kitty -e ~/.config/update_script.sh"
+                },
+                {
+                    "label": " ",
+                    "type": "toggle",
+                    "active": false,
+                    "command": "~/.config/scripts/toggle_float.sh",
+                    "update-command": "grep -q '^on$' ~/.config/hypr/float_state_temp && echo true || echo false"
+                }
+            ]
+        }
+    }
+}

@@ -10,7 +10,7 @@ hide_scroll=true
 insensitive=true
 prompt=
 sort_order=none
-
 columns=3
-image_size=150
+image_size=200
 print_command=false
+hide_search=true

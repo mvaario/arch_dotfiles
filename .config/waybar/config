@@ -22,10 +22,10 @@
     "tray",
     "pulseaudio",
     "custom/keylock",
-    "custom/theme",
     "custom/razer",
-    "custom/power",
-    "custom/notification"
+    "custom/notification",
+    "custom/power"
+    
   ],
   "hyprland/workspaces": {
     "format": "{id}",
@@ -78,7 +78,7 @@
   },
   "pulseaudio": {
     "format": "{icon}{volume}%",
-    "format-muted": "  muted",
+    "format-muted": " 0%",
     "format-icons": {
       "headphone": "",
       "default": [" ", " ", " "]
@@ -92,7 +92,7 @@
   },
   "custom/notification": {
     "escape": true,
-    "exec": "swaync-client -swb",
+    "exec": "while true; do swaync-client -swb || sleep 1; done",
     "exec-if": "which swaync-client",
     "format": "{icon}",
     "format-icons": {
@@ -109,11 +109,6 @@
     "interval": 1,
     "return-type": "json",
     "on-click": "~/.config/scripts/toggle_keylock.sh"
-  },
-  "custom/theme": {
-    "format": "",
-    "tooltip": false,
-    "on-click": "~/.config/scripts/theme_picker.sh"
   },
   "custom/razer": {
     "icon-size": 18,

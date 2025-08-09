@@ -18,18 +18,33 @@ list=""
 for theme in "$COLOR_DIR"/*.sh; do
     filename=$(basename "$theme")
     name="${filename%.sh}"
-    wall="$WALL_DIR/$name.jpg"
-    [ ! -f "$wall" ] && wall="$WALL_DIR/$name.png"
+
+    wall=$(find "$WALL_DIR" -type f \( -iname "$name.jpg" -o -iname "$name.png" \) | head -n 1)
     [ ! -f "$wall" ] && continue
 
-    list+=$'img:'"$wall"$':text:'"$filename"$'\n'
+    list+=$'img:'"$wall"$'\n'
 done
 
-# Show list with wofi
-selected=$(echo -e "$list" | wofi --dmenu --conf="$HOME/.config/wofi/theme_config")
+# Wofi select list
+#selected=$(echo -e "$list" | wofi --dmenu --conf="$HOME/.config/wofi/theme_config")
 
-# Extract script filename (after :text:)
-theme_file=$(echo "$selected" | sed 's|.*:text:||')
+# run wofi and wirete temp file
+~/.config/scripts/wofi.sh theme_selection "$list"
 
-# Run apply script with filename (e.g., earthsong.sh)
-[ -n "$theme_file" ] && exec "$APPLY_SCRIPT" "$theme_file"
+# read them file
+selected=$(<~/.config/wofi/temp.txt)
+rm ~/.config/wofi/temp.txt
+
+if [[ -n "$selected" ]]; then
+    # get the name
+    theme_file=$(basename "$selected" | sed 's/\.[^.]*$//')
+
+    # Run apply script with filename
+    [ -n "$theme_file" ] && exec "$APPLY_SCRIPT" "$theme_file.sh"
+    
+fi
+
+
+
+
+

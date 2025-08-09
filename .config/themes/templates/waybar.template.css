@@ -39,7 +39,7 @@ window#waybar {
 #custom-notification,
 #custom-keylock,
 #custom-razer,
-#custom-theme,
+#custom-settings,
 #cpu,
 #memory,
 #tray,
@@ -64,7 +64,7 @@ window#waybar.empty #window {
 }
 
 #pulseaudio.muted {
-  color: #282421;
+  color: #%red%;
 }
 
 #custom-logo {

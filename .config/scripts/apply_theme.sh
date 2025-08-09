@@ -20,19 +20,18 @@ alpha_hex=$("$hexopacity" "$opacity")
 
 # List of template files and their destination
 declare -A files=(
-    #["$HOME/Documents/projects/rice_configs/chrome/userChrome.css.template"]="$HOME/.mozilla/firefox/3j5wjipw.new-default/chrome/userChrome.css"
-    ["$HOME/.config/themes/templates/wofi.template.conf"]="$HOME/.config/wofi/style.css"
-    ["$HOME/.config/themes/templates/hyprlock.template.conf"]="$HOME/.config/hypr/hyprlock.conf"
-    ["$HOME/.config/themes/templates/hyprpaper.template.conf"]="$HOME/.config/hypr/hyprpaper.conf"
-    ["$HOME/.config/themes/templates/kitty.template.conf"]="$HOME/.config/kitty/colors.conf"
-    ["$HOME/.config/themes/templates/waybar.template.css"]="$HOME/.config/waybar/style.css"
     ["$HOME/.config/themes/templates/hyprland.template.conf"]="$HOME/.config/hypr/colors_temp.conf"
+    ["$HOME/.config/themes/templates/hyprpaper.template.conf"]="$HOME/.config/hypr/hyprpaper.conf"
+    ["$HOME/.config/themes/templates/hyprlock.template.conf"]="$HOME/.config/hypr/hyprlock.conf"
+    ["$HOME/.config/themes/templates/waybar.template.css"]="$HOME/.config/waybar/style.css"
+    ["$HOME/.config/themes/templates/kitty.template.conf"]="$HOME/.config/kitty/colors.conf"
+    ["$HOME/.config/themes/templates/wofi.template.conf"]="$HOME/.config/wofi/style.css"
+    ["$HOME/.config/themes/templates/swaync_style.template.css"]="$HOME/.config/swaync/style.css"
     ["$HOME/.config/themes/templates/fastfetch.template.conf"]="$HOME/.config/fastfetch/colors.conf"
     ["$HOME/.config/themes/templates/fastfetch_config.template.jsonc"]="$HOME/.config/fastfetch/config.jsonc"
     ["$HOME/.config/themes/templates/windows.template.conf"]="$HOME/.config/hypr/conf/window_theme.conf"
     ["$HOME/.config/themes/templates/gtk-4.template.css"]="$HOME/.config/gtk-4.0/gtk.css"
     ["$HOME/.config/themes/templates/zen_browser.template.js"]="$HOME/.zen/nt0xto0c.Default (release)/user.js"
-    #["$HOME/.config/themes/templates/startup_theme.template.conf"]="$HOME/.config/hypr/conf/startup_theme.conf"
 )
 
 # Loop through the files and apply the theme
@@ -90,6 +89,7 @@ pkill hyprpaper
 sleep 0.5
 hyprctl reload
 
+swaync-client -rs
 hyprpaper &
 waybar &
 

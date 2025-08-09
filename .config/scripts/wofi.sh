@@ -6,15 +6,22 @@ if pgrep -x wofi > /dev/null 2>&1; then
     exit
 fi
 
-
-# Build Wofi command
-if [[ $# -gt 0 ]]; then
-    wofi --show drun -y 10 -x 10 &
-else
+# wofi window positionS
+case "$1" in
+    menu)
+        wofi --show drun -y 10 -x 10 &
+        ;;
+    theme_selection)
+        printf '%s\n' "$2" | wofi --show dmenu --conf="$HOME/.config/wofi/theme_config" > ~/.config/wofi/temp.txt &
+        #little more time for loading themes
+        sleep 0.5
+        ;;
+    *)
     wofi --show drun &
-fi
+    ;;
+esac
 
-#save if
+#save pid
 wofi_pid=$!
 
 # keyboard temp flag
@@ -24,7 +31,7 @@ echo "false" > "$key_flag_file"
 libinput debug-events --device /dev/input/event2 | while read -r line; do
     if echo "$line" | grep -q "KEY.*pressed"; then
         echo "true" > "$key_flag_file"
-        echo "keyboard pressed"
+        #echo "keyboard pressed"
     fi
 done &
 keyboard_pid=$!
@@ -33,10 +40,10 @@ keyboard_pid=$!
 mouse_flag_file="$HOME/.config/wofi/wofi_mouse_flag"
 echo "false" > "$mouse_flag_file"
 # check mouse inputs
-libinput debug-events --device /dev/input/event8 | while read -r line; do
+libinput debug-events --device /dev/input/event4 | while read -r line; do
     if echo "$line" | grep -q "BTN_LEFT.*pressed"; then
         echo "true" > "$mouse_flag_file"
-        echo "right click pressed"
+        #echo "right click pressed"
     fi
 done &
 mouse_pid=$!
@@ -70,15 +77,21 @@ while true; do
         mouse_flag="false"
     fi
 
-
     # reset time
     if [[ "$key_flag" == "true" ]]; then
         outside_start=0
         echo "false" > "$key_flag_file"
     fi
 
+    # if theme is selected
+    if [["$1" == "theme_selection" ]]; then
+        if [[ -s ~/.config/wofi/temp.txt ]]; then
+            sleep 0.2
+            break
+        fi
+    fi
 
-    # if cursor inside wofi
+    # if cursor outside wofi
     if (( cx < x || cx > x2 || cy < y || cy > y2 )); then
         if (( outside_start == 0 )); then
             outside_start=$(date +%s%3N)
@@ -89,9 +102,6 @@ while true; do
             echo "$elapsed"
             #
             if (( elapsed >= 1000 )) || [[ "$mouse_flag" == "true" ]]; then
-                kill "$wofi_pid"
-                kill "$keyboard_pid"  2>/dev/null
-                kill "$mouse_pid" 2>/dev/null
                 break
             fi
 
@@ -99,9 +109,7 @@ while true; do
     else
         outside_start=0
     fi
-
-
 done
 kill "$wofi_pid"
-kill "$keyboard_pid"  2>/dev/null
-kill "$mouse_pid" 2>/dev/null
+kill "$keyboard_pid"
+kill "$mouse_pid"

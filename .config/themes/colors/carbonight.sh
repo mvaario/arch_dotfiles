@@ -27,7 +27,7 @@ export bwhite='f1decb'     # soft cream
 # For nautilus and cursor
 export cursor='catppuccin-mocha-dark-cursors'
 export size='20'
-export nautilus='Orchis-Dark-Nord'
+export nautilus='Orchis-Grey-Dark-Nord'
 export icons='black'
 export name='black'
 

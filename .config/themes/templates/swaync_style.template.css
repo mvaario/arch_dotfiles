@@ -1,0 +1,202 @@
+* {
+    outline: none;
+    font-family: "Adwaita Sans";
+    font-size: 18px;
+    text-shadow: none;
+    color: #cdd6f4;
+    background-color: transparent;
+    background: transparent;
+}
+
+.control-center {
+    background-color: alpha(#%background%, %opacity%);
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.65);
+    padding: 5px;
+    border: 1px solid #%main%;
+}
+
+.control-center .notification-row .notification-background {
+    border-radius: 15px;
+    margin-top: 5px;
+}
+
+.notification {
+    background-color: alpha(#%background%, %opacity%);
+}
+
+.notification > *:last-child > *  {
+    margin: 5px;
+}
+
+.summary { font-size: 1.1rem; }
+.time { font-size: 0.8rem; }
+.body { font-size: 1rem; }
+
+.notification-content {
+    padding: 15px 10px 10px 20px;
+}
+
+.notification-action > button {
+    padding: unset;
+    margin: unset;
+}
+.notification-action > label {
+    font-size: 1rem;
+    font-weight: normal;
+}
+
+.notification.critical {
+    background-color: alpha(#%red%, 0.5);
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.65);
+}
+.notification.low,
+.notification.normal  {
+    background-color: alpha(#%background%, %opacity%);
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.65);
+}
+
+.close-button {
+    background-color: alpha(#45475a, 0.8);
+    box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.35);
+}
+.close-button:hover {
+    background-color: alpha(#f38ba8, 0.8);
+}
+
+.notification-group-header,
+.notification-group-icon {
+    font-size: 0.9rem;
+}
+
+.notification-group-collapse-button,
+.notification-group-close-all-button {
+    box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.35);
+    background-color: #45475a;
+}
+
+.notification-group-collapse-button:hover {
+    background-color: alpha(#%main%, 0.8);
+}
+.notification-group-close-all-button:hover {
+    background-color: alpha(#f38ba8, 0.8);
+}
+
+trough highlight {
+    background: #%main%;
+}
+scale trough {
+    margin: 0rem 1rem;
+    background-color: #45475a;
+    min-height: 8px;
+    min-width: 70px;
+}
+slider {
+    background-color: #cdd6f4;
+}
+tooltip {
+    background-color: #45475a;
+}
+
+/*** Widgets ***/
+/* Buttons widget */
+.widget-buttons-grid {
+    font-size: 1rem;
+    padding: 20px 20px 10px;
+    margin: unset;
+}
+.widget-buttons-grid > flowbox > flowboxchild > button {
+    background: #45475a;
+    box-shadow: 0px 0px 10px alpha(#%background%, %opacity%);
+    border-radius: 12px;
+    min-width: 80px;
+    min-height: 30px;
+    padding: 6px;
+    margin: 0 0 0;
+    transition: all .5s ease;
+}
+.widget-buttons-grid > flowbox > flowboxchild > button:hover {
+    background: #585b70;
+}
+.widget-buttons-grid > flowbox > flowboxchild > button.toggle:checked {
+    background: #%main%;
+}
+.widget-buttons-grid > flowbox > flowboxchild > button.toggle:checked:hover {
+    background: alpha(#%main%, 0.8);
+}
+
+/* Mpris widget */
+@define-color mpris-album-art-overlay rgba(0, 0, 0, 0.55);
+@define-color mpris-button-hover rgba(0, 0, 0, 0.5);
+
+.widget-mpris .widget-mpris-player {
+    padding: 16px;
+    margin: 16px 20px;
+    background-color: @mpris-album-art-overlay;
+    border-radius: 12px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.65);
+}
+.widget-mpris .widget-mpris-player .widget-mpris-album-art {
+    border-radius: 12px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.65);
+}
+.widget-mpris .widget-mpris-player .widget-mpris-title {
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin: 0px 8px 8px 8px;
+}
+.widget-mpris .widget-mpris-player .widget-mpris-subtitle {
+    font-size: 1rem;
+}
+.widget-mpris .widget-mpris-player > box > button:hover {
+    background-color: @mpris-button-hover;
+}
+.widget-mpris > box > button:hover {
+    background: alpha(#585b70, 0.6);
+}
+
+/* Volume widget */
+.widget-volume {
+    padding: 6px 5px 5px 5px;
+    margin: unset;
+    font-size: 1.3rem;
+}
+.widget-volume > box > button {
+    border: none;
+}
+.per-app-volume {
+    padding: 4px 8px 8px 8px;
+    margin: 0px 8px 8px 8px;
+}
+
+/* Backlight widget */
+.widget-backlight {
+    padding: 0 0 3px 16px;
+    margin: unset;
+    font-size: 1.1rem;
+}
+
+/* Title widget */
+.widget-title {
+    padding: unset;
+    margin: unset;
+    font-weight: bold;
+    padding: 15px;
+}
+.widget-title > label {
+    font-size: 1.5rem;
+}
+.widget-title > button {
+    padding:unset;
+    margin:unset;
+    text-shadow: none;
+    background: #%red%;
+    border: none;
+    box-shadow: none;
+    border-radius: 100px;
+    padding:0px 6px;
+    transition: all .7s ease;
+}
+.widget-title > button:hover {
+    background: alpha(#%background%, %opacity%);
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.65);
+}
