@@ -84,7 +84,7 @@ while true; do
     fi
 
     # if theme is selected
-    if [["$1" == "theme_selection" ]]; then
+    if [[ "$1" == "theme_selection" ]]; then
         if [[ -s ~/.config/wofi/temp.txt ]]; then
             sleep 0.2
             break

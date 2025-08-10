@@ -1,8 +1,21 @@
 #!/bin/bash
 # Apply selected theme to different moduls
-# Script called be theme_picker
-THEME_FILE="$HOME/.config/themes/colors/$1"
+# Script called by theme_picker
+# Optional: log to check value
+# Source environment files to get HYPRLAND_INSTANCE_SIGNATURE and others
 
+source ~/.profile
+source ~/.bashrc
+export HYPRLAND_INSTANCE_SIGNATURE="${HYPRLAND_INSTANCE_SIGNATURE:-$(cat ~/.hyprland_signature 2>/dev/null)}"
+
+echo "HYPRLAND_INSTANCE_SIGNATURE is: $HYPRLAND_INSTANCE_SIGNATURE"
+
+# Ensure lock file is deleted on script exit or interruption
+LOCKFILE="$HOME/.config/scripts/theme_switch.lock"
+trap 'rm -f "$LOCKFILE"; exit' INT TERM EXIT
+
+#-------------------------------------------------
+THEME_FILE="$HOME/.config/themes/colors/$1"
 echo $THEME_FILE
 
 if [ ! -f "$THEME_FILE" ]; then
@@ -29,6 +42,7 @@ declare -A files=(
     ["$HOME/.config/themes/templates/swaync_style.template.css"]="$HOME/.config/swaync/style.css"
     ["$HOME/.config/themes/templates/fastfetch.template.conf"]="$HOME/.config/fastfetch/colors.conf"
     ["$HOME/.config/themes/templates/fastfetch_config.template.jsonc"]="$HOME/.config/fastfetch/config.jsonc"
+    ["$HOME/.config/themes/templates/btop_style.template.theme"]="$HOME/.config/btop/themes/btop_style.theme"
     ["$HOME/.config/themes/templates/windows.template.conf"]="$HOME/.config/hypr/conf/window_theme.conf"
     ["$HOME/.config/themes/templates/gtk-4.template.css"]="$HOME/.config/gtk-4.0/gtk.css"
     ["$HOME/.config/themes/templates/zen_browser.template.js"]="$HOME/.zen/nt0xto0c.Default (release)/user.js"
@@ -76,22 +90,26 @@ mv "$HOME/.config/hypr/colors_temp.conf" "$HOME/.config/hypr/colors.conf"
 echo "✅ Hyprland done"
 
 hyprctl setcursor $cursor $size
+
 gsettings set org.gnome.desktop.interface cursor-theme $cursor
 gsettings set org.gnome.desktop.interface cursor-size $size
 echo "✅ Cursor changes"
 
 gsettings set org.gnome.desktop.interface gtk-theme $nautilus
+
 echo "✅ Nautilus changes"
 
 pkill nautilus
-pkill waybar
+pkill swaync
 pkill hyprpaper
-sleep 0.5
+pkill waybar
 hyprctl reload
+sleep 0.5
 
-swaync-client -rs
-hyprpaper &
+swaync &
 waybar &
+hyprpaper &
+
 
 # Make blurred background for wlogout
 python3 $HOME/.config/scripts/blur_wallpaper.py $wallpaper $background_rgb_str
@@ -101,5 +119,9 @@ echo "✅ wlogout wallpaper done"
 # Changes folder theme (takes a while....)
 /usr/bin/papirus-folders -C $icons --theme Papirus-Dark >> /tmp/papirus.log 2>&1
 echo "✅ Folder theme changes"
+
+# Remove lock file
+rm -f "$LOCKFILE"
+trap - INT TERM EXIT
 
 echo "✅ all done"

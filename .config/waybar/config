@@ -92,15 +92,8 @@
   },
   "custom/notification": {
     "escape": true,
-    "exec": "while true; do swaync-client -swb || sleep 1; done",
-    "exec-if": "which swaync-client",
-    "format": "{icon}",
-    "format-icons": {
-      "none": "󰅺",
-      "notification": "󰡟"
-    },
-    "on-click": "sleep 0.1 && swaync-client -t -sw",
-    "return-type": "json",
+    "format": "󰅺",
+    "on-click": "swaync-client -t",
     "tooltip": false
   },
   "custom/keylock": {

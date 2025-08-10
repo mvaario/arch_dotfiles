@@ -1,0 +1,89 @@
+# Main background, empty for terminal default, need to be empty if you want transparent background
+theme[main_bg]="#000000"
+
+# Main text color
+theme[main_fg]="#%foreground%"
+
+# Title color for boxes
+theme[title]="#%foreground%"
+
+# Highlight color for keyboard shortcuts
+theme[hi_fg]="#%highlight%"
+
+# Background color of selected item in processes box
+theme[selected_bg]="#%main%"
+
+# Foreground color of selected item in processes box
+theme[selected_fg]="#%background%"
+
+# Color of inactive/disabled text
+theme[inactive_fg]="#%bblack%"
+
+# Color of text appearing on top of graphs, i.e uptime and current network graph scaling
+theme[graph_text]="#%foreground%"
+
+# Background color of the percentage meters
+theme[meter_bg]="#%background%"
+
+# Misc colors for processes box including mini cpu graphs, details memory graph and details status text
+theme[proc_misc]="#%highlight%"
+
+# Cpu box outline color
+theme[cpu_box]="#%main%"
+
+# Memory/disks box outline color
+theme[mem_box]="#%main%"
+
+# Net up/down box outline color
+theme[net_box]="#%main%"
+
+# Processes box outline color
+theme[proc_box]="#%main%"
+
+# Box divider line and small boxes line color
+theme[div_line]="#%main%"
+
+# Temperature graph colors
+theme[temp_start]="#%highlight%"
+theme[temp_mid]="#%main%"
+theme[temp_end]="#%red%"
+
+# CPU graph colors
+theme[cpu_start]="#%highlight%"
+theme[cpu_mid]="#%main%"
+theme[cpu_end]="#%red%"
+
+# Mem/Disk free meter
+theme[free_start]="#%highlight%"
+theme[free_mid]="#%main%"
+theme[free_end]="#%red%"
+
+# Mem/Disk cached meter
+theme[cached_start]="#%highlight%"
+theme[cached_mid]="#%main%"
+theme[cached_end]="#%red%"
+
+# Mem/Disk available meter
+theme[available_start]="#%highlight%"
+theme[available_mid]="#%main%"
+theme[available_end]="#%red%"
+
+# Mem/Disk used meter
+theme[used_start]="#%highlight%"
+theme[used_mid]="#%main%"
+theme[used_end]="#%red%"
+
+# Download graph colors
+theme[download_start]="#%highlight%"
+theme[download_mid]="#%main%"
+theme[download_end]="#%red%"
+
+# Upload graph colors
+theme[upload_start]="#%highlight%"
+theme[upload_mid]="#%main%"
+theme[upload_end]="#%red%"
+
+# Process box color gradient for threads, mem and cpu usage
+theme[process_start]="#%highlight%"
+theme[process_mid]="#%main%"
+theme[process_end]="#%red%"

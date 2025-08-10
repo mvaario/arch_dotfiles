@@ -75,15 +75,16 @@
                 },
                 {
                     "label": " ",
-                    "type": "normal",
+                    "type": "toggle",
                     "active": false,
-                    "command": "~/.config/scripts/theme_picker.sh"
+                    "command": "swaync-client -cp && nohup ~/.config/scripts/theme_picker.sh >/dev/null 2>&1 &",
+                    "update-command": "[ -f ~/.config/scripts/theme_switch.lock ] && echo true || echo false"
                 },
                 {
                     "label": " ",
                     "type": "normal",
                     "active": false,
-                    "command": "kitty -e ~/.config/update_script.sh"
+                    "command": "swaync-client -cp && kitty -e ~/.config/update_script.sh"
                 },
                 {
                     "label": " ",

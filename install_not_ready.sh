@@ -4,6 +4,9 @@ set -e
 # Edit these if nvidia or razer is used
 nvidia=false
 razer=false
+optional_softwares=false
+gitkraken=false
+
 
 #------------------------------------------------------------------------
 # Ask for sudo password upfront
@@ -20,6 +23,7 @@ fi
     kill -0 "$$" || exit
   done
 ) 2>/dev/null &
+
 
 #------------------------------------------------------------------------
 echo " "
@@ -39,6 +43,7 @@ in_multilib && /^\s*\[/ { in_multilib = 0 }
 ' /etc/pacman.conf | sudo tee /etc/pacman.conf.tmp > /dev/null
 sudo mv /etc/pacman.conf.tmp /etc/pacman.conf
 
+
 #------------------------------------------------------------------------
 echo " "
 echo "🔄 Updating system"
@@ -52,59 +57,53 @@ if ! command -v yay &> /dev/null; then
     cd -
 fi
 
+
 #------------------------------------------------------------------------
 echo " "
 echo "🚀 Downloading packages..."
 PACKAGES=(
-    git
-    neovim
-    code
-    hyprpolkitagent
-    ufw
-    pacman-contrib
+	git
+	neovim
+	code
+	hyprpolkitagent
+	ufw
+	pacman-contrib
 
-    noto-fonts
-    noto-fonts-emoji
-    ttf-dejavu
-    ttf-liberation
-    ttf-roboto
-    noto-fonts-cjk
-    papirus-icon-theme
+	noto-fonts
+	noto-fonts-emoji
+	ttf-dejavu
+	ttf-liberation
+	ttf-roboto
+	noto-fonts-cjk
+	papirus-icon-theme
 
-    pipewire
-    pipewire-alsa
-    pipewire-audio
-    pipewire-pulse
-    lib32-libpipewire
-    lib32-pipewire
-    pavucontrol
-    linux-headers
+	pipewire
+	pipewire-alsa
+	pipewire-audio
+	pipewire-pulse
+	lib32-libpipewire
+	lib32-pipewire
+	pavucontrol
+	linux-headers
 
-    kitty
-    waybar
-    hyprland
-    hyprpaper
-    hyprlock
-    hyprsunset
-    wofi
-    nautilus
-    starship
-    fastfetch
-    
-    lact
-    gnome-disk-utility
-    celluloid
-    steam
-    discord
-    lutris
-    gamemode
-    openrgb
+	kitty
+	waybar
+	hyprland
+	hyprpaper
+	hyprlock
+	hyprsunset
+	wofi
+	nautilus
+	swaync
+	starship
+	fastfetch
+	btop
 
+	gnome-disk-utility
 	mousepad
 	meld
 
-    cpupower
-    
+	cpupower
 )
 
 # Package installation loop
@@ -120,16 +119,17 @@ for pkg in "${PACKAGES[@]}"; do
     fi
 done
 
+
 #------------------------------------------------------------------------
 echo " "
 echo "📦 Downloading AUR packages..."
 
 AUR_PACKAGES=(
 	wlogout
-    papirus-folders
-    ttf-jetbrains-mono-nerd
-    nautilus-open-any-terminal
-    catppuccin-cursors-mocha
+	papirus-folders
+	ttf-jetbrains-mono-nerd
+	nautilus-open-any-terminal
+	catppuccin-cursors-mocha
 )
 
 for aur_pkg in "${AUR_PACKAGES[@]}"; do
@@ -144,6 +144,7 @@ for aur_pkg in "${AUR_PACKAGES[@]}"; do
 	fi
 done
 
+
 #------------------------------------------------------------------------
 # Setup nvidia
 if $nvidia; then
@@ -154,6 +155,12 @@ fi
 if $razer; then
 	scripts/razer.sh
 fi
+
+# Setup optional softwares
+if $optional_softwares; then
+	scripts/optional_softwares.sh $gitkraken
+fi
+
 
 #------------------------------------------------------------------------
 # Get user
@@ -190,37 +197,6 @@ EOF
 	rm /tmp/zen-latest.tar.xz
 fi
 
-#------------------------------------------------------------------------
-if [ ! -f ~/.local/opt/gitkraken/gitkraken ]; then
-	echo " "
-	echo "📥 Installing latest GitKranker..."
-	mkdir ~/.local/opt/gitkraken
-
-	# Download the latest version
-	curl -L https://release.gitkraken.com/linux/gitkraken-amd64.tar.gz -o /tmp/gitkraken.tar.gz
-
-	# Extract
-	tar -xzf /tmp/gitkraken.tar.gz -C ~/.local/opt/gitkraken --strip-components=1
-	
-	# Create desktop entry for wofi
-	cat > ~/.local/share/applications/gitkraken.desktop <<EOF
-[Desktop Entry]
-Version=1.0
-Type=Application
-Name=GitKraken
-Exec=/home/$USER/.local/opt/gitkraken/gitkraken
-Icon=/home/$USER/.local/opt/gitkraken/gitkraken.png	
-Terminal=false
-Categories=Development;Git;
-EOF
-
-	chmod +x ~/.local/share/applications/gitkraken.desktop
-	update-desktop-database ~/.local/share/applications/
-
-	# Delete temp file
-	rm /tmp/gitkraken.tar.gz
-
-fi
 
 #------------------------------------------------------------------------
 if [ ! -d "$HOME/.themes/Orchis-Dark-Nord" ]; then
@@ -235,6 +211,7 @@ fi
 
 echo "✅ All packages installed."
 echo " "
+
 
 #------------------------------------------------------------------------
 # Update HOOKS line
