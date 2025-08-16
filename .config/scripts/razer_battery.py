@@ -10,11 +10,11 @@ def get_battery():
     devices = client.devices
     for device in devices:
         level = device.battery_level
+        # write level to cache (for mice sleep)
         if level is not None and int(level) != 0:
             write_cache_level(level)
         else:
             level = read_cache_level()
-
 
         if level is not None:
             icon = get_icon(level)

@@ -1,20 +1,6 @@
 #!/bin/bash
 # Apply selected theme to different moduls
-# Script called by theme_picker
-# Optional: log to check value
-# Source environment files to get HYPRLAND_INSTANCE_SIGNATURE and others
-
-source ~/.profile
-source ~/.bashrc
-export HYPRLAND_INSTANCE_SIGNATURE="${HYPRLAND_INSTANCE_SIGNATURE:-$(cat ~/.hyprland_signature 2>/dev/null)}"
-
-echo "HYPRLAND_INSTANCE_SIGNATURE is: $HYPRLAND_INSTANCE_SIGNATURE"
-
-# Ensure lock file is deleted on script exit or interruption
-LOCKFILE="$HOME/.config/scripts/theme_switch.lock"
-trap 'rm -f "$LOCKFILE"; exit' INT TERM EXIT
-
-#-------------------------------------------------
+# Script called by theme_picker.sh
 THEME_FILE="$HOME/.config/themes/colors/$1"
 echo $THEME_FILE
 
@@ -23,13 +9,38 @@ if [ ! -f "$THEME_FILE" ]; then
     exit 1
 fi
 
+#-------------------------------------------------
+# make sure script is not running on the background
+LOCKFILE="$HOME/.config/scripts/theme_switch.lock"
+WAIT_TIME=3
+
+while grep -q " False$" "$LOCKFILE"; do
+  echo "Other instance running"
+  echo "Waiting..."
+  sleep 1
+  WAIT_TIME=$((WAIT_TIME - 1))
+  if [ "$WAIT_TIME" -le 0 ]; then
+    echo "Timeout reached, exiting."
+    exit 1
+  fi
+done
+
+# Empty lockfile if 
+echo "" > "$LOCKFILE"
+
+#-------------------------------------------------
+# No idea why this broke now...
+# source ~/.profile
+# source ~/.bashrc
+# export HYPRLAND_INSTANCE_SIGNATURE="${HYPRLAND_INSTANCE_SIGNATURE:-$(cat ~/.hyprland_signature 2>/dev/null)}"
+# echo "HYPRLAND_INSTANCE_SIGNATURE is: $HYPRLAND_INSTANCE_SIGNATURE"
+
 # Source the theme file to load the color variables
 source "$THEME_FILE"
 
 #create hex background with opacity
 hexopacity="$HOME/.config/scripts/hex_opacity.sh"
 alpha_hex=$("$hexopacity" "$opacity")
-
 
 # List of template files and their destination
 declare -A files=(
@@ -85,21 +96,45 @@ for template in "${!files[@]}"; do
         "$template" > "$dest"
 done
 
-#hyprland temp file to not show errors when loading themes
+
+#-------------------------------------------------
+# Load openRGB profile (takes a while....)
+echo "☑️ Changing OpenRGB profile"
+echo "OpenRGB False" >> "$LOCKFILE"
+nohup $HOME/.config/scripts/openrgb_profile.sh "$openrgb" "$LOCKFILE" >/dev/null 2>&1 &
+
+
+#-------------------------------------------------
+# Changes folder theme (takes a while....)
+pkill nautilus
+echo "☑️ Changing folder icons"
+echo "Papirus False" >> "$LOCKFILE"
+$HOME/.config/scripts/papirus_folders.sh "$icons" "$LOCKFILE" &
+
+
+#-------------------------------------------------
+# Make blurred background for wlogout
+echo "wlogout False" >> "$LOCKFILE"
+python3 $HOME/.config/scripts/blur_wallpaper.py "$wallpaper" "$background_rgb_str"
+sed -i "s|^wlogout .*|wlogout True|" "$LOCKFILE"
+echo "✅ wlogout wallpaper done"
+
+
+#-------------------------------------------------
+# Hyprland temp file to not show errors when loading themes
 mv "$HOME/.config/hypr/colors_temp.conf" "$HOME/.config/hypr/colors.conf"
 echo "✅ Hyprland done"
 
-hyprctl setcursor $cursor $size
-
-gsettings set org.gnome.desktop.interface cursor-theme $cursor
-gsettings set org.gnome.desktop.interface cursor-size $size
+hyprctl setcursor "$cursor" "$size"
+gsettings set org.gnome.desktop.interface cursor-theme "$cursor"
+gsettings set org.gnome.desktop.interface cursor-size "$size"
 echo "✅ Cursor changes"
 
-gsettings set org.gnome.desktop.interface gtk-theme $nautilus
-
+gsettings set org.gnome.desktop.interface gtk-theme "$nautilus"
 echo "✅ Nautilus changes"
 
-pkill nautilus
+
+#-------------------------------------------------
 pkill swaync
 pkill hyprpaper
 pkill waybar
@@ -109,19 +144,4 @@ sleep 0.5
 swaync &
 waybar &
 hyprpaper &
-
-
-# Make blurred background for wlogout
-python3 $HOME/.config/scripts/blur_wallpaper.py $wallpaper $background_rgb_str
-echo "✅ wlogout wallpaper done"
-
-
-# Changes folder theme (takes a while....)
-/usr/bin/papirus-folders -C $icons --theme Papirus-Dark >> /tmp/papirus.log 2>&1
-echo "✅ Folder theme changes"
-
-# Remove lock file
-rm -f "$LOCKFILE"
-trap - INT TERM EXIT
-
 echo "✅ all done"

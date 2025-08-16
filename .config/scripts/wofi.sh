@@ -12,9 +12,7 @@ case "$1" in
         wofi --show drun -y 10 -x 10 &
         ;;
     theme_selection)
-        printf '%s\n' "$2" | wofi --show dmenu --conf="$HOME/.config/wofi/theme_config" > ~/.config/wofi/temp.txt &
-        #little more time for loading themes
-        sleep 0.5
+        printf '%s\n' "$2" | wofi --show dmenu --conf="$HOME/.config/wofi/theme_config" > ~/.config/wofi/temp &
         ;;
     *)
     wofi --show drun &
@@ -39,8 +37,8 @@ keyboard_pid=$!
 # mouse temp flag
 mouse_flag_file="$HOME/.config/wofi/wofi_mouse_flag"
 echo "false" > "$mouse_flag_file"
-# check mouse inputs
-libinput debug-events --device /dev/input/event4 | while read -r line; do
+# check mouse inputs (need to be changed since razer id changes all the time....)
+libinput debug-events --device /dev/input/event5 | while read -r line; do
     if echo "$line" | grep -q "BTN_LEFT.*pressed"; then
         echo "true" > "$mouse_flag_file"
         #echo "right click pressed"
@@ -54,7 +52,7 @@ trap 'kill "$keyboard_pid"' EXIT INT TERM
 trap 'kill "$mouse_pid"' EXIT INT TERM
 outside_start=0
 while true; do
-    sleep 0.2
+    sleep 0.1
     # read wofi window position
     read -r x y w h <<< "$(hyprctl layers | grep 'namespace: wofi' | sed -n 's/.*xywh: \([-0-9 ]*\), namespace.*/\1/p')"
     x2=$(( x + w ))
@@ -85,8 +83,7 @@ while true; do
 
     # if theme is selected
     if [[ "$1" == "theme_selection" ]]; then
-        if [[ -s ~/.config/wofi/temp.txt ]]; then
-            sleep 0.2
+        if [[ -s ~/.config/wofi/temp ]]; then
             break
         fi
     fi
@@ -100,7 +97,6 @@ while true; do
             now=$(date +%s%3N)  # current time in milliseconds
             elapsed=$(( now - outside_start ))
             echo "$elapsed"
-            #
             if (( elapsed >= 1000 )) || [[ "$mouse_flag" == "true" ]]; then
                 break
             fi

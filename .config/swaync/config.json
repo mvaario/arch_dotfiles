@@ -53,18 +53,11 @@
         "buttons-grid": {
             "actions": [
                 {
+                    "label": "",
                     "type": "toggle",
+                    "active": false,
                     "command": "sh -c 'if mullvad status | grep \"Connected\" > /dev/null; then mullvad disconnect; else mullvad connect; fi'",
-                    "update-command": "sh -c 'mullvad status | grep \"Connected\" > /dev/null && echo true || echo false'",
-                    "active": false,
-                    "label": ""
-                },
-                {
-                    "label": " ",
-                    "type": "toggle",
-                    "active": false,
-                    "command": "sh -c '[[ $SWAYNC_TOGGLE_STATE == true ]] && pactl set-source-mute @DEFAULT_SOURCE@ 1 || pactl set-source-mute @DEFAULT_SOURCE@ 0'",
-                    "update-command": "sh -c '[[ $(pactl get-source-mute @DEFAULT_SOURCE@) == *yes* ]] && echo true || echo false'"
+                    "update-command": "sh -c 'mullvad status | grep \"Connected\" > /dev/null && echo true || echo false'"
                 },
                 {
                     "label": " ",
@@ -74,17 +67,23 @@
                     "update-command": "sh -c '[[ $(pactl get-sink-mute @DEFAULT_SINK@) == *yes* ]] && echo true || echo false'"
                 },
                 {
-                    "label": " ",
-                    "type": "toggle",
-                    "active": false,
-                    "command": "swaync-client -cp && nohup ~/.config/scripts/theme_picker.sh >/dev/null 2>&1 &",
-                    "update-command": "[ -f ~/.config/scripts/theme_switch.lock ] && echo true || echo false"
-                },
-                {
                     "label": " ",
                     "type": "normal",
                     "active": false,
-                    "command": "swaync-client -cp && kitty -e ~/.config/update_script.sh"
+                    "command": "swaync-client -cp && kitty --hold -e ~/.config/update_script.sh"
+                },
+                {
+                    "label": " ",
+                    "type": "toggle",
+                    "active": false,
+                    "command": "swaync-client -cp && ~/.config/scripts/theme_picker.sh",
+                    "update-command": "[ -f ~/.config/scripts/theme_switch.lock ] && grep -q ' False$' ~/.config/scripts/theme_switch.lock && echo true || echo false"
+                },
+                {
+                    "label": " ",
+                    "type": "normal",
+                    "active": false,
+                    "command": "swaync-client -cp && kitty -e btop"
                 },
                 {
                     "label": " ",

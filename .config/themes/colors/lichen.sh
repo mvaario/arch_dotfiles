@@ -35,3 +35,6 @@ export name='green'
 export background_rgb_str=$($HOME/.config/scripts/hex_to_rgb.sh "$background")
 
 export wallpaper='$HOME/.config/themes/wallpapers/lichen.jpg'
+
+#openrgb profile
+export openrgb="openrgb_orange"

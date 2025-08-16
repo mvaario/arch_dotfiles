@@ -12,6 +12,7 @@ else
     width=$(echo "$win_info" | jq -r '.size[0]')
     height=$(echo "$win_info" | jq -r '.size[1]')
 
+
     max_width=1280
     max_height=720
 
@@ -23,7 +24,6 @@ else
         height=$max_height
     fi
 
-    sleep 0.02
     hyprctl dispatch resizeactive exact $width $height
 
 fi

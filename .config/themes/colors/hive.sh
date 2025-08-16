@@ -35,3 +35,6 @@ export name='cyan'
 export background_rgb_str=$($HOME/.config/scripts/hex_to_rgb.sh "$background")
 
 export wallpaper='$HOME/.config/themes/wallpapers/hive.jpg'
+
+#openrgb profile
+export openrgb="openrgb_orange"

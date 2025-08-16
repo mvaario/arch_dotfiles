@@ -29,3 +29,8 @@ echo "🧾 Trimming journal logs (keep 100MB)..."
 sudo journalctl --vacuum-size=100M
 
 echo "✅ All done!"
+
+echo
+read -p "Press Enter to close..."
+
+pkill kitty
