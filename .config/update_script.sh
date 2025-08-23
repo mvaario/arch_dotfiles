@@ -8,15 +8,19 @@ echo "-------------------------------"
 # Ask for sudo upfront
 sudo -v
 
+echo ""
 echo "🔄 Updating official packages..."
 yay -Syu --noconfirm --answerdiff None --answerclean None
 
+echo ""
 echo "🧹 Removing orphan packages..."
 sudo pacman -Rns --noconfirm $(pacman -Qdtq) 2>/dev/null || echo "No orphans to remove."
 
+echo ""
 echo "🗑️ Clearing pacman cache (keep 3 versions)..."
 sudo paccache -r -k3
 
+echo ""
 echo "🧽 Cleaning up yay cache..."
 yay -Sc --noconfirm || true
 
@@ -25,9 +29,11 @@ if command -v flatpak &>/dev/null; then
     flatpak update -y
 fi
 
+echo ""
 echo "🧾 Trimming journal logs (keep 100MB)..."
 sudo journalctl --vacuum-size=100M
 
+echo ""
 echo "✅ All done!"
 
 echo

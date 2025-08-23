@@ -52,8 +52,8 @@
       ".*Code.*": "Visual Studio Code",
       ".*Alacritty": "Alacritty",
       ".*Thunar": "Thunar",
-      ".*Kitty*": "Terminal",
-      "^waybar.*": "waybar",
+      ".*Kitty*": "Kitty Terminal",
+      "^waybar.*": "Waybar",
       ".*bash*": "Terminal"
   }
   },

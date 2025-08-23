@@ -60,17 +60,17 @@
                     "update-command": "sh -c 'mullvad status | grep \"Connected\" > /dev/null && echo true || echo false'"
                 },
                 {
-                    "label": " ",
+                    "label": "",
                     "type": "toggle",
                     "active": false,
                     "command": "sh -c '[[ $SWAYNC_TOGGLE_STATE == true ]] && pactl set-sink-mute @DEFAULT_SINK@ 1 || pactl set-sink-mute @DEFAULT_SINK@ 0'",
                     "update-command": "sh -c '[[ $(pactl get-sink-mute @DEFAULT_SINK@) == *yes* ]] && echo true || echo false'"
                 },
                 {
-                    "label": " ",
+                    "label": "",
                     "type": "normal",
                     "active": false,
-                    "command": "swaync-client -cp && kitty --hold -e ~/.config/update_script.sh"
+                    "command": "swaync-client -cp && kitty --title system-update ~/.config/update_script.sh" 
                 },
                 {
                     "label": " ",
@@ -80,13 +80,13 @@
                     "update-command": "[ -f ~/.config/scripts/theme_switch.lock ] && grep -q ' False$' ~/.config/scripts/theme_switch.lock && echo true || echo false"
                 },
                 {
-                    "label": " ",
+                    "label": "",
                     "type": "normal",
                     "active": false,
-                    "command": "swaync-client -cp && kitty -e btop"
+                    "command": "swaync-client -cp && kitty --title btop-monitor btop"
                 },
                 {
-                    "label": " ",
+                    "label": "",
                     "type": "toggle",
                     "active": false,
                     "command": "~/.config/scripts/toggle_float.sh",

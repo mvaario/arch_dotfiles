@@ -9,6 +9,9 @@ if [ ! -f "$THEME_FILE" ]; then
     exit 1
 fi
 
+# Load common colors
+COMMON_FILE="$HOME/.config/themes/common.sh"
+
 #-------------------------------------------------
 # make sure script is not running on the background
 LOCKFILE="$HOME/.config/scripts/theme_switch.lock"
@@ -36,11 +39,16 @@ echo "" > "$LOCKFILE"
 # echo "HYPRLAND_INSTANCE_SIGNATURE is: $HYPRLAND_INSTANCE_SIGNATURE"
 
 # Source the theme file to load the color variables
+source "$COMMON_FILE"
 source "$THEME_FILE"
 
 #create hex background with opacity
 hexopacity="$HOME/.config/scripts/hex_opacity.sh"
 alpha_hex=$("$hexopacity" "$opacity")
+
+# changes color to rgb
+background_rgb_str=$($HOME/.config/scripts/hex_to_rgb.sh "$background")
+rgb_bwhite=$($HOME/.config/scripts/hex_to_rgb.sh "$bwhite")
 
 # List of template files and their destination
 declare -A files=(
@@ -64,6 +72,7 @@ for template in "${!files[@]}"; do
     dest="${files[$template]}"
     # Use sed to find and replace placeholders
     sed -e "s|%background_rgb_str%|$background_rgb_str|g" \
+        -e "s|%rgb_bwhite%|$rgb_bwhite|g" \
         -e "s,%opacity%,$opacity,g" \
         -e "s,%background%,$background,g" \
         -e "s,%backerground%,$backerground,g" \
@@ -110,7 +119,6 @@ pkill nautilus
 echo "☑️ Changing folder icons"
 echo "Papirus False" >> "$LOCKFILE"
 $HOME/.config/scripts/papirus_folders.sh "$icons" "$LOCKFILE" &
-
 
 #-------------------------------------------------
 # Make blurred background for wlogout

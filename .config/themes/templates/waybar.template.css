@@ -11,7 +11,7 @@ window#waybar {
     background: rgba(%background_rgb_str%,%opacity%);
     transition-property: background;
     transition-duration: .5s;
-    /*border: 1px solid #%main%;
+    /*border-top: 1px solid #%main%;
     border-left: 1px solid #%main%;
     border-right: 1px solid #%main%;*/
     border-bottom: 1px solid #%main%;
