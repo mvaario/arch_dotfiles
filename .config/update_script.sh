@@ -10,7 +10,11 @@ sudo -v
 
 echo ""
 echo "🔄 Updating official packages..."
-yay -Syu --noconfirm --answerdiff None --answerclean None
+sudo pacman -Syu --noconfirm
+
+echo ""
+echo "🔄 Updating AUR packages..."
+yay -Sua --noconfirm --answerdiff None --answerclean None
 
 echo ""
 echo "🧹 Removing orphan packages..."

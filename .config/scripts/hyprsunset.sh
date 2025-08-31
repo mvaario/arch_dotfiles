@@ -1,36 +1,30 @@
 #!/usr/bin/env bash
-# Script to changes hyprsunset temperature inside limits
+# Script to changes hyprsunset temperature
 
+# Default clamp values (you can adjust)
 MIN_TEMP=1000
 MAX_TEMP=6000
 STEP=200
 
-current=$(hyprctl hyprsunset temperature)
+# Get current temperature from hyprctl
+temp=$(hyprctl hyprsunset temperature)
 
-arg="$1"
+# Direction: up/down
+if [[ "$1" == "up" ]]; then
+    new_temp=$(( temp + STEP ))
+    if (( new_temp < MAX_TEMP )); then
+        hyprctl hyprsunset temperature $new_temp
+    elif (( temp < MAX_TEMP )); then
+        hyprctl hyprsunset temperature $MAX_TEMP
+    fi
 
-if [[ "$arg" == "up" ]]; then
-    new=$((current + STEP))
-elif [[ "$arg" == "down" ]]; then
-    new=$((current - STEP))
-elif [[ "$arg" =~ ^[0-9]+$ ]]; then
-    new=$arg
-else
-    new=$current
-fi
-
-# Clamp
-if (( new < MIN_TEMP )); then 
-    new=$MIN_TEMP; 
-    hyprctl hyprsunset temperature "$new"
-fi
-
-if (( new > MAX_TEMP )); then 
-    new=$MAX_TEMP; 
-    hyprctl hyprsunset temperature "$new"
+elif [[ "$1" == "down" ]]; then
+    new_temp=$(( temp - STEP ))
+    if (( new_temp > MIN_TEMP )); then
+        hyprctl hyprsunset temperature $new_temp
+    elif (( temp < MIN_TEMP )); then
+        hyprctl hyprsunset temperature $MIN_TEMP
+    fi
 fi
 
 
-
-# Print current temperature for slider update
-echo "$new"

@@ -37,5 +37,8 @@ else
 
     # save state
     echo "off" > "$STATE_FILE"
+
+    # need to reload to make normal float rules to work
+    hyprctl reload
 fi
 
