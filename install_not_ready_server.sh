@@ -165,6 +165,9 @@ echo "🧰 Applying configuration settings"
 cp -r "$(pwd)/.config" "$HOME/"
 cp -r "$(pwd)/.bashrc" "$HOME/"
 
+# copy server spesific configs
+cp -r "$(pwd)/.config_server/." "$HOME/.config/"
+
 # Enable ufw
 sudo systemctl enable ufw
 
@@ -178,11 +181,11 @@ gsettings set com.github.stunkymonkey.nautilus-open-any-terminal terminal kitty
 echo 'governor="performance"' | sudo tee /etc/default/cpupower
 
 # enable theme
-# ~/.config/scripts/apply_theme.sh earthsong.sh
+~/.config/scripts/apply_theme.sh earthsong.sh
 
 # Add permissions
-# sudo chown -R $USER:$USER /var/lib/papirus-folders/
-# sudo chown -R $USER:$USER /usr/share/icons/Papirus*
+sudo chown -R $USER:$USER /var/lib/papirus-folders/
+sudo chown -R $USER:$USER /usr/share/icons/Papirus*
 
 # Autolog in file
 if [ ! -d "/etc/systemd/system/getty@tty1.service.d" ]; then
