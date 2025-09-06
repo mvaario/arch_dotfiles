@@ -1,16 +1,16 @@
 echo " "
 echo "🎮 Downloading optional softwares..."
 PACKAGES=(
-    
     lact
     steam
     discord
     lutris
     gamemode
     openrgb
+    moonlight-qt
 )
 
-# Package installation loop
+# Package install
 for pkg in "${PACKAGES[@]}"; do
     echo "📦 Installing $pkg..."
     if ! sudo pacman -S --noconfirm --needed "$pkg"; then
@@ -26,8 +26,8 @@ done
 
 #------------------------------------------------------------------------
 if [$1 && ! -f ~/.local/opt/gitkraken/gitkraken ]; then
-  # Get user
-  USER=$(logname)
+    # Get user
+    USER=$(logname)
 
 	echo " "
 	echo "🔀 Installing latest GitKranker..."
