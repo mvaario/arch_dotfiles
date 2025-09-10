@@ -67,6 +67,8 @@ PACKAGES=(
 
 	papirus-icon-theme
 	linux-headers
+  openssh
+  jq
 
 	kitty
 	hyprland
@@ -75,6 +77,8 @@ PACKAGES=(
 	starship
 	fastfetch
 	btop
+  ethtool
+  iperf3
     
 	cpupower
 )
@@ -122,6 +126,7 @@ if $nvidia; then
 	install_scripts/nvidia.sh
 fi
 
+
 #------------------------------------------------------------------------
 if [ ! -d "$HOME/.themes/Orchis-Dark-Nord" ]; then
 	echo " "
@@ -135,6 +140,44 @@ fi
 
 echo "✅ All packages installed."
 echo " "
+
+
+#------------------------------------------------------------------------
+# Enable wake on lan
+INTERFACE="enp4s0"
+
+cat <<EOF | sudo tee /etc/systemd/system/wol.service > /dev/null
+[Unit]
+Description=Enable Wake-on-LAN
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/ethtool -s $INTERFACE wol g
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo systemctl enable wol.service
+
+
+#------------------------------------------------------------------------
+# Enable speed test
+
+cat <<EOF | sudo tee /etc/systemd/system/iperf3.service > /dev/null
+[Unit]
+Description=iPerf3 bandwidth measurement daemon
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/iperf3 -s
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo systemctl enable iperf3.service
 
 
 #------------------------------------------------------------------------
@@ -170,6 +213,8 @@ cp -r "$(pwd)/.config_server/." "$HOME/.config/"
 
 # Enable ufw
 sudo systemctl enable ufw
+sudo systemctl enable sshd
+sudo ufw allow ssh
 
 # random stuff for papirus folder icons
 gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark'

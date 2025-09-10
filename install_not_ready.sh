@@ -85,6 +85,7 @@ PACKAGES=(
 	lib32-pipewire
 	pavucontrol
 	linux-headers
+	jq
 
 	kitty
 	waybar

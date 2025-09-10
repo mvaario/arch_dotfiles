@@ -10,40 +10,47 @@ def get_battery():
     devices = client.devices
     for device in devices:
         level = device.battery_level
+
         # write level to cache (for mice sleep)
         if level is not None and int(level) != 0:
             write_cache_level(level)
         else:
             level = read_cache_level()
 
-        if level is not None:
-            icon = get_icon(level)
-            css_class = get_class(level)
-            text = f"{icon} {int(level)}%"
-            print(json.dumps({
-                "text": text,
-                "class": css_class,
-                "tooltip": device.name
-            }))
-            return
+        # Check if charging
+        charging = device.is_charging
+        icon = get_icon(level, charging)
+        css_class = get_class(level) # Used for red color
+        text = f"{icon} {int(level)}%"
+        print(json.dumps({
+            "text": text,
+            "class": css_class,
+            "tooltip": device.name
+        }))
+        return
 
+    # No device found
     print(json.dumps({
         "text": " N/A",
         "class": "unknown",
         "tooltip": "No device info"
         }))
 
-def get_icon(level):
-    if level >= 90:
-        return ""  # Full
-    elif level >= 60:
-        return ""
-    elif level >= 30:
-        return ""
-    elif level >= 15:
-        return ""
+def get_icon(level, charging):
+    if charging:
+        return "󰢝"
+
     else:
-        return ""  # Low      
+        if level >= 90:
+            return ""  # Full
+        elif level >= 60:
+            return ""
+        elif level >= 30:
+            return ""
+        elif level >= 15:
+            return ""
+        else:
+            return ""  # Low      
 
 
 def get_class(level):
