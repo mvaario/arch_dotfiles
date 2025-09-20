@@ -43,4 +43,4 @@ echo "✅ All done!"
 echo
 read -p "Press Enter to close..."
 
-pkill kitty
+exit
