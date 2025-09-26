@@ -15,4 +15,4 @@ export name='green'
 export wallpaper='$HOME/.config/themes/wallpapers/penitent.jpg'
 
 #openrgb profile
-export openrgb="openrgb_orange"
+export openrgb="openrgb_green

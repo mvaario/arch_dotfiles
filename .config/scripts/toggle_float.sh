@@ -13,6 +13,7 @@ if [ "$STATE" = "off" ]; then
     hyprctl clients -j | jq -r '.[].address' | while read -r addr; do
         # Not sure if this need to be done in window_float.sh
         hyprctl dispatch setfloating address:$addr
+        hyprctl dispatch resizeactive exact 720 720
     done
 
     # Make all new windows float

@@ -83,7 +83,7 @@
                     "label": "",
                     "type": "normal",
                     "active": false,
-                    "command": "swaync-client -cp && kitty --title btop-monitor btop"
+                    "command": "swaync-client -cp && ~/.config/scripts/start_btop.sh"
                 },
                 {
                     "label": "",

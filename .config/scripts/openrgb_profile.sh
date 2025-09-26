@@ -9,7 +9,7 @@ fi
 echo "$1" > "$HOME/.config/OpenRGB/cache_profile"
 
 # Start OpenRGB in background, capturing output
-stdbuf -oL -eL /usr/bin/openrgb --profile "$PROFILE" --startminimized 2>&1 | {
+stdbuf -oL -eL /usr/bin/openrgb --profile "$1" 2>&1 | {
     SECONDS=0
     while IFS= read -r line; do
         #debug:
@@ -19,13 +19,13 @@ stdbuf -oL -eL /usr/bin/openrgb --profile "$PROFILE" --startminimized 2>&1 | {
             echo "$line"
             # Mark openrgb finish
             sed -i "s|^OpenRGB .*|OpenRGB True|" "$LOCKFILE"
-            pkill openrgb
+            # pkill openrgb
             break
         fi
 
         if (( SECONDS >= 8 )); then
             echo "Timeout on openrgb profile loading"
-            pkill openrgb
+            # pkill openrgb
             break
         fi
     done
