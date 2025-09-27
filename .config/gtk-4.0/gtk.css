@@ -1,0 +1,66 @@
+/* Nautilus main window background */
+window.nautilus-window {
+    background-color: rgba(16,25,29,0.4);
+    background-image: none;
+    border: none;
+    box-shadow: none;
+    outline: none;
+}
+
+
+/*------------- Everything --------------*/
+.nautilus-window *:not(rubberband) {
+    background-color: rgba(16,25,29,0);
+    background-image: none;
+    border: none;
+    box-shadow: none;
+    outline: none;
+}
+/* --------------------------------------*/
+
+
+/*-------------- Hightlight --------------*/
+rubberband,
+.rubberband {
+    background-color: rgba(16,25,29, 0.4);
+    border: 1px solid #2196f3;  
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+} 
+
+/* --------------------------------------*/
+
+
+/*--------------- Headers ---------------*/
+.nautilus-window placessidebar{
+    background-color: rgba(16,25,29, 0);
+    border-right: 1px solid #2196f3;
+    border-radius: 0;
+}
+.nautilus-window headerbar{
+    background-color: rgba(16,25,29, 0);
+    border-bottom: 1px solid #2196f3;
+    border-radius: 0;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+/* --------------------------------------*/
+
+
+/*---------------- popup -----------------*/
+.nautilus-window popover,
+window > popover {
+    background-color: rgba(16,25,29, 0.6);
+    border-radius: 6px;
+    border: 1px solid #2196f3;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+/* --------------------------------------*/
+
+
+/* ------------ Selected text ------------*/ 
+.nautilus-window .view row:selected {
+    /* white */
+    background-color: rgba(241,222,203, 0.1);
+    color: #2196f3;
+}
+/* --------------------------------------*/
+

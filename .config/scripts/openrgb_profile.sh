@@ -9,7 +9,7 @@ fi
 echo "$1" > "$HOME/.config/OpenRGB/cache_profile"
 
 # Start OpenRGB in background, capturing output
-stdbuf -oL -eL /usr/bin/openrgb --profile "$1" 2>&1 | {
+stdbuf -oL -eL /usr/bin/openrgb --profile "$PROFILE" 2>&1 | {
     SECONDS=0
     while IFS= read -r line; do
         #debug:

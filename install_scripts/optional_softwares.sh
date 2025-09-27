@@ -9,6 +9,8 @@ PACKAGES=(
     openrgb
     moonlight-qt
 
+    pycharm-community-edition
+
     ristretto
     grim
     slurp
@@ -36,7 +38,7 @@ done
 
 
 #------------------------------------------------------------------------
-if [$1 && ! -f ~/.local/opt/gitkraken/gitkraken ]; then
+if [[ "$1" == "true" && ! -d ~/.local/opt/gitkraken ]]; then
     # Get user
     USER=$(logname)
 
