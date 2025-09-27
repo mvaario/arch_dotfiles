@@ -225,13 +225,6 @@ gsettings set com.github.stunkymonkey.nautilus-open-any-terminal terminal kitty
 # Performance mode
 echo 'governor="performance"' | sudo tee /etc/default/cpupower
 
-# enable theme
-~/.config/scripts/apply_theme.sh earthsong.sh
-
-# Add permissions
-sudo chown -R $USER:$USER /var/lib/papirus-folders/
-sudo chown -R $USER:$USER /usr/share/icons/Papirus*
-
 # Autolog in file
 if [ ! -d "/etc/systemd/system/getty@tty1.service.d" ]; then
     echo "Creating directory for systemd override: /etc/systemd/system/getty@tty1.service.d"
@@ -241,6 +234,13 @@ fi
 echo "[Service]
 ExecStart=
 ExecStart=-/usr/bin/agetty --autologin $USER --noclear %I xterm-kitty" | sudo tee "/etc/systemd/system/getty@tty1.service.d/override.conf" > /dev/null
+
+# enable theme
+~/.config/scripts/apply_theme.sh earthsong.sh
+
+# Add permissions
+sudo chown -R $USER:$USER /var/lib/papirus-folders/
+sudo chown -R $USER:$USER /usr/share/icons/Papirus*
 
 echo "✅ Configuration complete."
 echo ""

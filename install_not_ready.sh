@@ -255,13 +255,6 @@ gsettings set com.github.stunkymonkey.nautilus-open-any-terminal terminal kitty
 # Performance mode
 echo 'governor="performance"' | sudo tee /etc/default/cpupower
 
-# enable theme
-~/.config/scripts/apply_theme.sh earthsong.sh
-
-# Add permissions
-sudo chown -R $USER:$USER /var/lib/papirus-folders/
-sudo chown -R $USER:$USER /usr/share/icons/Papirus*
-
 # Autolog in file
 if [ ! -d "/etc/systemd/system/getty@tty1.service.d" ]; then
     echo "Creating directory for systemd override: /etc/systemd/system/getty@tty1.service.d"
@@ -286,6 +279,13 @@ sudo -u "$USER" DISPLAY=:0 XDG_RUNTIME_DIR="/run/user/$(id -u $USER)" gsettings 
 sudo -u "$USER" DISPLAY=:0 XDG_RUNTIME_DIR="/run/user/$(id -u $USER)" gsettings set org.xfce.mousepad.preferences.view font-name 'JetBrainsMonoNL Nerd Font Mono 10'
 sudo -u "$USER" DISPLAY=:0 XDG_RUNTIME_DIR="/run/user/$(id -u $USER)" gsettings set org.xfce.mousepad.preferences.view show-line-numbers true
 sudo -u "$USER" DISPLAY=:0 XDG_RUNTIME_DIR="/run/user/$(id -u $USER)" gsettings set org.xfce.mousepad.preferences.window always-show-tabs true
+
+# enable theme
+~/.config/scripts/apply_theme.sh earthsong.sh
+
+# Add permissions
+sudo chown -R $USER:$USER /var/lib/papirus-folders/
+sudo chown -R $USER:$USER /usr/share/icons/Papirus*
 
 echo "✅ Configuration complete."
 echo ""
