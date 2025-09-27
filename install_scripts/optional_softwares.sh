@@ -8,6 +8,17 @@ PACKAGES=(
     gamemode
     openrgb
     moonlight-qt
+
+    ristretto
+    grim
+    slurp
+
+    vlc
+    vlc-plugin-x264
+    vlc-plugin-mpeg2
+    vlc-plugin-mad
+    vlc-plugin-ffmpeg
+    
 )
 
 # Package install
