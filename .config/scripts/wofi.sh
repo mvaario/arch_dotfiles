@@ -18,41 +18,32 @@ case "$1" in
     wofi --show drun &
     ;;
 esac
-
 #save pid
 wofi_pid=$!
 
-# keyboard temp flag
-key_flag_file="$HOME/.config/wofi/wofi_keypress_flag"
-echo "false" > "$key_flag_file"
-# getting keyboard inputs
-libinput debug-events --device /dev/input/event2 | while read -r line; do
-    if echo "$line" | grep -q "KEY.*pressed"; then
-        echo "true" > "$key_flag_file"
-        #echo "keyboard pressed"
-    fi
-done &
-keyboard_pid=$!
-
-# mouse temp flag
+# mouse listener
 mouse_flag_file="$HOME/.config/wofi/wofi_mouse_flag"
 echo "false" > "$mouse_flag_file"
-# check mouse inputs (need to be changed since razer id changes all the time....)
-libinput debug-events --device /dev/input/event5 | while read -r line; do
+mouse_device=$(libinput list-devices | awk -v RS= '/Capabilities:.*pointer/{for(i=1;i<=NF;i++) if($i=="Kernel:") print $(i+1); exit}')
+libinput debug-events --device $mouse_device | while read -r line; do
+    # echo "$line"
     if echo "$line" | grep -q "BTN_LEFT.*pressed"; then
         echo "true" > "$mouse_flag_file"
-        #echo "right click pressed"
+        echo "right click pressed"
     fi
 done &
 mouse_pid=$!
 
-
 # trap lister, no idea how it works if it even does
-trap 'kill "$keyboard_pid"' EXIT INT TERM
+# trap 'kill "$keyboard_pid"' EXIT INT TERM
 trap 'kill "$mouse_pid"' EXIT INT TERM
 outside_start=0
 while true; do
     sleep 0.1
+    
+    # read mouse flag file
+    mouse_flag=$(cat "$mouse_flag_file")
+
     # read wofi window position
     read -r x y w h <<< "$(hyprctl layers | grep 'namespace: wofi' | sed -n 's/.*xywh: \([-0-9 ]*\), namespace.*/\1/p')"
     x2=$(( x + w ))
@@ -60,33 +51,6 @@ while true; do
 
     # read cursor position
     read cx cy < <(hyprctl cursorpos | tr -d ',')
-
-    # check if keyboard is pressed
-    if [[ -f $key_flag_file ]]; then
-        key_flag=$(cat "$key_flag_file")
-    else
-        key_flag="false"
-    fi
-
-    # check if mouse is pressed
-    if [[ -f $mouse_flag_file ]]; then
-        mouse_flag=$(cat "$mouse_flag_file")
-    else
-        mouse_flag="false"
-    fi
-
-    # reset time
-    if [[ "$key_flag" == "true" ]]; then
-        outside_start=0
-        echo "false" > "$key_flag_file"
-    fi
-
-    # if theme is selected
-    if [[ "$1" == "theme_selection" ]]; then
-        if [[ -s ~/.config/wofi/temp ]]; then
-            break
-        fi
-    fi
 
     # if cursor outside wofi
     if (( cx < x || cx > x2 || cy < y || cy > y2 )); then
@@ -105,7 +69,14 @@ while true; do
     else
         outside_start=0
     fi
+
+    # if theme is selected
+    if [[ "$1" == "theme_selection" ]]; then
+        if [[ -s ~/.config/wofi/temp ]]; then
+            break
+        fi
+    fi
 done
 kill "$wofi_pid"
-kill "$keyboard_pid"
 kill "$mouse_pid"
+# kill "$keyboard_pid"

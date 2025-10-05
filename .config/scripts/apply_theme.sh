@@ -30,6 +30,7 @@ done
 
 # Empty lockfile if 
 echo "" > "$LOCKFILE"
+echo "Hyprland False" >> "$LOCKFILE"
 
 #-------------------------------------------------
 # No idea why this broke now...
@@ -64,7 +65,7 @@ declare -A files=(
     ["$HOME/.config/themes/templates/btop_style.template.theme"]="$HOME/.config/btop/themes/btop_style.theme"
     ["$HOME/.config/themes/templates/windows.template.conf"]="$HOME/.config/hypr/conf/window_theme.conf"
     ["$HOME/.config/themes/templates/gtk-4.template.css"]="$HOME/.config/gtk-4.0/gtk.css"
-    ["$HOME/.config/themes/templates/zen_browser.template.js"]="$HOME/.zen/nt0xto0c.Default (release)/user.js"
+    ["$HOME/.config/themes/templates/zen_browser.template.js"]="$HOME/.zen/8wgze7tz.Default (release)/user.js"
 )
 
 # Loop through the files and apply the theme
@@ -112,7 +113,6 @@ echo "☑️ Changing OpenRGB profile"
 echo "OpenRGB False" >> "$LOCKFILE"
 nohup $HOME/.config/scripts/openrgb_profile.sh "$openrgb" "$LOCKFILE" >/dev/null 2>&1 &
 
-
 #-------------------------------------------------
 # Changes folder theme (takes a while....)
 pkill nautilus
@@ -123,10 +123,7 @@ $HOME/.config/scripts/papirus_folders.sh "$icons" "$LOCKFILE" &
 #-------------------------------------------------
 # Make blurred background for wlogout
 echo "wlogout False" >> "$LOCKFILE"
-python3 $HOME/.config/scripts/blur_wallpaper.py "$wallpaper" "$background_rgb_str"
-sed -i "s|^wlogout .*|wlogout True|" "$LOCKFILE"
-echo "✅ wlogout wallpaper done"
-
+python3 $HOME/.config/scripts/blur_wallpaper.py "$wallpaper" "$background_rgb_str" "$opacity" "$LOCKFILE"
 
 #-------------------------------------------------
 # Hyprland temp file to not show errors when loading themes
@@ -141,7 +138,6 @@ echo "✅ Cursor changes"
 gsettings set org.gnome.desktop.interface gtk-theme "$nautilus"
 echo "✅ Nautilus changes"
 
-
 #-------------------------------------------------
 pkill swaync
 pkill hyprpaper
@@ -149,7 +145,10 @@ pkill waybar
 hyprctl reload
 sleep 0.5
 
-swaync &
-waybar &
-hyprpaper &
+swaync & disown
+waybar & disown
+hyprpaper & disown
+
+# Mark Hyprland ready
+sed -i "s|^Hyprland .*|Hyprland True|" "$LOCKFILE"
 echo "✅ all done"

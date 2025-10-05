@@ -1,8 +1,12 @@
 #!/bin/bash
 # Script for switching workspaces, but keeping mouse position to same
 
-# move to workspace
-target_workspace=$1
+# with keyboard shortcuts
+if [ -n "$1" ]; then
+    target_workspace="$1"
+else
+    exit;
+fi
 
 # get cursor position
 read cx cy < <(hyprctl cursorpos | tr -d ',')

@@ -5,6 +5,8 @@ from PIL import Image, ImageFilter, ImageEnhance, ImageChops
 import os
 import sys
 import time
+import fileinput
+import re
 
 # Hypr default noise 0.0117
 def add_noise(img, noise=0.0117):
@@ -36,12 +38,10 @@ def add_blur(img, blur=15):
 start = time.time()
 print("Creating blured wlogout image")
 
-# $HOME/.config/themes/wallpapers/NAME
-input_path = sys.argv[1]
-
-img_path = os.path.expandvars(os.path.expanduser(input_path))
+# wallpaper
+wallpaper_path = sys.argv[1]
+img_path = os.path.expandvars(os.path.expanduser(wallpaper_path))
 img = Image.open(img_path).convert("RGB")
-
 
 # if changing hyprland decoration config these need to be adjusted
 #img = add_noise(img)
@@ -59,11 +59,18 @@ overlay_color = (r, g, b)
 overlay = Image.new("RGB", img.size, overlay_color)
 
 # use same as waybar and kitty terminal
-alpha = 0.6
+alpha = float(sys.argv[3])
 blended = Image.blend(img, overlay, alpha)
-
 output_path = os.path.expanduser("~/.config/wlogout/background/wallpaper.jpg")
 blended.save(output_path)
+
+
+# Mark lockfile ready
+lockfile = sys.argv[4]
+for line in fileinput.input(lockfile, inplace=True):
+    # Replace line starting with wlogout with wlogout True
+    new_line = re.sub(r"^wlogout .*", "wlogout True", line)
+    sys.stdout.write(new_line)
 
 print(f"Image edition done: {time.time()-start}")
 
