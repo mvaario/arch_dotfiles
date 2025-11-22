@@ -8,6 +8,7 @@ PACKAGES=(
     gamemode
     openrgb
     moonlight-qt
+    wakeonlan
 
     pycharm-community-edition
 
