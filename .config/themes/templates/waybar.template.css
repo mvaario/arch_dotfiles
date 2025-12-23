@@ -31,6 +31,30 @@ window#waybar {
   border-radius: 6px;
 }
 
+#custom-ws1,
+#custom-ws2,
+#custom-ws3,
+#custom-ws4 {
+  padding: 0.1rem 0.3rem;
+  margin: 0.45rem 0.25rem;
+  border-radius: 6px;
+}
+
+#custom-ws1.active,
+#custom-ws2.active,
+#custom-ws3.active,
+#custom-ws4.active {
+  background-color: #%main%;
+}
+
+#custom-ws1:hover,
+#custom-ws2:hover,
+#custom-ws3:hover,
+#custom-ws4:hover {
+  background-color: #707070;
+}
+
+
 #clock,
 #pulseaudio,
 #custom-logo,
@@ -77,6 +101,9 @@ window#waybar.empty #window {
 
 #custom-keylock.locked {
   color: #%red%;
+}
+#custom-keylock.unlocked {
+  color: transparent;
 }
 
 #custom-razer.critical {

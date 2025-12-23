@@ -21,6 +21,9 @@ if [ "$STATE" = "off" ]; then
 
     # save state
     echo "on" > "$STATE_FILE"
+
+    # Notification
+    notify-send "Floating on"
 else
     echo "setting floating OFF"
 
@@ -41,5 +44,8 @@ else
 
     # need to reload to make normal float rules to work
     hyprctl reload
+
+    # Notification
+    notify-send "Floating off"
 fi
 

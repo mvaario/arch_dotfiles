@@ -8,8 +8,14 @@ if [ -f "$STATE_FILE" ]; then
     # Currently locked – reset
     hyprctl dispatch submap reset
     rm -f "$STATE_FILE"
+
+    # Notification
+    notify-send "Keylock off"
 else
     # Currently unlocked – lock
     hyprctl dispatch submap clean
     touch "$STATE_FILE"
+
+    # Notification
+    notify-send "Keylock on"
 fi

@@ -105,6 +105,8 @@ PACKAGES=(
 	meld
 
 	cpupower
+
+	libinput-tools # For scripts to get devices
 )
 
 # Package install

@@ -65,7 +65,7 @@ declare -A files=(
     ["$HOME/.config/themes/templates/btop_style.template.theme"]="$HOME/.config/btop/themes/btop_style.theme"
     ["$HOME/.config/themes/templates/windows.template.conf"]="$HOME/.config/hypr/conf/window_theme.conf"
     ["$HOME/.config/themes/templates/gtk-4.template.css"]="$HOME/.config/gtk-4.0/gtk.css"
-    ["$HOME/.config/themes/templates/zen_browser.template.js"]="$HOME/.zen/8wgze7tz.Default (release)/user.js"
+    ["$HOME/.config/themes/templates/zen_browser.template.js"]="$HOME/.zen/qcjojoq2.Default (release)/user.js"
 )
 
 # Loop through the files and apply the theme
@@ -152,3 +152,6 @@ hyprpaper & disown
 # Mark Hyprland ready
 sed -i "s|^Hyprland .*|Hyprland True|" "$LOCKFILE"
 echo "✅ all done"
+
+# Notification
+notify-send "$name" "theme activated."

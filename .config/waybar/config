@@ -19,9 +19,9 @@
   ],
   "modules-center": ["clock"],
   "modules-right": [
+    "custom/keylock",
     "tray",
     "pulseaudio",
-    "custom/keylock",
     "custom/razer",
     "custom/notification",
     "custom/power"
@@ -36,14 +36,48 @@
     "format-icons": {
       "1": "",
       "2": "",
-      "3": "",
-      "4": ""
+      "3": "",
+      "4": ""
       },
   "persistent-workspaces": {
     "DP-1": [1, 2, 3, 4],
     "HDMI-A-1": [5, 6, 7, 8]
   },
     "persistent-only":true
+  },
+
+  "custom/ws1": {
+    "format": "1",
+    "on-click": "~/.config/scripts/workspace_switch.sh 1",
+    "exec": "~/.config/scripts/workspace_status.sh 1",
+    "return-type": "json",
+    "interval": 1,
+    "tooltip": false
+  },
+
+  "custom/ws2": {
+    "format": "2",
+    "on-click": "~/.config/scripts/workspace_switch.sh 2",
+    "exec": "~/.config/scripts/workspace_status.sh 2",
+    "return-type": "json",
+    "interval": 1,
+    "tooltip": false
+  },
+  "custom/ws3": {
+    "format": "3",
+    "on-click": "~/.config/scripts/workspace_switch.sh 3",
+    "exec": "~/.config/scripts/workspace_status.sh 3",
+    "return-type": "json",
+    "interval": 1,
+    "tooltip": false
+  },
+  "custom/ws4": {
+    "format": "4",
+    "on-click": "~/.config/scripts/workspace_switch.sh 4",
+    "exec": "~/.config/scripts/workspace_status.sh 4",
+    "return-type": "json",
+    "interval": 1,
+    "tooltip": false
   },
 
   "hyprland/window": {

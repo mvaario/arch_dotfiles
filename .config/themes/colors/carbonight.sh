@@ -15,4 +15,4 @@ export name='black'
 export wallpaper='$HOME/.config/themes/wallpapers/carbonight.png'
 
 #openrgb profile
-export openrgb="openrgb_orange"
+export openrgb="openrgb_white"

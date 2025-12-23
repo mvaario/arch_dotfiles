@@ -38,6 +38,7 @@ mouse_pid=$!
 # trap 'kill "$keyboard_pid"' EXIT INT TERM
 trap 'kill "$mouse_pid"' EXIT INT TERM
 outside_start=0
+outside_maxtime=10000
 while true; do
     sleep 0.1
     
@@ -61,7 +62,7 @@ while true; do
             now=$(date +%s%3N)  # current time in milliseconds
             elapsed=$(( now - outside_start ))
             echo "$elapsed"
-            if (( elapsed >= 1000 )) || [[ "$mouse_flag" == "true" ]]; then
+            if (( elapsed >= outside_maxtime )) || [[ "$mouse_flag" == "true" ]]; then
                 break
             fi
 

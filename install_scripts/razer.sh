@@ -22,4 +22,5 @@ done
 USER=$(logname)
 
 # Random stuff for razer...
-sudo gpasswd -a $USER plugdev
+sudo gpasswd -a $USER openrazer
+#sudo gpasswd -a $USER plugdev
