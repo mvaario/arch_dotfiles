@@ -1,7 +1,7 @@
 #
 # ~/.bashrc
 #
-if [[ $- == *i* ]]; then
+if [[ -n "$RUN_ANIMATION" ]]; then
     ~/.config/fastfetch/scripts/frame_animation.sh
     eval "$(starship init bash)"
 fi
