@@ -2,7 +2,7 @@
 # ~/.bashrc
 #
 if [[ $- == *i* ]]; then
-    ~/.config/scripts/frame_animation.sh
+    ~/.config/fastfetch/scripts/frame_animation.sh
     eval "$(starship init bash)"
 fi
 

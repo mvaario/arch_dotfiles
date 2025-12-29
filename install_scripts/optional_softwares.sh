@@ -12,9 +12,9 @@ PACKAGES=(
 
     pycharm-community-edition
 
-    ristretto
-    grim
-    slurp
+    ristretto # Image viewer
+    grim # Screenshot
+    slurp # Screenshot
 
     vlc
     vlc-plugin-x264

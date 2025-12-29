@@ -3,10 +3,6 @@ set -e
 
 # Edit these if nvidia or razer is used
 nvidia=true
-razer=true
-optional_softwares=true
-gitkraken=true
-
 
 #------------------------------------------------------------------------
 # Ask for sudo password upfront
@@ -69,44 +65,22 @@ PACKAGES=(
 	ufw
 	pacman-contrib
 
-	noto-fonts
-	noto-fonts-emoji
-	ttf-dejavu
-	ttf-liberation
-	ttf-roboto
-	noto-fonts-cjk
 	papirus-icon-theme
-
-	pipewire
-	pipewire-alsa
-	pipewire-audio
-	pipewire-pulse
-	lib32-libpipewire
-	lib32-pipewire
-	pavucontrol
 	linux-headers
-	jq
+  openssh
+  jq
 
 	kitty
-	waybar
 	hyprland
 	hyprpaper
-	hyprlock
-	hyprsunset
-	wofi
 	nautilus
-	swaync
 	starship
 	fastfetch
 	btop
-
-	gnome-disk-utility
-	mousepad
-	meld
-
+  ethtool
+  iperf3
+    
 	cpupower
-
-	libinput-tools # For scripts to get devices
 )
 
 # Package install
@@ -128,11 +102,8 @@ echo " "
 echo "📦 Downloading AUR packages..."
 
 AUR_PACKAGES=(
-	wlogout
-	papirus-folders
-	ttf-jetbrains-mono-nerd
-	nautilus-open-any-terminal
-	catppuccin-cursors-mocha
+    nautilus-open-any-terminal
+    sunshine
 )
 
 # AUR package install
@@ -155,52 +126,6 @@ if $nvidia; then
 	install_scripts/nvidia.sh
 fi
 
-# Setup razer
-if $razer; then
-	install_scripts/razer.sh
-fi
-
-# Setup optional softwares
-if $optional_softwares; then
-	install_scripts/optional_softwares.sh $gitkraken
-fi
-
-
-#------------------------------------------------------------------------
-# Get user
-USER=$(logname)
-
-if [ ! -f ~/.local/opt/zen/zen ]; then
-	echo " "
-	echo "📥 Installing latest Zen Browser..."
-	mkdir -p ~/.local/opt/zen
-	mkdir -p ~/.local/share/applications
-
-	# Download the latest version
-	curl -L https://github.com/zen-browser/desktop/releases/latest/download/zen.linux-x86_64.tar.xz -o /tmp/zen-latest.tar.xz
-
-	# Extract
-	tar xf /tmp/zen-latest.tar.xz -C ~/.local/opt/zen --strip-components=1
-
-	# Create desktop entry for wofi
-	cat > ~/.local/share/applications/zen.desktop <<EOF
-[Desktop Entry]
-Version=1.0
-Type=Application
-Name=Zen Browser
-Exec=/home/$USER/.local/opt/zen/zen %U
-Icon=/home/$USER/.local/opt/zen/browser/chrome/icons/default/default128.png
-Terminal=false
-Categories=Network;WebBrowser;
-EOF
-
-	chmod +x ~/.local/share/applications/zen.desktop
-	update-desktop-database ~/.local/share/applications/
-	
-	# Delete temp file
-	rm /tmp/zen-latest.tar.xz
-fi
-
 
 #------------------------------------------------------------------------
 if [ ! -d "$HOME/.themes/Orchis-Dark-Nord" ]; then
@@ -215,6 +140,44 @@ fi
 
 echo "✅ All packages installed."
 echo " "
+
+
+#------------------------------------------------------------------------
+# Enable wake on lan
+INTERFACE="enp4s0"
+
+cat <<EOF | sudo tee /etc/systemd/system/wol.service > /dev/null
+[Unit]
+Description=Enable Wake-on-LAN
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/ethtool -s $INTERFACE wol g
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo systemctl enable wol.service
+
+
+#------------------------------------------------------------------------
+# Enable speed test
+
+cat <<EOF | sudo tee /etc/systemd/system/iperf3.service > /dev/null
+[Unit]
+Description=iPerf3 bandwidth measurement daemon
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/iperf3 -s
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo systemctl enable iperf3.service
 
 
 #------------------------------------------------------------------------
@@ -245,8 +208,13 @@ echo "🧰 Applying configuration settings"
 cp -r "$(pwd)/.config" "$HOME/"
 cp -r "$(pwd)/.bashrc" "$HOME/"
 
+# copy server spesific configs
+cp -r "$(pwd)/.config_server/." "$HOME/.config/"
+
 # Enable ufw
 sudo systemctl enable ufw
+sudo systemctl enable sshd
+sudo ufw allow ssh
 
 # random stuff for papirus folder icons
 gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark'
@@ -267,23 +235,8 @@ echo "[Service]
 ExecStart=
 ExecStart=-/usr/bin/agetty --autologin $USER --noclear %I xterm-kitty" | sudo tee "/etc/systemd/system/getty@tty1.service.d/override.conf" > /dev/null
 
-# Link nautilus compare using meld
-mkdir -p "$HOME/.local/share/nautilus/scripts"
-[ -e "$HOME/.local/share/nautilus/scripts/Compare with Meld" ] || \
-ln -s "$HOME/.config/scripts/nautilus_compare.sh" "$HOME/.local/share/nautilus/scripts/Compare with Meld"
-
-# set mousepad theme
-export DISPLAY=:0
-export XDG_RUNTIME_DIR="/run/user/$(id -u)"
-
-sudo -u "$USER" DISPLAY=:0 XDG_RUNTIME_DIR="/run/user/$(id -u $USER)" gsettings set org.xfce.mousepad.preferences.view color-scheme 'oblivion'
-sudo -u "$USER" DISPLAY=:0 XDG_RUNTIME_DIR="/run/user/$(id -u $USER)" gsettings set org.xfce.mousepad.preferences.view tab-width 4
-sudo -u "$USER" DISPLAY=:0 XDG_RUNTIME_DIR="/run/user/$(id -u $USER)" gsettings set org.xfce.mousepad.preferences.view font-name 'JetBrainsMonoNL Nerd Font Mono 10'
-sudo -u "$USER" DISPLAY=:0 XDG_RUNTIME_DIR="/run/user/$(id -u $USER)" gsettings set org.xfce.mousepad.preferences.view show-line-numbers true
-sudo -u "$USER" DISPLAY=:0 XDG_RUNTIME_DIR="/run/user/$(id -u $USER)" gsettings set org.xfce.mousepad.preferences.window always-show-tabs true
-
 # enable theme
-~/.config/scripts/apply_theme.sh earthsong.sh
+~/.config/themes/scripts/apply_theme.sh earthsong.sh
 
 # Add permissions
 sudo chown -R $USER:$USER /var/lib/papirus-folders/

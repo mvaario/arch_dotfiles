@@ -8,7 +8,7 @@ fi
 #Remove cache so orders works
 rm ~/.cache/wofi-dmenu
 
-WALL_DIR="$HOME/.config/themes/wallpapers"
+WALL_DIR="$HOME/.config/themes/images"
 COLOR_DIR="$HOME/.config/themes/colors"
 
 list=""
@@ -24,11 +24,13 @@ for theme in "$COLOR_DIR"/*.sh; do
 done
 
 # run wofi and write temp file
-~/.config/scripts/wofi.sh theme_selection "$list"
+~/.config/wofi/scripts/wofi.sh theme_selection "$list"
 
 # read them file
 selected=$(<~/.config/wofi/temp)
 rm ~/.config/wofi/temp
+
+echo $selected
 
 if [[ -n "$selected" ]]; then
     # get the name
@@ -36,7 +38,7 @@ if [[ -n "$selected" ]]; then
 
     # Run run apply script with selected theme file
     if [ -n "$theme_file" ]; then
-        nohup "$HOME/.config/scripts/apply_theme.sh" "$theme_file.sh" >/dev/null 2>&1 &
+        nohup "$HOME/.config/themes/scripts/apply_theme.sh" "$theme_file.sh" >/dev/null 2>&1 &
     fi
 fi
 

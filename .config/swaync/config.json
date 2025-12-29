@@ -28,7 +28,7 @@
     "keyboard-shortcuts": true,
     "image-visibility": "when-available",
     "transition-time": 150,
-    "hide-on-clear": true,
+    "hide-on-clear": false,
     "hide-on-action": true,
     "text-empty": "No Notifications",
     "script-fail-notify": true,
@@ -70,26 +70,27 @@
                     "label": "",
                     "type": "normal",
                     "active": false,
-                    "command": "swaync-client -cp && kitty --title system-update ~/.config/update_script.sh" 
+                    "command": "swaync-client -cp && kitty --title system-update ~/.config/scripts/update_script.sh" 
                 },
                 {
                     "label": " ",
                     "type": "toggle",
                     "active": false,
-                    "command": "swaync-client -cp && ~/.config/scripts/theme_picker.sh",
-                    "update-command": "[ -f ~/.config/scripts/theme_switch.lock ] && grep -q ' False$' ~/.config/scripts/theme_switch.lock && echo true || echo false"
+                    "command": "swaync-client -cp && ~/.config/themes/scripts/theme_picker.sh",
+                    "update-command": "[ -f ~/.config/themes/scripts/theme_switch.lock ] && grep -q ' False$' ~/.config/themes/scripts/theme_switch.lock && echo true || echo false"
                 },
                 {
                     "label": "",
-                    "type": "normal",
+                    "type": "toggle",
                     "active": false,
-                    "command": "swaync-client -cp && ~/.config/scripts/start_btop.sh"
+                    "update-command": "pgrep -x btop >/dev/null && echo true || echo false",
+                    "command": "~/.config/btop/scripts/start_btop.sh"
                 },
                 {
                     "label": "",
                     "type": "toggle",
                     "active": false,
-                    "command": "~/.config/scripts/toggle_float.sh",
+                    "command": "~/.config/scripts/toggle_float.sh true",
                     "update-command": "grep -q '^on$' ~/.config/hypr/float_state_temp && echo true || echo false"
                 }
             ]

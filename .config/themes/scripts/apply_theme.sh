@@ -14,7 +14,7 @@ COMMON_FILE="$HOME/.config/themes/common.sh"
 
 #-------------------------------------------------
 # make sure script is not running on the background
-LOCKFILE="$HOME/.config/scripts/theme_switch.lock"
+LOCKFILE="$HOME/.config/themes/scripts/theme_switch.lock"
 WAIT_TIME=3
 
 while grep -q " False$" "$LOCKFILE"; do
@@ -111,7 +111,7 @@ done
 # Load openRGB profile (takes a while....)
 echo "☑️ Changing OpenRGB profile"
 echo "OpenRGB False" >> "$LOCKFILE"
-nohup $HOME/.config/scripts/openrgb_profile.sh "$openrgb" "$LOCKFILE" >/dev/null 2>&1 &
+nohup $HOME/.config/OpenRGB/scripts/openrgb_profile.sh "$openrgb" "$LOCKFILE" >/dev/null 2>&1 &
 
 #-------------------------------------------------
 # Changes folder theme (takes a while....)
@@ -123,7 +123,7 @@ $HOME/.config/scripts/papirus_folders.sh "$icons" "$LOCKFILE" &
 #-------------------------------------------------
 # Make blurred background for wlogout
 echo "wlogout False" >> "$LOCKFILE"
-python3 $HOME/.config/scripts/blur_wallpaper.py "$wallpaper" "$background_rgb_str" "$opacity" "$LOCKFILE"
+python3 $HOME/.config/themes/scripts/blur_wallpaper.py "$wallpaper" "$background_rgb_str" "$opacity" "$LOCKFILE"
 
 #-------------------------------------------------
 # Hyprland temp file to not show errors when loading themes
@@ -149,9 +149,23 @@ swaync & disown
 waybar & disown
 hyprpaper & disown
 
+#-------------------------------------------------
+# make sure float state is the same
+$HOME/.config/scripts/toggle_float.sh "false"
+
 # Mark Hyprland ready
 sed -i "s|^Hyprland .*|Hyprland True|" "$LOCKFILE"
 echo "✅ all done"
 
-# Notification
-notify-send "$name" "theme activated."
+
+# Notification timeout
+timeout=10
+for ((i=0; i<timeout; i++)); do
+    if ! grep -q ' False$' "$LOCKFILE"; then
+        notify-send "$name" "Theme activated."
+        exit 0
+    fi
+    sleep 1
+done
+
+notify-send "$name" "Theme activation timed out."
