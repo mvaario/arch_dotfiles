@@ -45,4 +45,4 @@ rm ~/.config/wofi/temp
 
 # Apply theme
 theme_file=$(basename "$selected" | sed 's/\.[^.]*$//')
-$HOME/.config/themes/scripts/apply_theme.sh "$theme_file.sh"
+nohup "$HOME/.config/themes/scripts/apply_theme.sh" "$theme_file.sh" >/dev/null 2>&1 &

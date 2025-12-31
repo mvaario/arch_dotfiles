@@ -138,6 +138,7 @@ $HOME/.config/scripts/toggle_float.sh "false"
 
 # Mark Hyprland ready
 sed -i "s|^Hyprland .*|Hyprland True|" "$LOCKFILE"
+echo "$1" >> "$LOCKFILE"
 echo "✅ all done"
 
 
@@ -145,10 +146,10 @@ echo "✅ all done"
 timeout=10
 for ((i=0; i<timeout; i++)); do
     if ! grep -q ' False$' "$LOCKFILE"; then
-        notify-send "$name" "Theme activated."
+        notify-send "$1" "Theme activated."
         exit 0
     fi
     sleep 1
 done
 
-notify-send "$name" "Theme activation timed out."
+notify-send "$1" "Theme activation timed out."

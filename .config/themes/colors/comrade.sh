@@ -15,4 +15,4 @@ export name='red'
 export wallpaper='$HOME/.config/themes/wallpapers/comrade.png'
 
 #openrgb profile
-export openrgb="openrgb_white"
+export openrgb="openrgb_red"
