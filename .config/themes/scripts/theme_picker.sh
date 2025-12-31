@@ -1,4 +1,17 @@
 #!/bin/bash
+
+#-------------------------------------------------
+# make sure script is not running on the background
+LOCKFILE="$HOME/.config/themes/scripts/theme_switch.lock"
+echo $LOCKFILE
+if grep -q " False$" "$LOCKFILE"; then
+    echo "Other instance running"
+    exit 1
+fi
+
+# Lock the lockfile
+echo "Hyprland False" > "$LOCKFILE"
+
 # Close wofi if it's already running
 if pgrep -x wofi > /dev/null 2>&1; then
     killall wofi
@@ -30,15 +43,6 @@ done
 selected=$(<~/.config/wofi/temp)
 rm ~/.config/wofi/temp
 
-echo $selected
-
-if [[ -n "$selected" ]]; then
-    # get the name
-    theme_file=$(basename "$selected" | sed 's/\.[^.]*$//')
-
-    # Run run apply script with selected theme file
-    if [ -n "$theme_file" ]; then
-        nohup "$HOME/.config/themes/scripts/apply_theme.sh" "$theme_file.sh" >/dev/null 2>&1 &
-    fi
-fi
-
+# Apply theme
+theme_file=$(basename "$selected" | sed 's/\.[^.]*$//')
+$HOME/.config/themes/scripts/apply_theme.sh "$theme_file.sh"

@@ -4,6 +4,9 @@ set -euo pipefail
 SRC="$HOME/.config/themes/wallpapers"
 DST="$HOME/.config/themes/images"
 
+# Delete old image files
+rm -rf $DST/*
+
 # Find jpg and png files recursively
 find "$SRC" -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \) | while IFS= read -r img; do
     # Relative path from source

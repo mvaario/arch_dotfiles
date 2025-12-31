@@ -2,35 +2,18 @@
 # Apply selected theme to different moduls
 # Script called by theme_picker.sh
 THEME_FILE="$HOME/.config/themes/colors/$1"
-echo $THEME_FILE
+LOCKFILE="$HOME/.config/themes/scripts/theme_switch.lock"
+echo "apply theme" $THEME_FILE
 
 if [ ! -f "$THEME_FILE" ]; then
     echo "Theme not found: $1"
+    # Release the lockfile
+    echo "Hyprland True" > "$LOCKFILE"
     exit 1
 fi
 
 # Load common colors
 COMMON_FILE="$HOME/.config/themes/common.sh"
-
-#-------------------------------------------------
-# make sure script is not running on the background
-LOCKFILE="$HOME/.config/themes/scripts/theme_switch.lock"
-WAIT_TIME=3
-
-while grep -q " False$" "$LOCKFILE"; do
-  echo "Other instance running"
-  echo "Waiting..."
-  sleep 1
-  WAIT_TIME=$((WAIT_TIME - 1))
-  if [ "$WAIT_TIME" -le 0 ]; then
-    echo "Timeout reached, exiting."
-    exit 1
-  fi
-done
-
-# Empty lockfile if 
-echo "" > "$LOCKFILE"
-echo "Hyprland False" >> "$LOCKFILE"
 
 #-------------------------------------------------
 # No idea why this broke now...

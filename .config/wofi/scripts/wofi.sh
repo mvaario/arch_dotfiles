@@ -71,6 +71,11 @@ while true; do
         outside_start=0
     fi
 
+    # Check if wofi is closed
+    if ! pgrep -x wofi >/dev/null; then
+        break
+    fi
+
     # if theme is selected
     if [[ "$1" == "theme_selection" ]]; then
         if [[ -s ~/.config/wofi/temp ]]; then
