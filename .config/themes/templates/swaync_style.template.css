@@ -9,10 +9,11 @@
 }
 
 .control-center {
+    padding: 0;
+    border: none;
     background-color: alpha(#%background%, %opacity%);
-    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.65);
-    padding: 5px;
-    border: 1px solid #%main%;
+    outline: 1px solid #%main%;
+    box-shadow: 0 0 10px rgba(0,0,0,0.65);
 }
 
 .control-center .notification-row .notification-background {

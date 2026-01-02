@@ -10,7 +10,7 @@ STEP=200
 temp=$(hyprctl hyprsunset temperature)
 
 # Direction: up/down
-if [[ "$1" == "up" ]]; then
+if [[ "$1" == "up" && "$temp" -lt "$MAX_TEMP" ]]; then
     new_temp=$(( temp + STEP ))
     if (( new_temp < MAX_TEMP )); then
         hyprctl hyprsunset temperature $new_temp
@@ -18,7 +18,7 @@ if [[ "$1" == "up" ]]; then
         hyprctl hyprsunset temperature $MAX_TEMP
     fi
 
-elif [[ "$1" == "down" ]]; then
+elif [[ "$1" == "down" && "$temp" -gt "$MIN_TEMP" ]]; then
     new_temp=$(( temp - STEP ))
     if (( new_temp > MIN_TEMP )); then
         hyprctl hyprsunset temperature $new_temp
