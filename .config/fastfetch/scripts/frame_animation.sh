@@ -30,10 +30,6 @@ RESET="\033[0m"
 HIGHLIGHT_COLOR=$(hex_to_ansi "$highlight")
 MAIN_COLOR=$(hex_to_ansi "$main")
 
-# Example usage
-echo -e "${HIGHLIGHT_COLOR}Highlight Text${RESET}"
-echo -e "${MAIN_COLOR}Main Text${RESET}"
-
 mapfile -t logo_lines < "$LOGO_FILE"
 mapfile -t mask_lines < "$MASK_FILE"
 
@@ -43,7 +39,7 @@ frame=0
 
 while true; do
     # Build new frame into temp_logo.txt
-    > "$TEMP_LOGO"  # Clear previous contents
+    : > "$TEMP_LOGO"  # Clear previous contents
     for (( row=0; row<num_rows; row++ )); do
         logo_line="${logo_lines[$row]}"
 
@@ -74,14 +70,25 @@ while true; do
 
     # Clear screen and reset cursor, then show fastfetch with updated logo
     tput cup 0 0
-    fastfetch --logo "$TEMP_LOGO" &
-    FF_PID=$!
 
-    # Wait until fastfetch finishes or animation step ends
-    while kill -0 $FF_PID 2>/dev/null; do
-        sleep 0.05
-        break
-    done
+    # Get terminal size (if size too small disable fastfetch infos)
+    COLS=$(tput cols)
+    if (( $COLS >= 90 )); then
+        new_mode="full"
+        fastfetch --logo "$TEMP_LOGO"
+    elif (( $COLS >= 40 )); then
+        new_mode="logo_only"
+        fastfetch --structure none --logo "$TEMP_LOGO"
+    else
+        new_mode="empty"
+        clear
+    fi
+    
+    # Mode switch need clearing
+    if [[ $new_mode != $mode ]]; then
+        mode=$new_mode
+        clear
+    fi
 
     ((frame=(frame+1)%num_rows))
 
@@ -94,5 +101,5 @@ while true; do
         break
     fi
 done
-
 tput cnorm  # Restore cursor
+

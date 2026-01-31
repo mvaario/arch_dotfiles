@@ -22,11 +22,11 @@ if [[ "$CURRENT_STATE" = "off" && "$SWITCH_STATE" = "true" ]]; then
     hyprctl clients -j | jq -r '.[].address' | while read -r addr; do
         # Not sure if this need to be done in window_float.sh
         hyprctl dispatch setfloating address:$addr
-        hyprctl dispatch resizeactive exact 720 720
+        hyprctl dispatch resizeactive exact 1400 800
     done
 
     # Make glabal float rule
-    hyprctl keyword windowrulev2 "float,class:.*"
+    hyprctl keyword windowrule match:class .*, float 1
 
     # save state
     echo "on" > "$STATE_FILE"
@@ -46,7 +46,7 @@ elif [[ "$CURRENT_STATE" = "on" && "$SWITCH_STATE" = "true" ]]; then
     done
 
     # Remove global float rule
-    hyprctl keyword windowrulev2 "tile,class:.*"
+    hyprctl keyword windowrule match:class .*, float 0
 
     # save state
     echo "off" > "$STATE_FILE"
