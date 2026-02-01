@@ -4,7 +4,6 @@
   font-family: Lexend, "JetBrainsMono NFP";
   font-size: 14px;
   font-weight: 600;
-  color: #%foreground%;
 }
 
 window#waybar {
@@ -16,21 +15,46 @@ window#waybar {
     border-right: 1px solid #%main%;*/
     border-bottom: 1px solid #%main%;
     border-radius: 50px;
+    color: #%foreground%;
 }
 
-#workspaces
-{
+#workspaces {
   margin: 2px 1px 3px 1px;
   padding: 0px 1px;
   border-radius: 6px;
+  color: #%main%;
 }
-#workspaces button
-{
-  padding: 0px 5px;
-  margin: 4px 3px;
+
+#workspaces button {
+    padding: 0px 5px;
+    margin: 4px 3px;
+    border: none;
+    border-radius: 0px;   
+    background-color: transparent; 
+    color: #%main%; 
+}
+
+#workspaces button.empty {
+    background-color: transparent;
+    color: #%foreground%
+}
+
+#workspaces button.active {
+    font-size: 18px;
+    background-color: transparent; 
+    border: none;
+    border-radius: 0px;                
+    color: #%highlight%;                        
+    border-bottom: 3px solid #%highlight%;; 
+}
+
+#workspaces button:hover {
+  background-color: transparent;
+  color: #%highlight%;
   border-radius: 6px;
 }
 
+/* not in use
 #custom-ws1,
 #custom-ws2,
 #custom-ws3,
@@ -53,7 +77,7 @@ window#waybar {
 #custom-ws4:hover {
   background-color: #707070;
 }
-
+*/
 
 #clock,
 #pulseaudio,
@@ -71,16 +95,6 @@ window#waybar {
   padding: 0.3rem 0.3rem;
   margin: 0.4rem 0.25rem;
   border-radius: 6px;
-}
-
-#workspaces button {
-  color: transparent;
-}
-#workspaces button:hover {
-  background-color: #707070;
-}
-#workspaces button.active {
-  background-color: #%main%;
 }
 
 window#waybar.empty #window {
@@ -109,7 +123,6 @@ window#waybar.empty #window {
 #custom-razer.critical {
   color: #%red%;
 }
-
 
 tooltip {
   background-color: #%background%;

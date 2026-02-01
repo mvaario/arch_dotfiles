@@ -60,7 +60,7 @@ Version=1.0
 Type=Application
 Name=GitKraken
 Exec=/home/$USER/.local/opt/gitkraken/gitkraken
-Icon=/home/$USER/.local/opt/gitkraken/gitkraken.png	
+Icon=/home/$USER/.local/opt/gitkraken/gitkraken.png
 Terminal=false
 Categories=Development;Git;
 EOF
