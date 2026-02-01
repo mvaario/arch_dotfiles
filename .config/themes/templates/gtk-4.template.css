@@ -7,7 +7,6 @@ window.nautilus-window {
     outline: none;
 }
 
-
 /*------------- Everything --------------*/
 .nautilus-window *:not(rubberband) {
     background-color: rgba(%background_rgb_str%,0);
@@ -15,35 +14,35 @@ window.nautilus-window {
     border: none;
     box-shadow: none;
     outline: none;
+    color: rgba(%rgb_bwhite%, 0.9);
 }
 /* --------------------------------------*/
-
 
 /*-------------- Hightlight --------------*/
 rubberband,
 .rubberband {
-    background-color: rgba(%background_rgb_str%, %opacity%);
+    background-color: rgba(%rgb_main%, 0.15);
     border: 1px solid #%main%;  
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    color: #%main%;
 } 
-
 /* --------------------------------------*/
-
 
 /*--------------- Headers ---------------*/
 .nautilus-window placessidebar{
     background-color: rgba(%background_rgb_str%, 0);
     border-right: 1px solid #%main%;
     border-radius: 0;
+    color: #%main%;
 }
 .nautilus-window headerbar{
     background-color: rgba(%background_rgb_str%, 0);
     border-bottom: 1px solid #%main%;
     border-radius: 0;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    color: #%main%;
 }
 /* --------------------------------------*/
-
 
 /*---------------- popup -----------------*/
 .nautilus-window popover,
@@ -55,12 +54,26 @@ window > popover {
 }
 /* --------------------------------------*/
 
-
-/* ------------ Selected text ------------*/ 
-.nautilus-window .view row:selected {
-    /* white */
-    background-color: rgba(%rgb_bwhite%, 0.1);
-    color: #%main%;
+/* ---------- Hightlighted text ---------*/ 
+.nautilus-window .view row:active {
+    background-color: rgba(%rgb_main%, 0.2);
+    color: rgba(%rgb_main%, 0.1);
 }
 /* --------------------------------------*/
 
+/* ------------ Selected text ------------*/ 
+.nautilus-window .view row:selected {
+    background-color: rgba(%rgb_main%, 0.2);
+    color: rgba(%rgb_main%, 0.1);
+}
+/* --------------------------------------*/
+
+/* ---------- Preferences window --------*/
+floating-sheet .background {
+    background-color: rgba(%background_rgb_str%, 0.6);
+    border-radius: 6px;
+    border: 1px solid #%main%;
+    color: #%bwhite%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+/* --------------------------------------*/

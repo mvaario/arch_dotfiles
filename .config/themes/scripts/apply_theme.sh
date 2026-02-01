@@ -33,6 +33,7 @@ alpha_hex=$("$hexopacity" "$opacity")
 # changes color to rgb
 background_rgb_str=$($HOME/.config/scripts/hex_to_rgb.sh "$background")
 rgb_bwhite=$($HOME/.config/scripts/hex_to_rgb.sh "$bwhite")
+rgb_main=$($HOME/.config/scripts/hex_to_rgb.sh "$main")
 
 # List of template files and their destination
 declare -A files=(
@@ -56,6 +57,7 @@ for template in "${!files[@]}"; do
     dest="${files[$template]}"
     # Use sed to find and replace placeholders
     sed -e "s|%background_rgb_str%|$background_rgb_str|g" \
+        -e "s|%rgb_main%|$rgb_main|g" \
         -e "s|%rgb_bwhite%|$rgb_bwhite|g" \
         -e "s,%opacity%,$opacity,g" \
         -e "s,%background%,$background,g" \
