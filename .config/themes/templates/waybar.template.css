@@ -1,15 +1,17 @@
 * {
   min-height: 0;
   min-width: 0;
-  font-family: Lexend, "JetBrainsMono NFP";
+  font-family: "JetBrainsMonoNL Nerd Font";
   font-size: 14px;
   font-weight: 600;
 }
 
+/* -------------------- main -------------------- */
+
 window#waybar {
     background: rgba(%background_rgb_str%,%opacity%);
     transition-property: background;
-    transition-duration: .5s;
+    transition-duration: .5s; 
     /*border-top: 1px solid #%main%;
     border-left: 1px solid #%main%;
     border-right: 1px solid #%main%;*/
@@ -17,100 +19,74 @@ window#waybar {
     border-radius: 50px;
     color: #%foreground%;
 }
+/* -------------------- ***** -------------------- */
 
-#workspaces {
-  margin: 2px 1px 3px 1px;
-  padding: 0px 1px;
-  border-radius: 6px;
-  color: #%main%;
-}
-
+/* ----------------- workspaces ------------------ */
 #workspaces button {
-    padding: 0px 5px;
-    margin: 4px 3px;
+    /* top  right  bottom  left */
+    padding: 0rem 0.1rem 0rem 0.1rem;
+    margin: 0.6rem 0.2rem 0.6rem 0.2rem;
     border: none;
-    border-radius: 0px;   
-    background-color: transparent; 
+    border-radius: 0px;  
+    background: none;
+    box-shadow: none;
     color: #%main%; 
 }
 
 #workspaces button.empty {
-    background-color: transparent;
-    color: #%foreground%
-}
-
-#workspaces button.active {
-    font-size: 18px;
-    background-color: transparent; 
-    border: none;
-    border-radius: 0px;                
-    color: #%highlight%;                        
-    border-bottom: 3px solid #%highlight%;; 
+    color: #%foreground%;
 }
 
 #workspaces button:hover {
-  background-color: transparent;
-  color: #%highlight%;
-  border-radius: 6px;
+    color: #%highlight%;
 }
 
-/* not in use
-#custom-ws1,
-#custom-ws2,
-#custom-ws3,
-#custom-ws4 {
-  padding: 0.1rem 0.3rem;
-  margin: 0.45rem 0.25rem;
-  border-radius: 6px;
+#workspaces button.active {   
+    color: #%highlight%;
+    box-shadow: inset 0 -3px 0 0px #%highlight%;
 }
 
-#custom-ws1.active,
-#custom-ws2.active,
-#custom-ws3.active,
-#custom-ws4.active {
-  background-color: #%main%;
-}
+/* -------------------- ***** -------------------- */
 
-#custom-ws1:hover,
-#custom-ws2:hover,
-#custom-ws3:hover,
-#custom-ws4:hover {
-  background-color: #707070;
-}
-*/
-
-#clock,
-#pulseaudio,
-#custom-logo,
-#custom-power,
-#custom-spotify,
-#custom-notification,
-#custom-keylock,
-#custom-razer,
-#custom-settings,
-#cpu,
-#memory,
-#tray,
-#window {
-  padding: 0.3rem 0.3rem;
-  margin: 0.4rem 0.25rem;
-  border-radius: 6px;
-}
-
-window#waybar.empty #window {
-  background-color: transparent;
-}
-
-#pulseaudio.muted {
-  color: #%red%;
-}
-
+/* ------------------- modules ------------------- */
 #custom-logo {
+  /* top  right  bottom  left */
+  margin: 0.1rem 1rem 0rem 1.5rem;
   color: #%main%;
+  font-size: 16px;
 }
 
-#custom-power {
-  color: #%main%;
+#cpu {
+  /* top  right  bottom  left */
+  margin: 0rem 0.5rem 0rem 1rem;
+}
+#memory {
+  /* top  right  bottom  left */
+  margin: 0rem 0.5rem 0rem 0.5rem;
+}
+
+#window {
+  /* top  right  bottom  left */
+  margin: 0rem 0.5rem 0rem 0.5rem;
+}
+/* -------------------- ***** -------------------- */
+
+/* ------------------- calendar ------------------- */
+tooltip {
+     border-radius: 4px;
+     background: rgba(%background_rgb_str%,%opacity%);
+     color: #%foreground%; 
+     border: 1px solid #%main%;
+}
+/* -------------------- ***** -------------------- */
+
+#custom-keylock,
+#tray,
+#pulseaudio,
+#custom-razer,
+#custom-notification {
+  /* top  right  bottom  left */
+  margin: 0rem 0.5rem 0rem 0.5rem;  
 }
 
 #custom-keylock.locked {
@@ -120,11 +96,24 @@ window#waybar.empty #window {
   color: transparent;
 }
 
+
+#pulseaudio.muted {
+  color: #%red%;
+}
+
 #custom-razer.critical {
   color: #%red%;
 }
 
-tooltip {
-  background-color: #%background%;
-  border: 2px solid #282421;
+#custom-power {
+  /* top  right  bottom  left */
+  margin: 0rem 1.5rem 0.2rem 0rem;
+  color: #%main%;
 }
+
+
+#tray {
+  color: #%red%;
+}
+
+

@@ -27,6 +27,17 @@
     "custom/power"
     
   ],
+  
+/* -------------------- ***** -------------------- */
+
+  "custom/logo": {
+    "format": "",
+    "tooltip": false,
+    "on-click": "~/.config/wofi/scripts/wofi.sh menu"
+  },
+/* -------------------- ***** -------------------- */
+
+
   "hyprland/workspaces": {
     "format": "{id}",
     "on-click": "activate",
@@ -45,18 +56,35 @@
   },
     "persistent-only":true
   },
+/* -------------------- ***** -------------------- */
+
+  "cpu": {
+    "format": " {usage}%",
+    "interval": 10,
+    "tooltip": false
+  },
+/* -------------------- ***** -------------------- */
+
+  "memory": {
+    "format": " {used:0.1f}G",
+    "interval": 10
+  },
+/* -------------------- ***** -------------------- */
+
   "hyprland/window": {
     "format": "{title}",
     "rewrite": {
-      ".*Firefox": "Mozilla Firefox",
       ".*Code.*": "Visual Studio Code",
-      ".*Alacritty": "Alacritty",
-      ".*Thunar": "Thunar",
-      ".*Kitty*": "Kitty Terminal",
-      "^waybar.*": "Waybar",
-      ".*bash*": "Terminal"
+      "bash": "Terminal",
+      "(.*) — Zen Browser": "$1",
+      "(.*) - YouTube — Zen Browser": "$1",
+      "(.*) - Mousepad": "$1",
+      "^~.*": "Kitty: $0",
+      "^/.*": "Kitty: $0"
   }
   },
+/* -------------------- ***** -------------------- */
+
   "clock": {
     "format": " {:%H:%M    %a %d %b}",
     "calendar": {
@@ -64,18 +92,24 @@
     "mode-mon-col": 1,
     "on-scroll": 1
     },
-    "tooltip-format": "<span color='#cdd6f4' font='Lexend 16'><tt><small>{calendar}</small></tt></span>"
+    "tooltip-format": "<span font='JetBrainsMono Nerd Font Mono 12'><tt>{calendar}</tt></span>"
   },
-  "cpu": {
-    "format": " {usage}%",
-    "interval": 10,
-    "tooltip": false
-  },
+/* -------------------- ***** -------------------- */
 
-  "memory": {
-    "format": " {used:0.1f}G",
-    "interval": 10
+  "custom/keylock": {
+    "format": " ",
+    "exec": "~/.config/waybar/scripts/keylock_status.sh",
+    "interval": 1,
+    "return-type": "json"
   },
+/* -------------------- ***** -------------------- */
+
+  "tray": {
+  "spacing": 10,
+  "show-passive-items": false
+  },
+/* -------------------- ***** -------------------- */
+
   "pulseaudio": {
     "format": "{icon}{volume}%",
     "format-muted": " 0%",
@@ -85,37 +119,27 @@
     },
     "on-click": "pavucontrol"
   },
-  "custom/power": {
-    "tooltip": false,
-    "on-click": "wlogout --protocol layer-shell -b 3",
-    "format": "⏻ "
-  },
-  "custom/notification": {
-    "escape": true,
-    "format": "󰅺",
-    "on-click": "swaync-client -t",
-    "tooltip": false
-  },
-  "custom/keylock": {
-    "format": "",
-    "exec": "~/.config/scripts/keylock_status.sh",
-    "interval": 1,
-    "return-type": "json",
-    "on-click": "~/.config/scripts/toggle_keylock.sh"
-  },
+/* -------------------- ***** -------------------- */
+
   "custom/razer": {
     "icon-size": 18,
     "interval": 60,
     "return-type": "json",
-    "exec": "~/.config/scripts/razer_battery.py"
+    "exec": "~/.config/waybar/scripts/razer_battery.py"
   },
-  "custom/logo": {
-        "format": " ",
-        "tooltip": false,
-        "on-click": "~/.config/wofi/scripts/wofi.sh menu"
+/* -------------------- ***** -------------------- */
+
+  "custom/notification": {
+    "escape": true,
+    "format": "󰅺 ",
+    "on-click": "swaync-client -t",
+    "tooltip": false
   },
-  "tray": {
-  "spacing": 10,
-  "show-passive-items": false
+/* -------------------- ***** -------------------- */
+
+  "custom/power": {
+    "tooltip": false,
+    "on-click": "wlogout --protocol layer-shell -b 3",
+    "format": "⏻ "
   }
 }

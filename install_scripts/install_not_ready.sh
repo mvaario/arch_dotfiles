@@ -5,8 +5,6 @@ set -e
 nvidia=true
 razer=true
 optional_softwares=true
-gitkraken=true
-
 
 #------------------------------------------------------------------------
 # Ask for sudo password upfront
@@ -15,7 +13,7 @@ if ! sudo -v; then
   exit 1
 fi
 
-# Keep sudo alive in the background
+# Keep sudo alive in the background (does not work)
 (
   while true; do
     sleep 30
@@ -62,13 +60,14 @@ fi
 echo " "
 echo "🚀 Downloading packages..."
 PACKAGES=(
+	# essentials
 	git
 	neovim
-	code
 	hyprpolkitagent
 	ufw
 	pacman-contrib
 
+	# fonts
 	noto-fonts
 	noto-fonts-emoji
 	ttf-dejavu
@@ -77,6 +76,7 @@ PACKAGES=(
 	noto-fonts-cjk
 	papirus-icon-theme
 
+	# audio
 	pipewire
 	pipewire-alsa
 	pipewire-audio
@@ -87,9 +87,10 @@ PACKAGES=(
 	linux-headers
 	jq
 
+	# pacages
+	hyprland
 	kitty
 	waybar
-	hyprland
 	hyprpaper
 	hyprlock
 	hyprsunset
@@ -99,18 +100,22 @@ PACKAGES=(
 	starship
 	fastfetch
 	btop
+	openrgb
 
+	# softwares
+	ristretto 		# Image viewer
+    grim 			# screenshot
+    slurp 			# screenshot
 	gnome-disk-utility
-	mousepad
-	meld
+	mousepad		# easy notepad
+	meld			# compare
 
+	# miscs
 	cpupower
-
-	# xbox controller
-	xone-dkms-git 
+	xone-dkms-git 	# xbox controller
 	xone-dongle-firmware
 
-	libinput-tools # For scripts to get devices
+	libinput-tools # For wofi scripts to get devices (does it even work?)
 )
 
 # Package install
@@ -166,7 +171,7 @@ fi
 
 # Setup optional softwares
 if $optional_softwares; then
-	install_scripts/optional_softwares.sh $gitkraken
+	install_scripts/optional_softwares.sh
 fi
 
 
@@ -252,7 +257,7 @@ cp -r "$(pwd)/.bashrc" "$HOME/"
 # Enable ufw
 sudo systemctl enable ufw
 
-# random stuff for papirus folder icons
+# Enable Papirus-Dark
 gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark'
 
 # Set terminal for nautilus
@@ -261,15 +266,17 @@ gsettings set com.github.stunkymonkey.nautilus-open-any-terminal terminal kitty
 # Performance mode
 echo 'governor="performance"' | sudo tee /etc/default/cpupower
 
-# Autolog in file
-if [ ! -d "/etc/systemd/system/getty@tty1.service.d" ]; then
-    echo "Creating directory for systemd override: /etc/systemd/system/getty@tty1.service.d"
-    sudo mkdir -p "/etc/systemd/system/getty@tty1.service.d"
-fi
 
-echo "[Service]
-ExecStart=
-ExecStart=-/usr/bin/agetty --autologin $USER --noclear %I xterm-kitty" | sudo tee "/etc/systemd/system/getty@tty1.service.d/override.conf" > /dev/null
+
+# Autolog in file - Will be removed
+#if [ ! -d "/etc/systemd/system/getty@tty1.service.d" ]; then
+#    echo "Creating directory for systemd override: /etc/systemd/system/getty@tty1.service.d"
+#    sudo mkdir -p "/etc/systemd/system/getty@tty1.service.d"
+#fi
+
+#echo "[Service]
+#ExecStart=
+#ExecStart=-/usr/bin/agetty --autologin $USER --noclear %I xterm-kitty" | sudo tee "/etc/systemd/system/getty@tty1.service.d/override.conf" > /dev/null
 
 # Link nautilus compare using meld
 mkdir -p "$HOME/.local/share/nautilus/scripts"
@@ -286,10 +293,10 @@ sudo -u "$USER" DISPLAY=:0 XDG_RUNTIME_DIR="/run/user/$(id -u $USER)" gsettings 
 sudo -u "$USER" DISPLAY=:0 XDG_RUNTIME_DIR="/run/user/$(id -u $USER)" gsettings set org.xfce.mousepad.preferences.view show-line-numbers true
 sudo -u "$USER" DISPLAY=:0 XDG_RUNTIME_DIR="/run/user/$(id -u $USER)" gsettings set org.xfce.mousepad.preferences.window always-show-tabs true
 
-# enable theme
+# enable theme (Does not work on TTY)
 ~/.config/themes/scripts/apply_theme.sh earthsong.sh
 
-# Add permissions
+# Add permissions (Will be edited to ./icons)
 sudo chown -R $USER:$USER /var/lib/papirus-folders/
 sudo chown -R $USER:$USER /usr/share/icons/Papirus*
 

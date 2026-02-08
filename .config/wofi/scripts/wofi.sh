@@ -38,7 +38,7 @@ mouse_pid=$!
 # trap 'kill "$keyboard_pid"' EXIT INT TERM
 trap 'kill "$mouse_pid"' EXIT INT TERM
 outside_start=0
-outside_maxtime=10000
+outside_maxtime=3000
 while true; do
     sleep 0.1
     

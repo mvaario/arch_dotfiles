@@ -1,6 +1,8 @@
 #!/bin/bash
 # Apply selected theme to different moduls
 # Script called by theme_picker.sh
+start_time=$(date +%s%N) # log the time
+
 THEME_FILE="$HOME/.config/themes/colors/$1"
 LOCKFILE="$HOME/.config/themes/scripts/theme_switch.lock"
 echo "apply theme" $THEME_FILE
@@ -32,8 +34,9 @@ alpha_hex=$("$hexopacity" "$opacity")
 
 # changes color to rgb
 background_rgb_str=$($HOME/.config/scripts/hex_to_rgb.sh "$background")
-rgb_bwhite=$($HOME/.config/scripts/hex_to_rgb.sh "$bwhite")
 rgb_main=$($HOME/.config/scripts/hex_to_rgb.sh "$main")
+#darken background since kitty is stupid and does not match
+darkenbackground=$($HOME/.config/themes/scripts/darken_background.sh "$background")
 
 # List of template files and their destination
 declare -A files=(
@@ -58,8 +61,8 @@ for template in "${!files[@]}"; do
     # Use sed to find and replace placeholders
     sed -e "s|%background_rgb_str%|$background_rgb_str|g" \
         -e "s|%rgb_main%|$rgb_main|g" \
-        -e "s|%rgb_bwhite%|$rgb_bwhite|g" \
         -e "s,%opacity%,$opacity,g" \
+        -e "s,%darkenbackground%,$darkenbackground,g" \
         -e "s,%background%,$background,g" \
         -e "s,%backerground%,$backerground,g" \
         -e "s,%foreground%,$foreground,g" \
@@ -96,19 +99,19 @@ done
 # Load openRGB profile (takes a while....)
 echo "☑️ Changing OpenRGB profile"
 echo "OpenRGB False" >> "$LOCKFILE"
-nohup $HOME/.config/OpenRGB/scripts/openrgb_profile.sh "$openrgb" "$LOCKFILE" >/dev/null 2>&1 &
+$HOME/.config/OpenRGB/scripts/openrgb_profile.sh "$openrgb" "$LOCKFILE" &
 
 #-------------------------------------------------
-# Changes folder theme (takes a while....)
+# Changes folder theme
 pkill nautilus
 echo "☑️ Changing folder icons"
 echo "Papirus False" >> "$LOCKFILE"
-$HOME/.config/scripts/papirus_folders.sh "$icons" "$LOCKFILE" &
+$HOME/.config/themes/scripts/papirus_folders.sh "$icons" "$LOCKFILE" &
 
 #-------------------------------------------------
 # Make blurred background for wlogout
 echo "wlogout False" >> "$LOCKFILE"
-python3 $HOME/.config/themes/scripts/blur_wallpaper.py "$wallpaper" "$background_rgb_str" "$opacity" "$LOCKFILE"
+python3 $HOME/.config/themes/scripts/blur_wallpaper.py "$wallpaper" "$background_rgb_str" "$opacity" "$LOCKFILE" &
 
 #-------------------------------------------------
 # Hyprland temp file to not show errors when loading themes
@@ -122,6 +125,10 @@ echo "✅ Cursor changes"
 
 gsettings set org.gnome.desktop.interface gtk-theme "$nautilus"
 echo "✅ Nautilus changes"
+
+# Make custom icons correct
+echo "recolor False" >> "$LOCKFILE"
+$HOME/.config/themes/scripts/icon_recolor.sh "$foreground" "$LOCKFILE"
 
 #-------------------------------------------------
 pkill swaync
@@ -149,6 +156,10 @@ timeout=10
 for ((i=0; i<timeout; i++)); do
     if ! grep -q ' False$' "$LOCKFILE"; then
         notify-send "$1" "Theme activated."
+
+        end_time=$(date +%s%N)
+        elapsed=$(( ($end_time - $start_time) / 1000000 ))
+        echo "everything took ${elapsed} ms" >> $HOME/.config/themes/scripts/theme_switch.lock
         exit 0
     fi
     sleep 1

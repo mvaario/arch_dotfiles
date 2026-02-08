@@ -1,10 +1,10 @@
 #!/bin/sh
-export opacity='0.6'
+export opacity='0.4'
 
-export background='2b282b'     
-export foreground='c0ccdb'      
-export main='9c27b0'            
-export highlight='C34AEE'
+export background='1E0820'  # 2 from bottom
+export foreground='E4AEEA'  # 6 from top
+export main='BE3CCD'        # 13/25 from top 
+export highlight='CF6DD9'   # 3 up
 
 # For nautilus and cursor
 export cursor='catppuccin-mocha-mauve-cursors'

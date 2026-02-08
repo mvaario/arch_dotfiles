@@ -13,20 +13,19 @@ stdbuf -oL -eL /usr/bin/openrgb --profile "$PROFILE" 2>&1 | {
     SECONDS=0
     while IFS= read -r line; do
         #debug:
-        #echo "$line"
+        echo "$line"
 
         if [[ "$line" == *"Profile loaded successfully"* ]]; then
-            echo "$line"
             # Mark openrgb finish
             sed -i "s|^OpenRGB .*|OpenRGB True|" "$LOCKFILE"
-            # pkill openrgb
             break
         fi
 
         if (( SECONDS >= 8 )); then
             echo "Timeout on openrgb profile loading"
-            # pkill openrgb
             break
         fi
     done
 }
+
+pkill openrgb

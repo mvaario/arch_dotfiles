@@ -14,7 +14,7 @@ window.nautilus-window {
     border: none;
     box-shadow: none;
     outline: none;
-    color: rgba(%rgb_bwhite%, 0.9);
+    color: #%foreground%;
 }
 /* --------------------------------------*/
 

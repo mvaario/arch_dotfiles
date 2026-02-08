@@ -1,203 +1,195 @@
 * {
+    /* everything */
     outline: none;
-    font-family: "Adwaita Sans";
+    font-family: "JetBrainsMonoNL Nerd Font";
     font-size: 18px;
+    font-weight: 500;
     text-shadow: none;
-    color: #cdd6f4;
+    color: #%foreground%;
     background-color: transparent;
     background: transparent;
 }
 
+/* control center */
 .control-center {
-    padding: 0;
     border: none;
     background-color: alpha(#%background%, %opacity%);
     outline: 1px solid #%main%;
-    box-shadow: 0 0 10px rgba(0,0,0,0.65);
+    box-shadow: 0 0 10px rgba(0,0,0,%opacity%);
 }
 
-.control-center .notification-row .notification-background {
-    border-radius: 15px;
-    margin-top: 5px;
+.control-center * {
+    /* top  right  bottom  left */
+    padding-top: 0px;
+    padding-bottom: 0px;
+    margin-top: 3px;
+    margin-bottom: 3px;
 }
 
-.notification {
-    background-color: alpha(#%background%, %opacity%);
+
+.widget-title {
+    background-color: alpha(#%background%, 0);
+    
 }
 
-.notification > *:last-child > *  {
-    margin: 5px;
-}
-
-.summary { font-size: 1.1rem; }
+/* notification inside and popup*/
+.summary { font-size: 1.2rem; }
 .time { font-size: 0.8rem; }
 .body { font-size: 1rem; }
 
-.notification-content {
-    padding: 15px 15px 15px 15px;
-}
-
-.notification-action > button {
-    padding: unset;
-    margin: unset;
-}
-.notification-action > label {
-    font-size: 1rem;
-    font-weight: normal;
-}
-
-.notification.critical {
-    background-color: alpha(#%red%, 0.5);
-    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.65);
-}
-.notification.low,
-.notification.normal  {
+/* notification popup */
+.notification {
     background-color: alpha(#%background%, %opacity%);
-    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.65);
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.3);
+    border: 1px solid #%main%;
+    /* top  right  bottom  left */
+    padding: 1rem;
 }
 
+/* notification inside swaync */
+.control-center .notification  {
+    background-color: alpha(#%background%, %opacity%);
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.3);
+    border: 1px solid alpha(#%main%, %opacity%);
+    /* top  right  bottom  left */
+    margin: 0rem 0rem 0rem 0rem;
+    padding: 0rem 1rem 0rem 1rem;
+}
+
+.control-center .notification-group-close-all-button,
+.control-center .notification-group-close-all-button:hover,
+.control-center .notification-group-collapse-button,
+.control-center .notification-group-collapse-button:hover {
+    background-color: alpha(#%green%, %opacity%);
+    
+}
+
+.widget-buttons-grid {
+    /* top  right  bottom  left */
+    margin: 0px 0px 0px 0px;
+    padding: 0px 20px 0px 20px;
+
+}
+
+.widget-buttons-grid > flowbox > flowboxchild > button {
+    background: alpha(#%background%, %opacity%);
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
+    min-width: 100px;
+    min-height: 40px;
+    transition: all .5s ease;
+    /* top  right  bottom  left */
+    margin: 2px 2px 2px 2px;
+    padding: 5px 0px 5px 0px;
+}
+
+/* buttons checked */
+.widget-buttons-grid > flowbox > flowboxchild > button.toggle:checked {
+    background: alpha(#%main%, %opacity%);
+}
+
+/* buttons hover */
+.widget-buttons-grid > flowbox > flowboxchild > button:hover {
+    background: alpha(#%highlight%, %opacity%);
+}
+
+/* buttons checked and hover */
+.widget-buttons-grid > flowbox > flowboxchild > button.toggle:checked:hover {
+    background: alpha(#%highlight%, %opacity%);
+}
+
+/* notification pop up close button */
 .close-button {
-    background-color: alpha(#45475a, 0.8);
-    box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.35);
+    background-color: alpha(#%background%, %opacity%);
+    box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.3);
 }
 .close-button:hover {
-    background-color: alpha(#f38ba8, 0.8);
+    background-color: alpha(#%red%, %opacity%);
 }
 
-.notification-group-header,
-.notification-group-icon {
-    font-size: 0.9rem;
+/* Close button */
+.widget-title {
+    font-size: 1.25rem;
+    font-weight: 500;
 }
 
-.notification-group-collapse-button,
-.notification-group-close-all-button {
-    box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.35);
-    background-color: #45475a;
-}
-
-.notification-group-collapse-button:hover {
-    background-color: alpha(#%main%, 0.8);
-}
-.notification-group-close-all-button:hover {
-    background-color: alpha(#f38ba8, 0.8);
-}
-
-trough highlight {
-    background: #%main%;
-}
-scale trough {
-    margin: 0rem 1rem;
-    background-color: #45475a;
-    min-height: 8px;
-    min-width: 70px;
-}
-slider {
-    background-color: #cdd6f4;
-}
-tooltip {
-    background-color: #45475a;
-}
-
-/*** Widgets ***/
-/* Buttons widget */
-.widget-buttons-grid {
-    font-size: 1rem;
-    padding: 20px 20px 10px;
-    margin: unset;
-}
-.widget-buttons-grid > flowbox > flowboxchild > button {
-    background: #45475a;
-    box-shadow: 0px 0px 10px alpha(#%background%, %opacity%);
+/* close button inside swaync */
+.widget-title > button {
+    background: alpha(#%background%, %opacity%);
+    border: none;
+    box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.3);
     border-radius: 12px;
-    min-width: 80px;
-    min-height: 30px;
-    padding: 6px;
-    margin: 0 0 0;
     transition: all .5s ease;
 }
-.widget-buttons-grid > flowbox > flowboxchild > button:hover {
-    background: #585b70;
+.widget-title > button:hover {
+    background: alpha(#%red%, %opacity%);
 }
-.widget-buttons-grid > flowbox > flowboxchild > button.toggle:checked {
-    background: #%main%;
+
+
+/* volume */
+.widget-volume {
+    background: transparent;
+    pointer-events: none;
+    pointer-events: none;
 }
-.widget-buttons-grid > flowbox > flowboxchild > button.toggle:checked:hover {
-    background: alpha(#%main%, 0.8);
+
+/* Slider trough (the bar) */
+.widget-volume scale trough {
+    background-color: alpha(#%background%, %opacity%);
+    min-height: 4px;
+    border-radius: 2px;
 }
+
+/* Filled part */
+.widget-volume scale trough highlight {
+    background-color: alpha(#%main%, %opacity%);
+    border-radius: 2px;
+}
+
+/* Slider handle */
+.widget-volume scale slider {
+    background-color: #%foreground%;
+    min-width: 5px;
+    min-height: 5px;
+    border-radius: 999px;
+}
+
 
 /* Mpris widget */
-@define-color mpris-album-art-overlay rgba(0, 0, 0, 0.55);
-@define-color mpris-button-hover rgba(0, 0, 0, 0.5);
-
-.widget-mpris .widget-mpris-player {
-    padding: 16px;
-    margin: 16px 20px;
-    background-color: @mpris-album-art-overlay;
-    border-radius: 12px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.65);
-}
-.widget-mpris .widget-mpris-player .widget-mpris-album-art {
-    border-radius: 12px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.65);
-}
-.widget-mpris .widget-mpris-player .widget-mpris-title {
-    font-weight: bold;
-    font-size: 1.2rem;
-    margin: 0px 8px 8px 8px;
-}
-.widget-mpris .widget-mpris-player .widget-mpris-subtitle {
-    font-size: 1rem;
-}
-.widget-mpris .widget-mpris-player > box > button:hover {
-    background-color: @mpris-button-hover;
-}
-.widget-mpris > box > button:hover {
-    background: alpha(#585b70, 0.6);
+.widget-mpris * {
+    /* top  right  bottom  left */
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
 }
 
-/* Volume widget */
-.widget-volume {
-    padding: 6px 5px 5px 5px;
-    margin: unset;
-    font-size: 1.3rem;
-}
-.widget-volume > box > button {
-    border: none;
-}
-.per-app-volume {
-    padding: 4px 8px 8px 8px;
-    margin: 0px 8px 8px 8px;
+.widget-mpris-player {
+  padding: 10px 10px 10px 10px;
+  border: 1px solid alpha(#%main%, %opacity%);
+  background-color: alpha(#%background%, %opacity%);
 }
 
-/* Backlight widget */
-.widget-backlight {
-    padding: 0 0 3px 16px;
-    margin: unset;
-    font-size: 1.1rem;
+.widget-mpris image {
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
 }
 
-/* Title widget */
-.widget-title {
-    padding: unset;
-    margin: unset;
-    font-weight: bold;
-    padding: 15px;
+picture.mpris-background {
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
+    opacity: 0;
 }
-.widget-title > label {
-    font-size: 1.5rem;
+
+
+/* expanded notication buttons (delete this) */
+.notification-group-collapse-button,
+.notification-group-close-all-button {
+    background-color: alpha(#ff0048, 0.8);
 }
-.widget-title > button {
-    padding:unset;
-    margin:unset;
-    text-shadow: none;
-    background: #%red%;
-    border: none;
-    box-shadow: none;
-    border-radius: 100px;
-    padding:0px 6px;
-    transition: all .7s ease;
+/* expanded notication buttons (delete this) */
+.notification-group-collapse-button:hover {
+    background-color: alpha(#ff0048, 0.8);
 }
-.widget-title > button:hover {
-    background: alpha(#%background%, %opacity%);
-    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.65);
+/* expanded notication buttons (delete this) */
+.notification-group-close-all-button:hover {
+    background-color: alpha(#ff0048, 0.8);
 }

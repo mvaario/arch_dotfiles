@@ -1,20 +1,17 @@
 echo " "
 echo "🎮 Downloading optional softwares..."
 PACKAGES=(
+    code
     lact
     steam
     discord
     lutris
     gamemode
-    openrgb
+    
     moonlight-qt
     wakeonlan
 
     pycharm-community-edition
-
-    ristretto # Image viewer
-    grim # Screenshot
-    slurp # Screenshot
 
     vlc
     vlc-plugin-x264
@@ -37,9 +34,8 @@ for pkg in "${PACKAGES[@]}"; do
     fi
 done
 
-
 #------------------------------------------------------------------------
-if [[ "$1" == "true" && ! -d ~/.local/opt/gitkraken ]]; then
+if [[ ! -d ~/.local/opt/gitkraken ]]; then
     # Get user
     USER=$(logname)
 
