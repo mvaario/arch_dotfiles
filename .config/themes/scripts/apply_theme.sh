@@ -95,6 +95,7 @@ for template in "${!files[@]}"; do
 done
 
 
+
 #-------------------------------------------------
 # Load openRGB profile (takes a while....)
 echo "☑️ Changing OpenRGB profile"
@@ -128,14 +129,19 @@ echo "✅ Nautilus changes"
 
 # Make custom icons correct
 echo "recolor False" >> "$LOCKFILE"
-$HOME/.config/themes/scripts/icon_recolor.sh "$foreground" "$LOCKFILE"
+$HOME/.config/themes/scripts/icon_recolor.sh "$foreground" "$LOCKFILE" &
 
 #-------------------------------------------------
 pkill swaync
 pkill hyprpaper
 pkill waybar
 hyprctl reload
-sleep 0.5
+
+# wait until everything is ready
+timeout=3000
+while grep -qP '^(?!Hyprland|OpenRGB).* False$' "$LOCKFILE"; do
+    $HOME/.config/themes/scripts/timeout.sh "$start_time" "$timeout" "$LOCKFILE" 
+done
 
 swaync & disown
 waybar & disown
@@ -143,26 +149,21 @@ hyprpaper & disown
 
 #-------------------------------------------------
 # make sure float state is the same
-$HOME/.config/scripts/toggle_float.sh "false"
+$HOME/.config/scripts/toggle_float.sh "false" &
 
 # Mark Hyprland ready
 sed -i "s|^Hyprland .*|Hyprland True|" "$LOCKFILE"
-echo "$1" >> "$LOCKFILE"
 echo "✅ all done"
 
-
 # Notification timeout
-timeout=10
-for ((i=0; i<timeout; i++)); do
-    if ! grep -q ' False$' "$LOCKFILE"; then
-        notify-send "$1" "Theme activated."
-
-        end_time=$(date +%s%N)
-        elapsed=$(( ($end_time - $start_time) / 1000000 ))
-        echo "everything took ${elapsed} ms" >> $HOME/.config/themes/scripts/theme_switch.lock
-        exit 0
-    fi
-    sleep 1
+timeout=5000
+while grep -E ' False$' "$LOCKFILE" | grep -vq '^OpenRGB '; do
+    $HOME/.config/themes/scripts/timeout.sh "$start_time" "$timeout" "$LOCKFILE" 
 done
 
-notify-send "$1" "Theme activation timed out."
+# Mark to time and notify
+end_time=$(date +%s%N)
+elapsed=$(( ($end_time - $start_time) / 1000000 ))
+echo "Theme $1 took ${elapsed} ms" >> $HOME/.config/themes/scripts/theme_switch.lock
+notify-send "$1" "Theme activated."
+exit 0

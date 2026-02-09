@@ -22,7 +22,7 @@ stdbuf -oL -eL /usr/bin/openrgb --profile "$PROFILE" 2>&1 | {
         fi
 
         if (( SECONDS >= 8 )); then
-            echo "Timeout on openrgb profile loading"
+            echo "Timeout on OpenRGB profile loading" >> "$LOCKFILE"
             break
         fi
     done

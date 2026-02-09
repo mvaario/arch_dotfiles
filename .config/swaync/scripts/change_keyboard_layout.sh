@@ -11,8 +11,6 @@ fi
 # Get current layout
 CURRENT=$(hyprctl devices -j | jq -r '.[] | .[] | select(.name=="rdmctmzt-evo80-2.4g") | .active_keymap')
 
-#echo $CURRENT
-
 # Map to short code (US/FI)
 case "$CURRENT" in
     US|'English (US)')
@@ -27,3 +25,8 @@ case "$CURRENT" in
         #echo "$CURRENT"
         ;;
 esac
+
+# Notify when changed
+if [ "$1" = "switch" ]; then
+    notify-send "$CURRENT" "keyboard layout activated"
+fi

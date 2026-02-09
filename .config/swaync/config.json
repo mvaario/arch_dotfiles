@@ -78,7 +78,7 @@
             ]
         },
         "volume": {
-            "label": " ",
+            "label": "",
             "step": 1
         },
         "mpris": {
