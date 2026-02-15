@@ -33,14 +33,32 @@ def adjust_vibrancy(img, vibrancy=0.1696):
 def add_blur(img, blur=15):
     return img.filter(ImageFilter.GaussianBlur(blur))
 
+def mark_lockfile(LOCKFILE, wallpaper):
+    # Mark lockfile ready
+    for line in fileinput.input(LOCKFILE, inplace=True):
+        if line.startswith("Wlogout"):
+            line = f"Wlogout True {wallpaper_name}\n"
+        sys.stdout.write(line)
+    return
 
+
+wallpaper = sys.argv[1]
+background_rgb_str = sys.argv[2]
+opacity = sys.argv[3]
+current_wallpaper = sys.argv[4]
+LOCKFILE = sys.argv[5]
+
+wallpaper_name = os.path.basename(wallpaper)
+if  wallpaper_name == current_wallpaper:
+    print("Current wlogout image is the same")
+    mark_lockfile(LOCKFILE, wallpaper_name)
+    quit()
 
 start = time.time()
 print("Creating blured wlogout image")
 
 # wallpaper
-wallpaper_path = sys.argv[1]
-img_path = os.path.expandvars(os.path.expanduser(wallpaper_path))
+img_path = os.path.expandvars(os.path.expanduser(wallpaper))
 img = Image.open(img_path).convert("RGB")
 
 # if changing hyprland decoration config these need to be adjusted
@@ -52,25 +70,18 @@ img = add_blur(img, blur=30)
 
 
 # Create a solid color image with the kitty background color
-background_color_str = sys.argv[2]  # aka: 35,38,51
-r, g, b = map(int, background_color_str.split(","))
+r, g, b = map(int, background_rgb_str.split(","))
 
 overlay_color = (r, g, b)
 overlay = Image.new("RGB", img.size, overlay_color)
 
 # use same as waybar and kitty terminal
-alpha = float(sys.argv[3])
+alpha = float(opacity)
 blended = Image.blend(img, overlay, alpha)
 output_path = os.path.expanduser("~/.config/wlogout/background/wallpaper.jpg")
 blended.save(output_path)
 
-
-# Mark lockfile ready
-lockfile = sys.argv[4]
-for line in fileinput.input(lockfile, inplace=True):
-    # Replace line starting with wlogout with wlogout True
-    new_line = re.sub(r"^wlogout .*", "wlogout True", line)
-    sys.stdout.write(new_line)
+mark_lockfile(LOCKFILE, wallpaper_name)
 
 print(f"Image edition done: {time.time()-start}")
 

@@ -3,14 +3,14 @@
 # Script called by theme_picker.sh
 start_time=$(date +%s%N) # log the time
 
-THEME_FILE="$HOME/.config/themes/colors/$1"
-LOCKFILE="$HOME/.config/themes/scripts/theme_switch.lock"
+THEME_FILE="$HOME/.config/themes/colors/$1.sh"
+LOCKFILE="$HOME/.config/themes/theme_switch.lock"
 echo "apply theme" $THEME_FILE
 
 if [ ! -f "$THEME_FILE" ]; then
     echo "Theme not found: $1"
     # Release the lockfile
-    echo "Hyprland True" > "$LOCKFILE"
+    sed -i "s|^Hyprland .*|Hyprland True|" "$LOCKFILE"
     exit 1
 fi
 
@@ -89,30 +89,32 @@ for template in "${!files[@]}"; do
         -e "s,%size%,$size,g" \
         -e "s,%nautilus%,$nautilus,g" \
         -e "s,%icons%,$icons,g" \
-        -e "s,%name%,$name,g" \
+        -e "s,%fastfetch%,$fastfetch,g" \
         -e "s,%alpha_hex%,$alpha_hex,g" \
         "$template" > "$dest"
 done
 
 
-
 #-------------------------------------------------
 # Load openRGB profile (takes a while....)
 echo "☑️ Changing OpenRGB profile"
-echo "OpenRGB False" >> "$LOCKFILE"
-$HOME/.config/OpenRGB/scripts/openrgb_profile.sh "$openrgb" "$LOCKFILE" &
+CURRENT_PROFILE=$(grep '^OpenRGB ' "$LOCKFILE" | cut -d' ' -f3-)
+sed -i "s|^OpenRGB .*|OpenRGB False|" "$LOCKFILE"
+$HOME/.config/OpenRGB/scripts/openrgb_profile.sh "$openrgb" "$CURRENT_PROFILE" "$LOCKFILE" &
 
 #-------------------------------------------------
 # Changes folder theme
 pkill nautilus
 echo "☑️ Changing folder icons"
-echo "Papirus False" >> "$LOCKFILE"
-$HOME/.config/themes/scripts/papirus_folders.sh "$icons" "$LOCKFILE" &
+CURRENT_ICONS=$(grep '^Papirus ' "$LOCKFILE" | cut -d' ' -f3-)
+sed -i "s|^Papirus .*|Papirus False|" "$LOCKFILE"
+$HOME/.config/themes/scripts/papirus_folders.sh "$icons" "$CURRENT_ICONS" "$LOCKFILE" &
 
 #-------------------------------------------------
 # Make blurred background for wlogout
-echo "wlogout False" >> "$LOCKFILE"
-python3 $HOME/.config/themes/scripts/blur_wallpaper.py "$wallpaper" "$background_rgb_str" "$opacity" "$LOCKFILE" &
+CURRENT_WALLPAPER=$(grep '^Wlogout ' "$LOCKFILE" | cut -d' ' -f3-)
+sed -i "s|^Wlogout .*|Wlogout False|" "$LOCKFILE"
+python3 $HOME/.config/themes/scripts/blur_wallpaper.py "$wallpaper" "$background_rgb_str" "$opacity" "$CURRENT_WALLPAPER" "$LOCKFILE" &
 
 #-------------------------------------------------
 # Hyprland temp file to not show errors when loading themes
@@ -128,8 +130,9 @@ gsettings set org.gnome.desktop.interface gtk-theme "$nautilus"
 echo "✅ Nautilus changes"
 
 # Make custom icons correct
-echo "recolor False" >> "$LOCKFILE"
-$HOME/.config/themes/scripts/icon_recolor.sh "$foreground" "$LOCKFILE" &
+CURRENT_COLOR=$(grep '^Recolor ' "$LOCKFILE" | cut -d' ' -f3-)
+sed -i "s|^Recolor .*|Recolor False|" "$LOCKFILE"
+$HOME/.config/themes/scripts/icon_recolor.sh "$foreground" "$CURRENT_COLOR" "$LOCKFILE" $
 
 #-------------------------------------------------
 pkill swaync
@@ -149,7 +152,7 @@ hyprpaper & disown
 
 #-------------------------------------------------
 # make sure float state is the same
-$HOME/.config/scripts/toggle_float.sh "false" &
+$HOME/.config/swaync/scripts/toggle_float.sh "false" &
 
 # Mark Hyprland ready
 sed -i "s|^Hyprland .*|Hyprland True|" "$LOCKFILE"
@@ -164,6 +167,6 @@ done
 # Mark to time and notify
 end_time=$(date +%s%N)
 elapsed=$(( ($end_time - $start_time) / 1000000 ))
-echo "Theme $1 took ${elapsed} ms" >> $HOME/.config/themes/scripts/theme_switch.lock
+sed -i "s|^Theme .*|Theme $1 took ${elapsed} ms|" "$LOCKFILE"
 notify-send "$1" "Theme activated."
 exit 0

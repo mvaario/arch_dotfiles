@@ -12,12 +12,14 @@ window#waybar {
     background: rgba(%background_rgb_str%,%opacity%);
     transition-property: background;
     transition-duration: .5s; 
+    box-shadow: none;
     /*border-top: 1px solid #%main%;
     border-left: 1px solid #%main%;
     border-right: 1px solid #%main%;*/
     border-bottom: 1px solid #%main%;
     border-radius: 50px;
     color: #%foreground%;
+    
 }
 /* -------------------- ***** -------------------- */
 

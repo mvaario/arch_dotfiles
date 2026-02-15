@@ -52,27 +52,27 @@
                     "label": "",
                     "type": "normal",
                     "active": false,
-                    "command": "swaync-client -cp && kitty --title system-update ~/.config/scripts/update_script.sh" 
+                    "command": "swaync-client -cp && kitty --title system-update ~/.config/swaync/scripts/update_script.sh" 
                 },
                 {
                     "label": "",
                     "type": "toggle",
                     "active": false,
-                    "command": "swaync-client -cp && ~/.config/themes/scripts/theme_picker.sh",
-                    "update-command": "[ -f ~/.config/themes/scripts/theme_switch.lock ] && grep -q ' False$' ~/.config/themes/scripts/theme_switch.lock && echo true || echo false"
+                    "command": "swaync-client -cp && ~/.config/swaync/scripts/theme_picker.sh",
+                    "update-command": "[ -f ~/.config/themes/theme_switch.lock ] && grep -q ' False$' ~/.config/themes/theme_switch.lock && echo true || echo false"
                 },
                 {
                     "label": "",
                     "type": "toggle",
                     "active": false,
                     "update-command": "pgrep -x btop >/dev/null && echo true || echo false",
-                    "command": "~/.config/btop/scripts/start_btop.sh"
+                    "command": "~/.config/swaync/scripts/start_btop.sh"
                 },
                 {
                     "label": "",
                     "type": "toggle",
                     "active": false,
-                    "command": "~/.config/scripts/toggle_float.sh true",
+                    "command": "~/.config/swaync/scripts/toggle_float.sh true",
                     "update-command": "grep -q '^on$' ~/.config/hypr/float_state_temp && echo true || echo false"
                 }
             ]

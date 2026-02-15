@@ -6,7 +6,7 @@
     {
       "type": "custom",
       "format": "┌──────────────────────────────────────────┐",
-      "outputColor":"%name%"
+      "outputColor":"%fastfetch%"
     },
     {
       "type": "os",
@@ -45,18 +45,18 @@
     {
       "type": "custom",
       "format": "└──────────────────────────────────────────┘",
-      "outputColor":"%name%"
+      "outputColor":"%fastfetch%"
     },
     {
       "type": "title",
       "key": "  ",
       "format": "{6} {7} {8}",
-      "keyColor": "%name%"
+      "keyColor": "%fastfetch%"
     },
     {
       "type": "custom",
       "format": "┌──────────────────────────────────────────┐",
-      "outputColor":"%name%"
+      "outputColor":"%fastfetch%"
     },
     {
       "type": "cpu",
@@ -96,7 +96,7 @@
     {
       "type": "custom",
       "format": "└──────────────────────────────────────────┘",
-      "outputColor":"%name%"
+      "outputColor":"%fastfetch%"
     },
     {
       "type": "colors",

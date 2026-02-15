@@ -1,8 +1,15 @@
 PROFILE="$HOME/.config/OpenRGB/themes/$1.orp"
-LOCKFILE=$2
+CURRENT_PROFILE=$2
+LOCKFILE=$3
 if [ ! -f "$PROFILE" ]; then
     echo "Profile not found: $PROFILE"
     exit 1
+fi
+
+if [ "$CURRENT_PROFILE" = "$1" ]; then
+    echo "Current profile already loaded"
+    sed -i "s|^OpenRGB .*|OpenRGB True $2|" "$LOCKFILE"
+    exit 0
 fi
 
 #write temp file with the profile to run on startup
@@ -17,7 +24,7 @@ stdbuf -oL -eL /usr/bin/openrgb --profile "$PROFILE" 2>&1 | {
 
         if [[ "$line" == *"Profile loaded successfully"* ]]; then
             # Mark openrgb finish
-            sed -i "s|^OpenRGB .*|OpenRGB True|" "$LOCKFILE"
+            sed -i "s|^OpenRGB .*|OpenRGB True $1|" "$LOCKFILE"
             break
         fi
 
