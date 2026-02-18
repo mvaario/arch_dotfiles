@@ -78,6 +78,9 @@ else
         hyprctl keyword windowrule match:class .*, float 0
         echo "off" > "$STATE_FILE"
 
+        # need to reload to make normal float rules to work
+        hyprctl reload
+
     else
         echo "keeping floating ON"
         
@@ -87,3 +90,8 @@ else
     fi
 fi
 
+# Mark Hyprland ready if new theme
+if [[ -n "$2" ]]; then
+    LOCKFILE="$2"
+    sed -i "s|^Hyprland .*|Hyprland True|" "$LOCKFILE"
+fi

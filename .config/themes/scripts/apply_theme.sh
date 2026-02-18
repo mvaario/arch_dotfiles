@@ -152,17 +152,14 @@ hyprpaper & disown
 
 #-------------------------------------------------
 # make sure float state is the same
-$HOME/.config/swaync/scripts/toggle_float.sh "false" &
-
-# Mark Hyprland ready
-sed -i "s|^Hyprland .*|Hyprland True|" "$LOCKFILE"
-echo "✅ all done"
+$HOME/.config/swaync/scripts/toggle_float.sh "false" "$LOCKFILE" &
 
 # Notification timeout
 timeout=5000
 while grep -E ' False$' "$LOCKFILE" | grep -vq '^OpenRGB '; do
     $HOME/.config/themes/scripts/timeout.sh "$start_time" "$timeout" "$LOCKFILE" 
 done
+echo "✅ all done"
 
 # Mark to time and notify
 end_time=$(date +%s%N)
