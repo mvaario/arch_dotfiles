@@ -1,7 +1,7 @@
 * {
   min-height: 0;
   min-width: 0;
-  font-family: "JetBrainsMonoNL Nerd Font";
+  font-family: "JetBrainsMonoNL Nerd Font Propo";
   font-size: 14px;
   font-weight: 600;
 }
@@ -109,7 +109,7 @@ tooltip {
 
 #custom-power {
   /* top  right  bottom  left */
-  margin: 0rem 1.5rem 0.2rem 0rem;
+  margin: 0rem 1.5rem 0.2rem 0.5rem;
   color: #%main%;
 }
 

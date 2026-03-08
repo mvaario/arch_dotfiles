@@ -16,10 +16,12 @@ fi
 echo "$1" > "$HOME/.config/OpenRGB/cache_profile"
 
 # Start OpenRGB in background, capturing output
+start_time=$(date +%s%N)
 stdbuf -oL -eL /usr/bin/openrgb --profile "$PROFILE" 2>&1 | {
-    SECONDS=0
     while IFS= read -r line; do
-        #debug:
+        time=$(date +%s%N)
+        elapsed=$(( ($time - $start_time) / 1000000 ))
+        #debug
         echo "$line"
 
         if [[ "$line" == *"Profile loaded successfully"* ]]; then
@@ -28,8 +30,10 @@ stdbuf -oL -eL /usr/bin/openrgb --profile "$PROFILE" 2>&1 | {
             break
         fi
 
-        if (( SECONDS >= 8 )); then
-            echo "Timeout on OpenRGB profile loading" >> "$LOCKFILE"
+        if [ $elapsed -gt 5000 ]; then
+            # Timeout
+            sed -i "s|^OpenRGB .*|OpenRGB timeout when loading profile $1|" "$LOCKFILE"
+            pkill openrgb
             break
         fi
     done

@@ -37,7 +37,7 @@ mouse_pid=$!
 # trap lister, no idea how it works if it even does
 # trap 'kill "$keyboard_pid"' EXIT INT TERM
 trap 'kill "$mouse_pid"' EXIT INT TERM
-outside_start=0
+outside_start=$(date +%s%3N)
 outside_maxtime=3000
 while true; do
     sleep 0.1
@@ -55,20 +55,16 @@ while true; do
 
     # if cursor outside wofi
     if (( cx < x || cx > x2 || cy < y || cy > y2 )); then
-        if (( outside_start == 0 )); then
-            outside_start=$(date +%s%3N)
-            echo "time reset"
-        else
-            now=$(date +%s%3N)  # current time in milliseconds
-            elapsed=$(( now - outside_start ))
-            echo "$elapsed"
-            if (( elapsed >= outside_maxtime )) || [[ "$mouse_flag" == "true" ]]; then
-                break
-            fi
-
+        now=$(date +%s%3N)  # current time in milliseconds
+        elapsed=$(( now - outside_start ))
+        echo "$elapsed"
+        # if cursor outside and timer or right click
+        if (( elapsed >= outside_maxtime )) || [[ "$mouse_flag" == "true" ]]; then
+            break
         fi
     else
-        outside_start=0
+        echo "time reset"
+        outside_start=$(date +%s%3N)
     fi
 
     # Check if wofi is closed
@@ -83,6 +79,7 @@ while true; do
         fi
     fi
 done
+echo "true" > "$mouse_flag_file"
 kill "$wofi_pid"
 kill "$mouse_pid"
 # kill "$keyboard_pid"

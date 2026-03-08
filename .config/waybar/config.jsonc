@@ -44,17 +44,11 @@
     "all-outputs": true,
     "disable-scroll": true,
     "active-only": false,
-    "format-icons": {
-      "1": "",
-      "2": "",
-      "3": "",
-      "4": ""
-      },
-  "persistent-workspaces": {
-    "DP-1": [1, 2, 3, 4],
-    "HDMI-A-1": [5, 6, 7, 8]
-  },
-    "persistent-only":true
+    "persistent-only":true,
+    "persistent-workspaces": {
+      "DP-1": [1, 2, 3, 4],
+      "HDMI-A-1": [5, 6, 7, 8]
+    }
   },
 /* -------------------- ***** -------------------- */
 
@@ -75,7 +69,7 @@
     "format": "{title}",
     "rewrite": {
       ".*Code.*": "Visual Studio Code",
-      "bash": "Terminal",
+      "bash": "Fastfetch",
       "(.*) — Zen Browser": "$1",
       "(.*) - YouTube — Zen Browser": "$1",
       "(.*) - Mousepad": "$1",
@@ -97,7 +91,7 @@
 /* -------------------- ***** -------------------- */
 
   "custom/keylock": {
-    "format": " ",
+    "format": "",
     "exec": "~/.config/waybar/scripts/keylock_status.sh",
     "interval": 1,
     "return-type": "json"
@@ -105,24 +99,27 @@
 /* -------------------- ***** -------------------- */
 
   "tray": {
-  "spacing": 10,
-  "show-passive-items": false
+    "spacing": 10,
+    "show-passive-items": true,
+    "icons": {
+      "steam": "steam",
+      "vlc": "vlc",
+      "discord": "discord"
+    }
   },
 /* -------------------- ***** -------------------- */
 
   "pulseaudio": {
-    "format": "{icon}{volume}%",
-    "format-muted": " 0%",
+    "format": "{icon} {volume}%",
     "format-icons": {
       "headphone": "",
-      "default": [" ", " ", " "]
+      "default": ["", "", ""]
     },
     "on-click": "pavucontrol"
   },
 /* -------------------- ***** -------------------- */
 
   "custom/razer": {
-    "icon-size": 18,
     "interval": 60,
     "return-type": "json",
     "exec": "~/.config/waybar/scripts/razer_battery.py"
@@ -131,7 +128,7 @@
 
   "custom/notification": {
     "escape": true,
-    "format": "󰅺 ",
+    "format": "󰅺",
     "on-click": "swaync-client -t",
     "tooltip": false
   },
@@ -140,6 +137,6 @@
   "custom/power": {
     "tooltip": false,
     "on-click": "wlogout --protocol layer-shell -b 3",
-    "format": "⏻ "
+    "format": "⏻"
   }
 }

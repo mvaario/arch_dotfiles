@@ -88,7 +88,7 @@ def get_class(level):
 # waybar text
 def waybar(waybar_icon, level, battery_class, device):
     if level != None:
-        text = f"{waybar_icon} {int(level)}%"
+        text = f"{waybar_icon}{int(level)}%"
         print(json.dumps({
             "text": text,
             "class": battery_class,

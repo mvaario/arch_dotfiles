@@ -15,8 +15,3 @@ else
         echo "Papirus folder command failed"
     fi
 fi
-
-
-
-
-

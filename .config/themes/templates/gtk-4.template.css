@@ -1,22 +1,86 @@
-/* Nautilus main window background */
-window.nautilus-window {
-    background-color: rgba(%background_rgb_str%,%opacity%);
-    background-image: none;
-    border: none;
-    box-shadow: none;
-    outline: none;
-}
-
-/*------------- Everything --------------*/
-.nautilus-window *:not(rubberband) {
-    background-color: rgba(%background_rgb_str%,0);
+/*------------- Background -------------- */
+.nautilus-window *:not(rubberband),
+window header,
+window notebook,
+notebook > header > tabs > tab {
+    background-color: transparent;
     background-image: none;
     border: none;
     box-shadow: none;
     outline: none;
     color: #%foreground%;
 }
-/* --------------------------------------*/
+/*------------- Background -------------- */
+window {
+    background-color: rgba(%background_rgb_str%,%opacity%);
+    background-image: none;
+    border: none;
+    box-shadow: none;
+    outline: none;
+    color: #%foreground%;
+}
+
+
+notebook > header > tabs > tab:checked,
+notebook > header > tabs > tab:hover {
+    border: none;
+    background-image: none;
+    box-shadow: none;
+    outline: none;
+    background-color: rgba(%rgb_main%, 0.2);
+    color: #%foreground%; 
+}
+
+notebook combobox,
+notebook combobox popover {
+    background-color: transparent;
+    border: none;
+}
+notebook combobox button {
+    color: #%foreground%;
+    background-color: transparent;
+    border-radius: 6px;
+    border: 1px solid #%main%;
+}
+
+
+notebook combobox popover contents {
+    color: #%red%;
+    background-color: rgba(%background_rgb_str%, 0.6);
+    border-radius: 6px;
+    border: 1px solid #%main%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+
+/*
+notebook scale trough,
+scale highlight,
+trough * {
+    background-color: #%red%;
+    color: #%red%;
+}*/
+
+
+/* non active part of sliders */
+progressbar trough,
+scale trough {
+    background-color: rgba(%background_rgb_str%, 1);
+}
+
+/* volume meter progress */
+progressbar progress {
+    background-color: rgba(%rgb_main%, 1);
+}
+
+
+/* pavucontrol separators */
+notebook separator {
+    background-color: rgba(%rgb_main%, 1);
+}
+
+
+
 
 /*-------------- Hightlight --------------*/
 rubberband,
@@ -29,13 +93,13 @@ rubberband,
 /* --------------------------------------*/
 
 /*--------------- Headers ---------------*/
-.nautilus-window placessidebar{
+placessidebar {
     background-color: rgba(%background_rgb_str%, 0);
     border-right: 1px solid #%main%;
     border-radius: 0;
     color: #%main%;
 }
-.nautilus-window headerbar{
+headerbar {
     background-color: rgba(%background_rgb_str%, 0);
     border-bottom: 1px solid #%main%;
     border-radius: 0;
@@ -45,7 +109,7 @@ rubberband,
 /* --------------------------------------*/
 
 /*---------------- popup -----------------*/
-.nautilus-window popover,
+popover,
 window > popover {
     background-color: rgba(%background_rgb_str%, 0.6);
     border-radius: 6px;
@@ -55,25 +119,19 @@ window > popover {
 /* --------------------------------------*/
 
 /* ---------- Hightlighted text ---------*/ 
-.nautilus-window .view row:active {
+listview:not(.sidebar) row:active,
+listview:not(.sidebar) row:selected {
     background-color: rgba(%rgb_main%, 0.2);
-    color: rgba(%rgb_main%, 0.1);
+    color: rgba(%rgb_main%, 0.2); 
 }
 /* --------------------------------------*/
 
-/* ------------ Selected text ------------*/ 
-.nautilus-window .view row:selected {
-    background-color: rgba(%rgb_main%, 0.2);
-    color: rgba(%rgb_main%, 0.1);
-}
-/* --------------------------------------*/
 
 /* ---------- Preferences window --------*/
 floating-sheet .background {
     background-color: rgba(%background_rgb_str%, 0.6);
     border-radius: 6px;
     border: 1px solid #%main%;
-    color: #%bwhite%;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 /* --------------------------------------*/

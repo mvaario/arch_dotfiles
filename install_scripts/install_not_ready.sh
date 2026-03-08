@@ -87,7 +87,7 @@ PACKAGES=(
 	linux-headers
 	jq
 
-	# pacages
+	# packages
 	hyprland
 	kitty
 	waybar
@@ -161,17 +161,17 @@ done
 #------------------------------------------------------------------------
 # Setup nvidia
 if $nvidia; then
-	install_scripts/nvidia.sh
+	./nvidia.sh
 fi
 
 # Setup razer
 if $razer; then
-	install_scripts/razer.sh
+	./razer.sh
 fi
 
 # Setup optional softwares
 if $optional_softwares; then
-	install_scripts/optional_softwares.sh
+	./optional_softwares.sh
 fi
 
 
@@ -257,6 +257,12 @@ cp -r "$(pwd)/.bashrc" "$HOME/"
 # Enable ufw
 sudo systemctl enable ufw
 
+# Copy icons to .icons folder. Used to make custom icons work without permission issues
+cp -a /usr/share/icons/Papirus-Dark $HOME/.icons
+find "$HOME/.icons/Papirus-Dark" -type l -exec rm -v {} +
+cp -an /usr/share/icons/Papirus/* $HOME/.icons/Papirus-Dark
+
+
 # Enable Papirus-Dark
 gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark'
 
@@ -294,11 +300,11 @@ sudo -u "$USER" DISPLAY=:0 XDG_RUNTIME_DIR="/run/user/$(id -u $USER)" gsettings 
 sudo -u "$USER" DISPLAY=:0 XDG_RUNTIME_DIR="/run/user/$(id -u $USER)" gsettings set org.xfce.mousepad.preferences.window always-show-tabs true
 
 # enable theme (Does not work on TTY)
-~/.config/themes/scripts/apply_theme.sh earthsong.sh
+#~/.config/themes/scripts/apply_theme.sh earthsong.sh
 
 # Add permissions (Will be edited to ./icons)
-sudo chown -R $USER:$USER /var/lib/papirus-folders/
-sudo chown -R $USER:$USER /usr/share/icons/Papirus*
+#sudo chown -R $USER:$USER /var/lib/papirus-folders/
+#sudo chown -R $USER:$USER /usr/share/icons/Papirus*
 
 echo "✅ Configuration complete."
 echo ""

@@ -1,0 +1,72 @@
+{
+    "editor.mouseWheelZoom": true,
+    "editor.fontSize": 16,
+    "window.zoomLevel": 1,
+    "explorer.confirmDragAndDrop": false,
+    "window.experimental.windowControlsOverlay.enabled": true,
+
+    "qt-core.additionalQtPaths": [
+        {
+            "name": "Qt-5.15.18-linux-g++_from_PATH",
+            "path": "/usr/bin/qmake"
+        }
+    ],
+    "workbench.statusBar.visible": false,
+    "editor.minimap.enabled": false,
+    "breadcrumbs.enabled": false,
+    "editor.fontFamily": "'JetBrainsMono Nerd Font Mono', 'Droid Sans Mono', 'monospace'",
+    "editor.padding.bottom": 15,
+    "editor.padding.top": 15,
+    "editor.smoothScrolling": true,
+    "terminal.integrated.smoothScrolling": true,
+    "editor.cursorBlinking": "smooth",
+    "workbench.activityBar.location": "hidden",
+    "window.menuStyle": "custom",
+    "window.titleBarStyle": "native",
+    "chat.agentsControl.enabled": false,
+    "workbench.layoutControl.enabled": false,
+    "workbench.navigationControl.enabled": false,
+    "window.commandCenter": false,
+    "window.menuBarVisibility": "toggle",
+
+    /*"workbench.colorCustomizations": {
+        "editor.foreground": "#C6B5E3",
+        "editor.background": "#1e1e2e80",
+        "sideBar.background": "#181825cc",
+
+        "activityBar.background": "11111bcc",
+        "titleBar.activeBackground": "#11111bcc",
+        "statusBar.background": "#11111bcc"
+    }*/
+
+    "files.exclude": {
+        "**/.mono": true,
+        "**/dconf": true,
+        "**/discord": true,
+        "**/Electron": true,
+        "**/FreeCAD": true,
+        "**/GitKraken": true,
+        "**/go": true,
+        "**/JetBrains": true,
+        "**/kdeconnect": true,
+        "**/lact": true,
+        "**/libreoffice": true,
+        "**/menus": true,
+        "**/Mousepad": true,
+        "**/Moonlight Game Streaming Project": true,
+        "**/mozilla": true,
+        "**/Mullvad VPN": true,
+        "**/nucleus-shell": true,
+        "**/papirus-folders": true,
+        "**/paradox-launcher-v2": true,
+        "**/pulse": true,
+        "**/ristretto": true,
+        "**/systemd": true,
+        "**/unity3d": true,
+        "**/via-nativia": true,
+        "**/VirtualBox": true,
+        "**/vlc": true,
+        "**/xfce4": true,
+        "**/yay": true
+    }
+}
