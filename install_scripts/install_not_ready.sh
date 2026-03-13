@@ -70,6 +70,7 @@ PACKAGES=(
 	# fonts
 	noto-fonts
 	noto-fonts-emoji
+	ttf-jetbrains-mono-nerd
 	ttf-dejavu
 	ttf-liberation
 	ttf-roboto
@@ -112,8 +113,6 @@ PACKAGES=(
 
 	# miscs
 	cpupower
-	xone-dkms-git 	# xbox controller
-	xone-dongle-firmware
 
 	libinput-tools # For wofi scripts to get devices (does it even work?)
 )
@@ -139,9 +138,11 @@ echo "📦 Downloading AUR packages..."
 AUR_PACKAGES=(
 	wlogout
 	papirus-folders
-	ttf-jetbrains-mono-nerd
 	nautilus-open-any-terminal
 	catppuccin-cursors-mocha
+
+	xone-dkms-git 			# xbox controller
+	xone-dongle-firmware
 )
 
 # AUR package install
@@ -299,8 +300,8 @@ sudo -u "$USER" DISPLAY=:0 XDG_RUNTIME_DIR="/run/user/$(id -u $USER)" gsettings 
 sudo -u "$USER" DISPLAY=:0 XDG_RUNTIME_DIR="/run/user/$(id -u $USER)" gsettings set org.xfce.mousepad.preferences.view show-line-numbers true
 sudo -u "$USER" DISPLAY=:0 XDG_RUNTIME_DIR="/run/user/$(id -u $USER)" gsettings set org.xfce.mousepad.preferences.window always-show-tabs true
 
-# enable theme (Does not work on TTY)
-#~/.config/themes/scripts/apply_theme.sh earthsong.sh
+# enable theme
+./install_earthsong_theme.sh
 
 # Add permissions (Will be edited to ./icons)
 #sudo chown -R $USER:$USER /var/lib/papirus-folders/

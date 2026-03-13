@@ -1,28 +1,9 @@
 #!/bin/bash
-# Apply selected theme to different moduls
-# Script called by theme_picker.sh
-start_time=$(date +%s%N) # log the time
-
-THEME_FILE="$HOME/.config/themes/colors/$1.sh"
 LOCKFILE="$HOME/.config/themes/theme_switch.lock"
-echo "apply theme" $THEME_FILE
-
-if [ ! -f "$THEME_FILE" ]; then
-    echo "Theme not found: $1"
-    # Release the lockfile
-    sed -i "s|^Hyprland .*|Hyprland True|" "$LOCKFILE"
-    exit 1
-fi
+THEME_FILE="$HOME/.config/themes/colors/earthsong.sh"
 
 # Load common colors
 COMMON_FILE="$HOME/.config/themes/common.sh"
-
-#-------------------------------------------------
-# No idea why this broke now...
-# source ~/.profile
-# source ~/.bashrc
-# export HYPRLAND_INSTANCE_SIGNATURE="${HYPRLAND_INSTANCE_SIGNATURE:-$(cat ~/.hyprland_signature 2>/dev/null)}"
-# echo "HYPRLAND_INSTANCE_SIGNATURE is: $HYPRLAND_INSTANCE_SIGNATURE"
 
 # Source the theme file to load the color variables
 source "$COMMON_FILE"
@@ -94,34 +75,28 @@ for template in "${!files[@]}"; do
         "$template" > "$dest"
 done
 
-
 #-------------------------------------------------
 # Load openRGB profile (takes a while....)
 echo "☑️ Changing OpenRGB profile"
 CURRENT_PROFILE=$(grep '^OpenRGB ' "$LOCKFILE" | cut -d' ' -f3-)
-sed -i "s|^OpenRGB .*|OpenRGB False|" "$LOCKFILE"
-$HOME/.config/OpenRGB/scripts/openrgb_profile.sh "$openrgb" "$CURRENT_PROFILE" "$LOCKFILE" &
+$HOME/.config/OpenRGB/scripts/openrgb_profile.sh "$openrgb" "$CURRENT_PROFILE" "$LOCKFILE"
 
 #-------------------------------------------------
 # Changes folder theme
-pkill nautilus
 echo "☑️ Changing folder icons"
-CURRENT_ICONS=$(grep '^Papirus ' "$LOCKFILE" | cut -d' ' -f3-)
-sed -i "s|^Papirus .*|Papirus False|" "$LOCKFILE"
-$HOME/.config/themes/scripts/papirus_folders.sh "$icons" "$CURRENT_ICONS" "$LOCKFILE" &
+CURRENT_ICONS=""
+$HOME/.config/themes/scripts/papirus_folders.sh "$icons" "$CURRENT_ICONS" "$LOCKFILE"
 
 #-------------------------------------------------
 # Make blurred background for wlogout
 CURRENT_WALLPAPER=$(grep '^Wlogout ' "$LOCKFILE" | cut -d' ' -f3-)
-sed -i "s|^Wlogout .*|Wlogout False|" "$LOCKFILE"
-python3 $HOME/.config/themes/scripts/blur_wallpaper.py "$wallpaper" "$background_rgb_str" "$opacity" "$CURRENT_WALLPAPER" "$LOCKFILE" &
+python3 $HOME/.config/themes/scripts/blur_wallpaper.py "$wallpaper" "$background_rgb_str" "$opacity" "$CURRENT_WALLPAPER" "$LOCKFILE"
 
 #-------------------------------------------------
 # Hyprland temp file to not show errors when loading themes
 mv "$HOME/.config/hypr/colors_temp.conf" "$HOME/.config/hypr/colors.conf"
 echo "✅ Hyprland done"
 
-hyprctl setcursor "$cursor" "$size"
 gsettings set org.gnome.desktop.interface cursor-theme "$cursor"
 gsettings set org.gnome.desktop.interface cursor-size "$size"
 echo "✅ Cursor changes"
@@ -131,39 +106,4 @@ echo "✅ Nautilus changes"
 
 # Make custom icons for waybar tray
 CURRENT_COLOR=$(grep '^Recolor ' "$LOCKFILE" | cut -d' ' -f3-)
-sed -i "s|^Recolor .*|Recolor False|" "$LOCKFILE"
-$HOME/.config/themes/scripts/icon_recolor.sh "$foreground" "$CURRENT_COLOR" "$LOCKFILE" $
-
-#-------------------------------------------------
-pkill swaync
-pkill hyprpaper
-pkill waybar
-hyprctl reload
-
-# wait until everything is ready
-timeout=3000
-while grep -qP '^(?!Hyprland|OpenRGB).* False$' "$LOCKFILE"; do
-    $HOME/.config/themes/scripts/timeout.sh "$start_time" "$timeout" "$LOCKFILE" 
-done
-
-swaync & disown
-waybar & disown
-hyprpaper & disown
-
-#-------------------------------------------------
-# make sure float state is the same
-$HOME/.config/swaync/scripts/toggle_float.sh "false" "$LOCKFILE" &
-
-# Notification timeout
-timeout=5000
-while grep -E ' False$' "$LOCKFILE" | grep -vq '^OpenRGB '; do
-    $HOME/.config/themes/scripts/timeout.sh "$start_time" "$timeout" "$LOCKFILE" 
-done
-echo "✅ all done"
-
-# Mark to time and notify
-end_time=$(date +%s%N)
-elapsed=$(( ($end_time - $start_time) / 1000000 ))
-sed -i "s|^Theme .*|Theme $1 took ${elapsed} ms|" "$LOCKFILE"
-notify-send "$1" "Theme activated."
-exit 0
+$HOME/.config/themes/scripts/icon_recolor.sh "$foreground" "$CURRENT_COLOR" "$LOCKFILE"
