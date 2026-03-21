@@ -28,17 +28,17 @@ COMMON_FILE="$HOME/.config/themes/common.sh"
 source "$COMMON_FILE"
 source "$THEME_FILE"
 
-#create hex background with opacity
+# create hex background with opacity
 hexopacity="$HOME/.config/scripts/hex_opacity.sh"
 alpha_hex=$("$hexopacity" "$opacity")
 
 # changes color to rgb
 background_rgb_str=$($HOME/.config/scripts/hex_to_rgb.sh "$background")
 rgb_main=$($HOME/.config/scripts/hex_to_rgb.sh "$main")
-#darken background since kitty is stupid and does not match
+# darken background since kitty is stupid and does not match
 darkenbackground=$($HOME/.config/themes/scripts/darken_background.sh "$background")
 
-# List of template files and their destination
+# list of template files and their destination
 declare -A files=(
     ["$HOME/.config/themes/templates/hyprland.template.conf"]="$HOME/.config/hypr/colors_temp.conf"
     ["$HOME/.config/themes/templates/hyprpaper.template.conf"]="$HOME/.config/hypr/hyprpaper.conf"
@@ -121,14 +121,18 @@ python3 $HOME/.config/themes/scripts/blur_wallpaper.py "$wallpaper" "$background
 mv "$HOME/.config/hypr/colors_temp.conf" "$HOME/.config/hypr/colors.conf"
 echo "✅ Hyprland done"
 
+#-------------------------------------------------
 hyprctl setcursor "$cursor" "$size"
 gsettings set org.gnome.desktop.interface cursor-theme "$cursor"
 gsettings set org.gnome.desktop.interface cursor-size "$size"
+sed -i "s|^Cursor .*|Cursor $cursor|" "$LOCKFILE"
+sed -i "s|^Cursor_Size .*|Cursor_Size $size|" "$LOCKFILE"
 echo "✅ Cursor changes"
 
 gsettings set org.gnome.desktop.interface gtk-theme "$nautilus"
 echo "✅ Nautilus changes"
 
+#-------------------------------------------------
 # Make custom icons for waybar tray
 CURRENT_COLOR=$(grep '^Recolor ' "$LOCKFILE" | cut -d' ' -f3-)
 sed -i "s|^Recolor .*|Recolor False|" "$LOCKFILE"
@@ -161,6 +165,7 @@ while grep -E ' False$' "$LOCKFILE" | grep -vq '^OpenRGB '; do
 done
 echo "✅ all done"
 
+#-------------------------------------------------
 # Mark to time and notify
 end_time=$(date +%s%N)
 elapsed=$(( ($end_time - $start_time) / 1000000 ))
