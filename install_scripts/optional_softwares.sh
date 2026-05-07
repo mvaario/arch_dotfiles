@@ -1,7 +1,6 @@
 echo " "
 echo "🎮 Downloading optional softwares..."
 PACKAGES=(
-    code
     lact
     steam
     discord

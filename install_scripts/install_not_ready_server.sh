@@ -60,7 +60,6 @@ echo "🚀 Downloading packages..."
 PACKAGES=(
 	git
 	neovim
-	code
 	hyprpolkitagent
 	ufw
 	pacman-contrib
@@ -79,7 +78,10 @@ PACKAGES=(
 	btop
   ethtool
   iperf3
-    
+
+  # softwares
+  code
+
 	cpupower
 )
 

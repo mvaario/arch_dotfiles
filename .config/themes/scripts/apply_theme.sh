@@ -128,7 +128,7 @@ gsettings set org.gnome.desktop.interface cursor-size "$size"
 sed -i "s|^Cursor .*|Cursor $cursor|" "$LOCKFILE"
 sed -i "s|^Cursor_Size .*|Cursor_Size $size|" "$LOCKFILE"
 echo "✅ Cursor changes"
-
+gsettings set org.gnome.desktop.interface color-scheme "prefer-dark"
 gsettings set org.gnome.desktop.interface gtk-theme "$nautilus"
 echo "✅ Nautilus changes"
 

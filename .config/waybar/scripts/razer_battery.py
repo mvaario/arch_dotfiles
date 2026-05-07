@@ -54,13 +54,13 @@ def get_icons(level, charging):
         waybar_icon = ""
         notification_icon = "good"
 
-    elif level >= 30:
+    elif level >= 25:
         waybar_icon = ""
         notification_icon = "low"
         
-    elif level >= 15:
+    elif level >= 10:
         waybar_icon = ""
-        notification_icon = "low"
+        notification_icon = "caution"
     else:
         waybar_icon = ""
         notification_icon = "empty"
@@ -125,13 +125,14 @@ def notification(notification_icon, charging):
     text = f"{level}% remaining"
 
     old_notification = read_notification()
+
     if notification_icon != old_notification:
         if charging:
             text = f"{level}% charging"
             notify = True
         elif old_notification == f"{notification_icon}-charging":
             notify = True
-        elif notification_icon == "battery-low":
+        elif notification_icon == "battery-critical":
             notify = True
         elif notification_icon == "battery-empty":
             notify = True
@@ -139,10 +140,10 @@ def notification(notification_icon, charging):
         elif notification_icon == "battery-missing":
             notify = True
 
-    if notify:
         # write notification cache
         write_notification(notification_icon)
 
+    if notify:
         # send notification
         subprocess.run([
             "notify-send",

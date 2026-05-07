@@ -102,19 +102,21 @@ PACKAGES=(
 	fastfetch
 	btop
 	openrgb
-
+	
 	# softwares
-	ristretto 		# Image viewer
-    grim 			# screenshot
-    slurp 			# screenshot
+	code
+	ristretto 						# Image viewer
+    grim 							# screenshot
+    slurp 							# screenshot
 	gnome-disk-utility
-	mousepad		# easy notepad
-	meld			# compare
+	mousepad						# easy notepad
+	meld							# mousepad compare
+	xdg-desktop-portal-hyprland 	# allow screen sharing
 
 	# miscs
 	cpupower
 
-	libinput-tools # For wofi scripts to get devices (does it even work?)
+	libinput-tools 					# For wofi scripts to get devices (does it even work?)
 )
 
 # Package install
