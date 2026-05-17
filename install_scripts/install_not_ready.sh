@@ -5,8 +5,11 @@ set -e
 nvidia=true
 razer=true
 optional_softwares=true
+laptop=true
+
 
 #------------------------------------------------------------------------
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 # Ask for sudo password upfront
 if ! sudo -v; then
   echo "❌ This script requires sudo privileges."
@@ -101,7 +104,8 @@ PACKAGES=(
 	starship
 	fastfetch
 	btop
-	openrgb
+	xdg-desktop-portal-hyprland 	# allow screen sharing
+	libinput-tools 					# For wofi scripts to get devices (does it even work?)
 	
 	# softwares
 	code
@@ -111,12 +115,9 @@ PACKAGES=(
 	gnome-disk-utility
 	mousepad						# easy notepad
 	meld							# mousepad compare
-	xdg-desktop-portal-hyprland 	# allow screen sharing
-
+	
 	# miscs
 	cpupower
-
-	libinput-tools 					# For wofi scripts to get devices (does it even work?)
 )
 
 # Package install
@@ -138,13 +139,10 @@ echo " "
 echo "📦 Downloading AUR packages..."
 
 AUR_PACKAGES=(
-	wlogout
 	papirus-folders
 	nautilus-open-any-terminal
 	catppuccin-cursors-mocha
 
-	xone-dkms-git 			# xbox controller
-	xone-dongle-firmware
 )
 
 # AUR package install
@@ -164,19 +162,36 @@ done
 #------------------------------------------------------------------------
 # Setup nvidia
 if $nvidia; then
-	./nvidia.sh
+	"$SCRIPT_DIR/nvidia.sh"
 fi
 
 # Setup razer
 if $razer; then
-	./razer.sh
+	"$SCRIPT_DIR/razer.sh"
+else
+	sed -i '/^[[:space:]]*\/\/.*"custom\/razer"/! s/"custom\/razer"/\/\/ "custom\/razer"/' \
+			"$HOME/.config/waybar/config.jsonc"
 fi
 
 # Setup optional softwares
 if $optional_softwares; then
-	./optional_softwares.sh
+	"$SCRIPT_DIR/optional_softwares.sh"
 fi
 
+if $laptop; then
+    sed -i \
+        -e 's|^[[:space:]]*//[[:space:]]*"battery"|    "battery"|' \
+        -e 's|^[[:space:]]*//[[:space:]]*"network"|    "network"|' \
+        "$HOME/.config/waybar/config.jsonc"
+
+	sed -i \
+        's|^[[:space:]]*#[[:space:]]*bind = ,XF86MonBrightnessUp, exec, brightnessctl s 5%+|bind = ,XF86AudioMute, exec, pactl -- set-sink-mute 0 toggle|' \
+		's|^[[:space:]]*#[[:space:]]*bind = ,XF86MonBrightnessDown, exec, brightnessctl s 5%-|bind = ,XF86AudioMute, exec, pactl -- set-sink-mute 0 toggle|' \
+		's|^[[:space:]]*#[[:space:]]*bind = ,XF86AudioLowerVolume, exec, pactl -- set-sink-volume 0 -1%|bind = ,XF86AudioMute, exec, pactl -- set-sink-mute 0 toggle|' \
+		's|^[[:space:]]*#[[:space:]]*bind = ,XF86AudioRaiseVolume, exec, pactl -- set-sink-volume 0 +1%|bind = ,XF86AudioMute, exec, pactl -- set-sink-mute 0 toggle|' \
+		's|^[[:space:]]*#[[:space:]]*bind = ,XF86AudioMute, exec, pactl -- set-sink-mute 0 toggle|bind = ,XF86AudioMute, exec, pactl -- set-sink-mute 0 toggle|' \
+        "$HOME/.config/hypr/conf/keybinds.conf"
+fi
 
 #------------------------------------------------------------------------
 # Get user
@@ -254,45 +269,93 @@ echo " "
 echo "🧰 Applying configuration settings"
 
 # copy config files
-cp -r "$(pwd)/.config" "$HOME/"
-cp -r "$(pwd)/.bashrc" "$HOME/"
+echo "Copying dot files"
+DOTFILES_DIR="$(dirname "$SCRIPT_DIR")"
+cp -r "$DOTFILES_DIR/.config" "$HOME/"
+cp -r "$DOTFILES_DIR/.bashrc" "$HOME/"
 
-# Enable ufw
-sudo systemctl enable ufw
 
+#------------------------------------------------------------------------
+echo "Configurating monitors"
+# detect connected monitors
+mapfile -t monitors < <(
+    for m in /sys/class/drm/*/status; do
+        [[ $(<"$m") == "connected" ]] &&
+        basename "$(dirname "$m")" | sed 's/^card[0-9]-//'
+    done
+)
+
+primary="${monitors[0]}"
+secondary="${monitors[1]}"
+# replace first placeholder (required)
+sed -i "s/\bDP-1\b/$primary/g" "$HOME/.config/hypr/hyprland.conf"
+sed -i "s/\bDP-1\b/$primary/g" "$HOME/.config/hypr/hyprpaper.conf"
+sed -i "s/\bDP-1\b/$primary/g" "$HOME/.config/hypr/conf/autostart.conf"
+sed -i "s/\bDP-1\b/$primary/g" "$HOME/.config/hypr/conf/keyboard.conf"
+sed -i "s/\bDP-1\b/$primary/g" "$HOME/.config/waybar/config.jsonc"
+
+if [[ -n "$secondary" ]]; then
+    # replace second placeholder
+    sed -i "s/\bHDMI-A-1\b/$secondary/g" "$HOME/.config/hypr/hyprland.conf"
+	sed -i "s/\bHDMI-A-1\b/$secondary/g" "$HOME/.config/hypr/hyprpaper.conf"
+	sed -i "s/\bHDMI-A-1\b/$secondary/g" "$HOME/.config/waybar/config.jsonc"
+else
+    # remove all lines containing HDMI-A-1
+    sed -i '/HDMI-A-1/d' "$HOME/.config/hypr/hyprland.conf"
+	sed -i '/HDMI-A-1/d' "$HOME/.config/waybar/config.jsonc"
+fi
+
+#------------------------------------------------------------------------
 # Copy icons to .icons folder. Used to make custom icons work without permission issues
+echo "Copying icons"
 cp -a /usr/share/icons/Papirus-Dark $HOME/.icons
 find "$HOME/.icons/Papirus-Dark" -type l -exec rm -v {} +
 cp -an /usr/share/icons/Papirus/* $HOME/.icons/Papirus-Dark
 
+# Enable ufw
+echo "Enabling ufw"
+sudo systemctl enable ufw
 
 # Enable Papirus-Dark
+echo "Enabling icon theme"
 gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark'
 
 # Set terminal for nautilus
+echo "Enabling open-any-terminal"
 gsettings set com.github.stunkymonkey.nautilus-open-any-terminal terminal kitty
 
 # Performance mode
+echo "Enabling performance mode"
 echo 'governor="performance"' | sudo tee /etc/default/cpupower
 
+# add user to input group, needed to detect mouse inputs
+sudo usermod -aG input $USER
 
+# Grub timeout and style
+if [ -f "/etc/default/grub" ]; then
+	echo "Setting Grub timeout"
+	GRUB_FILE="/etc/default/grub"
+	sudo sed -i \
+	-e 's/^GRUB_TIMEOUT=.*/GRUB_TIMEOUT=0/' \
+	-e 's/^GRUB_TIMEOUT_STYLE=.*/GRUB_TIMEOUT_STYLE=hidden/' \
+	"$GRUB_FILE"
 
-# Autolog in file - Will be removed
-#if [ ! -d "/etc/systemd/system/getty@tty1.service.d" ]; then
-#    echo "Creating directory for systemd override: /etc/systemd/system/getty@tty1.service.d"
-#    sudo mkdir -p "/etc/systemd/system/getty@tty1.service.d"
-#fi
-
-#echo "[Service]
-#ExecStart=
-#ExecStart=-/usr/bin/agetty --autologin $USER --noclear %I xterm-kitty" | sudo tee "/etc/systemd/system/getty@tty1.service.d/override.conf" > /dev/null
+	sudo grub-mkconfig -o /boot/grub/grub.cfg
+fi
 
 # Link nautilus compare using meld
+echo "Creating nautilus compare with Meld link"
+if [ -d "$HOME/.local/share/nautilus/scripts" ]; then
+	rm -rf $HOME/.local/share/nautilus/scripts
+fi
+
+echo "Creating mousepad compare"
 mkdir -p "$HOME/.local/share/nautilus/scripts"
 [ -e "$HOME/.local/share/nautilus/scripts/Compare with Meld" ] || \
 ln -s "$HOME/.config/nautilus/scripts/nautilus_compare.sh" "$HOME/.local/share/nautilus/scripts/Compare with Meld"
 
 # set mousepad theme
+echo "Setting mousepad theme"
 export DISPLAY=:0
 export XDG_RUNTIME_DIR="/run/user/$(id -u)"
 
@@ -302,12 +365,9 @@ sudo -u "$USER" DISPLAY=:0 XDG_RUNTIME_DIR="/run/user/$(id -u $USER)" gsettings 
 sudo -u "$USER" DISPLAY=:0 XDG_RUNTIME_DIR="/run/user/$(id -u $USER)" gsettings set org.xfce.mousepad.preferences.view show-line-numbers true
 sudo -u "$USER" DISPLAY=:0 XDG_RUNTIME_DIR="/run/user/$(id -u $USER)" gsettings set org.xfce.mousepad.preferences.window always-show-tabs true
 
-# enable theme
-./install_earthsong_theme.sh
 
-# Add permissions (Will be edited to ./icons)
-#sudo chown -R $USER:$USER /var/lib/papirus-folders/
-#sudo chown -R $USER:$USER /usr/share/icons/Papirus*
+# enable theme
+~/.config/themes/scripts/apply_theme.sh "earthsong" 0
 
 echo "✅ Configuration complete."
 echo ""

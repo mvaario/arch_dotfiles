@@ -139,30 +139,32 @@ sed -i "s|^Recolor .*|Recolor False|" "$LOCKFILE"
 $HOME/.config/themes/scripts/icon_recolor.sh "$foreground" "$CURRENT_COLOR" "$LOCKFILE" $
 
 #-------------------------------------------------
-pkill swaync
-pkill hyprpaper
-pkill waybar
-hyprctl reload
+if [[ "$2" != "0" ]]; then
+    pkill swaync
+    pkill hyprpaper
+    pkill waybar
+    hyprctl reload
 
-# wait until everything is ready
-timeout=3000
-while grep -qP '^(?!Hyprland|OpenRGB).* False$' "$LOCKFILE"; do
-    $HOME/.config/themes/scripts/timeout.sh "$start_time" "$timeout" "$LOCKFILE" 
-done
+    # wait until everything is ready
+    timeout=3000
+    while grep -qP '^(?!Hyprland|OpenRGB).* False$' "$LOCKFILE"; do
+        $HOME/.config/themes/scripts/timeout.sh "$start_time" "$timeout" "$LOCKFILE" 
+    done
 
-swaync & disown
-waybar & disown
-hyprpaper & disown
+    swaync & disown
+    waybar & disown
+    hyprpaper & disown
 
-#-------------------------------------------------
-# make sure float state is the same
-$HOME/.config/swaync/scripts/toggle_float.sh "false" "$LOCKFILE" &
+    #-------------------------------------------------
+    # make sure float state is the same
+    $HOME/.config/swaync/scripts/toggle_float.sh "false" "$LOCKFILE" &
 
-# Notification timeout
-timeout=5000
-while grep -E ' False$' "$LOCKFILE" | grep -vq '^OpenRGB '; do
-    $HOME/.config/themes/scripts/timeout.sh "$start_time" "$timeout" "$LOCKFILE" 
-done
+    # Notification timeout
+    timeout=5000
+    while grep -E ' False$' "$LOCKFILE" | grep -vq '^OpenRGB '; do
+        $HOME/.config/themes/scripts/timeout.sh "$start_time" "$timeout" "$LOCKFILE" 
+    done
+fi
 echo "✅ all done"
 
 #-------------------------------------------------

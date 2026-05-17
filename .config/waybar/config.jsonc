@@ -23,6 +23,8 @@
     "tray",
     "pulseaudio",
     "custom/razer",
+    //"battery",
+    //"network",
     "custom/notification",
     "custom/power"
     
@@ -107,7 +109,7 @@
       "discord": "discord"
     }
   },
-/* -------------------- ***** -------------------- */
+/* -------------------- Audio -------------------- */
 
   "pulseaudio": {
     "format": "{icon} {volume}%",
@@ -117,14 +119,40 @@
     },
     "on-click": "pavucontrol"
   },
-/* -------------------- ***** -------------------- */
+/* -------------------- Battery -------------------- */
 
-  "custom/razer": {
+  "battery": {
+    "interval": 5,
+    "states": {
+        "warning": 30,
+        "critical": 15
+    },
+      "format": "{icon}{capacity}%",
+      "format-icons": {
+      "default": ["", "", "", "", ""],
+      "full": "",
+      "charging": "",
+      "plugged": ""
+    }
+  },
+/* -------------------- Network -------------------- */
+
+"network": {
+    "format-wifi": "",
+    "format-ethernet": "󰈀",
+    "format-disconnected": "󰖪",
+    "tooltip-format": "{ifname} via {gwaddr}",
+    "tooltip-format-wifi": "{essid} ({signalStrength}%)",
+    "tooltip-format-ethernet": "{ifname}"
+},
+/* -------------------- Razer battery -------------------- */
+
+  // "custom/razer": {
     "interval": 60,
     "return-type": "json",
     "exec": "~/.config/waybar/scripts/razer_battery.py"
   },
-/* -------------------- ***** -------------------- */
+/* -------------------- Notifications -------------------- */
 
   "custom/notification": {
     "escape": true,
@@ -132,7 +160,7 @@
     "on-click": "swaync-client -t",
     "tooltip": false
   },
-/* -------------------- ***** -------------------- */
+/* -------------------- Power -------------------- */
 
   "custom/power": {
     "tooltip": false,

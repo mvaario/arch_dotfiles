@@ -6,6 +6,7 @@ PACKAGES=(
     discord
     lutris
     gamemode
+    openrgb
     
     moonlight-qt
     wakeonlan
@@ -31,6 +32,25 @@ for pkg in "${PACKAGES[@]}"; do
             *) echo "🛑 Exiting script."; exit 1;;
         esac
     fi
+done
+
+
+AUR_PACKAGES=(
+	xone-dkms-git 			# xbox controller
+	xone-dongle-firmware    # xbox controller
+)
+
+# AUR package install
+for aur_pkg in "${AUR_PACKAGES[@]}"; do
+    echo "📥 Installing $aur_pkg from AUR..."
+    if ! yay -S --noconfirm --needed "$aur_pkg"; then
+        echo "❌ Failed to install: $aur_pkg"
+        read -p "⚠️  Continue anyway? (y/N): " yn
+        case "$yn" in
+            [Yy]*) echo "⏩ Continuing...";;
+            *) echo "🛑 Exiting script."; exit 1;;
+        esac
+	fi
 done
 
 #------------------------------------------------------------------------
