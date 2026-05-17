@@ -10,6 +10,7 @@ laptop=true
 
 #------------------------------------------------------------------------
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+DOTFILES_DIR="$(dirname "$SCRIPT_DIR")"
 # Ask for sudo password upfront
 if ! sudo -v; then
   echo "❌ This script requires sudo privileges."
@@ -49,15 +50,6 @@ sudo mv /etc/pacman.conf.tmp /etc/pacman.conf
 echo " "
 echo "🔄 Updating system"
 sudo pacman -Syu
-
-if ! command -v yay &> /dev/null; then
-    echo "📥 Installing yay AUR helper..."
-    git clone https://aur.archlinux.org/yay.git
-    cd yay
-    makepkg -si --noconfirm
-    cd -
-fi
-
 
 #------------------------------------------------------------------------
 echo " "
@@ -133,6 +125,16 @@ for pkg in "${PACKAGES[@]}"; do
     fi
 done
 
+#------------------------------------------------------------------------
+if ! command -v yay &> /dev/null; then
+    echo "📥 Installing yay AUR helper..."
+	sudo pacman -S --needed git base-devel
+    git clone https://aur.archlinux.org/yay.git
+    cd yay
+    makepkg -si --noconfirm
+    cd -
+fi
+
 
 #------------------------------------------------------------------------
 echo " "
@@ -170,7 +172,7 @@ if $razer; then
 	"$SCRIPT_DIR/razer.sh"
 else
 	sed -i '/^[[:space:]]*\/\/.*"custom\/razer"/! s/"custom\/razer"/\/\/ "custom\/razer"/' \
-			"$HOME/.config/waybar/config.jsonc"
+			"$DOTFILES_DIR/.config/waybar/config.jsonc"
 fi
 
 # Setup optional softwares
@@ -270,7 +272,6 @@ echo "🧰 Applying configuration settings"
 
 # copy config files
 echo "Copying dot files"
-DOTFILES_DIR="$(dirname "$SCRIPT_DIR")"
 cp -r "$DOTFILES_DIR/.config" "$HOME/"
 cp -r "$DOTFILES_DIR/.bashrc" "$HOME/"
 
