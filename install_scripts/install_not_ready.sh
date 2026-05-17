@@ -8,14 +8,13 @@ optional_softwares=true
 laptop=true
 
 
-#------------------------------------------------------------------------
-SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-DOTFILES_DIR="$(dirname "$SCRIPT_DIR")"
+#------------------------------------------------------------------------ 
+BASE_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 # Ask for sudo password upfront
 if ! sudo -v; then
   echo "❌ This script requires sudo privileges."
   exit 1
-fi
+fi 
 
 # Keep sudo alive in the background (does not work)
 (
@@ -102,8 +101,8 @@ PACKAGES=(
 	# softwares
 	code
 	ristretto 						# Image viewer
-    grim 							# screenshot
-    slurp 							# screenshot
+	grim 							# screenshot
+	slurp 							# screenshot
 	gnome-disk-utility
 	mousepad						# easy notepad
 	meld							# mousepad compare
@@ -164,35 +163,35 @@ done
 #------------------------------------------------------------------------
 # Setup nvidia
 if $nvidia; then
-	"$SCRIPT_DIR/nvidia.sh"
+	"$BASE_DIR/install_scripts/nvidia.sh"
 fi
 
 # Setup razer
 if $razer; then
-	"$SCRIPT_DIR/razer.sh"
+	"$BASE_DIR/install_scripts/razer.sh"
 else
 	sed -i '/^[[:space:]]*\/\/.*"custom\/razer"/! s/"custom\/razer"/\/\/ "custom\/razer"/' \
-			"$DOTFILES_DIR/.config/waybar/config.jsonc"
+			"$BASE_DIR/.config/waybar/config.jsonc"
 fi
 
 # Setup optional softwares
 if $optional_softwares; then
-	"$SCRIPT_DIR/optional_softwares.sh"
+	"$BASE_DIR/install_scripts/optional_softwares.sh"
 fi
 
 if $laptop; then
     sed -i \
         -e 's|^[[:space:]]*//[[:space:]]*"battery"|    "battery"|' \
         -e 's|^[[:space:]]*//[[:space:]]*"network"|    "network"|' \
-        "$HOME/.config/waybar/config.jsonc"
+        	"$BASE_DIR/.config/waybar/config.jsonc"
 
 	sed -i \
-        's|^[[:space:]]*#[[:space:]]*bind = ,XF86MonBrightnessUp, exec, brightnessctl s 5%+|bind = ,XF86AudioMute, exec, pactl -- set-sink-mute 0 toggle|' \
-		's|^[[:space:]]*#[[:space:]]*bind = ,XF86MonBrightnessDown, exec, brightnessctl s 5%-|bind = ,XF86AudioMute, exec, pactl -- set-sink-mute 0 toggle|' \
-		's|^[[:space:]]*#[[:space:]]*bind = ,XF86AudioLowerVolume, exec, pactl -- set-sink-volume 0 -1%|bind = ,XF86AudioMute, exec, pactl -- set-sink-mute 0 toggle|' \
-		's|^[[:space:]]*#[[:space:]]*bind = ,XF86AudioRaiseVolume, exec, pactl -- set-sink-volume 0 +1%|bind = ,XF86AudioMute, exec, pactl -- set-sink-mute 0 toggle|' \
+        's|^[[:space:]]*#[[:space:]]*bind = ,XF86MonBrightnessUp, exec, brightnessctl s 5%+|bind = ,XF86MonBrightnessUp, exec, brightnessctl s 5%+|' \
+		's|^[[:space:]]*#[[:space:]]*bind = ,XF86MonBrightnessDown, exec, brightnessctl s 5%-|bind = ,XF86MonBrightnessDown, exec, brightnessctl s 5%-|' \
+		's|^[[:space:]]*#[[:space:]]*bind = ,XF86AudioLowerVolume, exec, pactl -- set-sink-volume 0 -1%|bind = ,XF86AudioLowerVolume, exec, pactl -- set-sink-volume 0 -1%|' \
+		's|^[[:space:]]*#[[:space:]]*bind = ,XF86AudioRaiseVolume, exec, pactl -- set-sink-volume 0 +1%|bind = ,XF86AudioRaiseVolume, exec, pactl -- set-sink-volume 0 +1%|' \
 		's|^[[:space:]]*#[[:space:]]*bind = ,XF86AudioMute, exec, pactl -- set-sink-mute 0 toggle|bind = ,XF86AudioMute, exec, pactl -- set-sink-mute 0 toggle|' \
-        "$HOME/.config/hypr/conf/keybinds.conf"
+        	"$BASE_DIR/.config/hypr/conf/keybinds.conf"
 fi
 
 #------------------------------------------------------------------------
@@ -272,8 +271,8 @@ echo "🧰 Applying configuration settings"
 
 # copy config files
 echo "Copying dot files"
-cp -r "$DOTFILES_DIR/.config" "$HOME/"
-cp -r "$DOTFILES_DIR/.bashrc" "$HOME/"
+cp -r "$BASE_DIR/.config" "$HOME/"
+cp -r "$BASE_DIR/.bashrc" "$HOME/"
 
 
 #------------------------------------------------------------------------

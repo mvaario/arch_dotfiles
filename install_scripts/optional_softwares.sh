@@ -60,7 +60,9 @@ if [[ ! -d ~/.local/opt/gitkraken ]]; then
 
 	echo " "
 	echo "🔀 Installing latest GitKranker..."
+    mkdir ~/.local/opt
 	mkdir ~/.local/opt/gitkraken
+    mkdir ~/.local/share/applications
 
 	# Download the latest version
 	curl -L https://release.gitkraken.com/linux/gitkraken-amd64.tar.gz -o /tmp/gitkraken.tar.gz
