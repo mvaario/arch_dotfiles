@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# script for making wlogout image look same as hyprlock and hyprland blur effects
+# script for making wlogout image look same as hyprland blur effects
 
 from PIL import Image, ImageFilter, ImageEnhance, ImageChops
 import os

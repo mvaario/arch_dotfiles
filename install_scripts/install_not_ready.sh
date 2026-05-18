@@ -87,7 +87,6 @@ PACKAGES=(
 	kitty
 	waybar
 	hyprpaper
-	hyprlock
 	hyprsunset
 	wofi
 	nautilus
@@ -161,6 +160,8 @@ done
 
 
 #------------------------------------------------------------------------
+mkdir -p ~/.local/share/applications
+
 # Setup nvidia
 if $nvidia; then
 	"$BASE_DIR/install_scripts/nvidia.sh"
@@ -169,8 +170,8 @@ fi
 # Setup razer
 if $razer; then
 	"$BASE_DIR/install_scripts/razer.sh"
-else
-	sed -i '/^[[:space:]]*\/\/.*"custom\/razer"/! s/"custom\/razer"/\/\/ "custom\/razer"/' \
+	sed -i \
+		-e 's|^[[:space:]]*//[[:space:]]*"custom\/razer"|    "custom\/razer"|' \
 			"$BASE_DIR/.config/waybar/config.jsonc"
 fi
 
@@ -186,11 +187,11 @@ if $laptop; then
         	"$BASE_DIR/.config/waybar/config.jsonc"
 
 	sed -i \
-        's|^[[:space:]]*#[[:space:]]*bind = ,XF86MonBrightnessUp, exec, brightnessctl s 5%+|bind = ,XF86MonBrightnessUp, exec, brightnessctl s 5%+|' \
-		's|^[[:space:]]*#[[:space:]]*bind = ,XF86MonBrightnessDown, exec, brightnessctl s 5%-|bind = ,XF86MonBrightnessDown, exec, brightnessctl s 5%-|' \
-		's|^[[:space:]]*#[[:space:]]*bind = ,XF86AudioLowerVolume, exec, pactl -- set-sink-volume 0 -1%|bind = ,XF86AudioLowerVolume, exec, pactl -- set-sink-volume 0 -1%|' \
-		's|^[[:space:]]*#[[:space:]]*bind = ,XF86AudioRaiseVolume, exec, pactl -- set-sink-volume 0 +1%|bind = ,XF86AudioRaiseVolume, exec, pactl -- set-sink-volume 0 +1%|' \
-		's|^[[:space:]]*#[[:space:]]*bind = ,XF86AudioMute, exec, pactl -- set-sink-mute 0 toggle|bind = ,XF86AudioMute, exec, pactl -- set-sink-mute 0 toggle|' \
+        -e 's|^[[:space:]]*#[[:space:]]*bind = ,XF86MonBrightnessUp, exec, brightnessctl s 5%+|bind = ,XF86MonBrightnessUp, exec, brightnessctl s 5%+|' \
+		-e 's|^[[:space:]]*#[[:space:]]*bind = ,XF86MonBrightnessDown, exec, brightnessctl s 5%-|bind = ,XF86MonBrightnessDown, exec, brightnessctl s 5%-|' \
+		-e 's|^[[:space:]]*#[[:space:]]*bind = ,XF86AudioLowerVolume, exec, pactl -- set-sink-volume 0 -1%|bind = ,XF86AudioLowerVolume, exec, pactl -- set-sink-volume 0 -1%|' \
+		-e 's|^[[:space:]]*#[[:space:]]*bind = ,XF86AudioRaiseVolume, exec, pactl -- set-sink-volume 0 +1%|bind = ,XF86AudioRaiseVolume, exec, pactl -- set-sink-volume 0 +1%|' \
+		-e 's|^[[:space:]]*#[[:space:]]*bind = ,XF86AudioMute, exec, pactl -- set-sink-mute 0 toggle|bind = ,XF86AudioMute, exec, pactl -- set-sink-mute 0 toggle|' \
         	"$BASE_DIR/.config/hypr/conf/keybinds.conf"
 fi
 
@@ -202,8 +203,7 @@ if [ ! -f ~/.local/opt/zen/zen ]; then
 	echo " "
 	echo "📥 Installing latest Zen Browser..."
 	mkdir -p ~/.local/opt/zen
-	mkdir -p ~/.local/share/applications
-
+	
 	# Download the latest version
 	curl -L https://github.com/zen-browser/desktop/releases/latest/download/zen.linux-x86_64.tar.xz -o /tmp/zen-latest.tar.xz
 
@@ -289,7 +289,7 @@ primary="${monitors[0]}"
 secondary="${monitors[1]}"
 # replace first placeholder (required)
 sed -i "s/\bDP-1\b/$primary/g" "$HOME/.config/hypr/hyprland.conf"
-sed -i "s/\bDP-1\b/$primary/g" "$HOME/.config/hypr/hyprpaper.conf"
+sed -i "s/\bDP-1\b/$primary/g" "$HOME/.config/themes/templates/hyprpaper.template.conf"
 sed -i "s/\bDP-1\b/$primary/g" "$HOME/.config/hypr/conf/autostart.conf"
 sed -i "s/\bDP-1\b/$primary/g" "$HOME/.config/hypr/conf/keyboard.conf"
 sed -i "s/\bDP-1\b/$primary/g" "$HOME/.config/waybar/config.jsonc"
@@ -297,7 +297,7 @@ sed -i "s/\bDP-1\b/$primary/g" "$HOME/.config/waybar/config.jsonc"
 if [[ -n "$secondary" ]]; then
     # replace second placeholder
     sed -i "s/\bHDMI-A-1\b/$secondary/g" "$HOME/.config/hypr/hyprland.conf"
-	sed -i "s/\bHDMI-A-1\b/$secondary/g" "$HOME/.config/hypr/hyprpaper.conf"
+	sed -i "s/\bHDMI-A-1\b/$secondary/g" "$HOME/.config/themes/templates/hyprpaper.template.conf"
 	sed -i "s/\bHDMI-A-1\b/$secondary/g" "$HOME/.config/waybar/config.jsonc"
 else
     # remove all lines containing HDMI-A-1
@@ -308,7 +308,8 @@ fi
 #------------------------------------------------------------------------
 # Copy icons to .icons folder. Used to make custom icons work without permission issues
 echo "Copying icons"
-cp -a /usr/share/icons/Papirus-Dark $HOME/.icons
+mkdir -p $HOME/.icons/Papirus-Dark
+cp -a /usr/share/icons/Papirus-Dark $HOME/.icons/Papirus-Dark
 find "$HOME/.icons/Papirus-Dark" -type l -exec rm -v {} +
 cp -an /usr/share/icons/Papirus/* $HOME/.icons/Papirus-Dark
 

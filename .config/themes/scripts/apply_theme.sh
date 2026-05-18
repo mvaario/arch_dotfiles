@@ -42,7 +42,6 @@ darkenbackground=$($HOME/.config/themes/scripts/darken_background.sh "$backgroun
 declare -A files=(
     ["$HOME/.config/themes/templates/hyprland.template.conf"]="$HOME/.config/hypr/colors_temp.conf"
     ["$HOME/.config/themes/templates/hyprpaper.template.conf"]="$HOME/.config/hypr/hyprpaper.conf"
-    ["$HOME/.config/themes/templates/hyprlock.template.conf"]="$HOME/.config/hypr/hyprlock.conf"
     ["$HOME/.config/themes/templates/waybar.template.css"]="$HOME/.config/waybar/style.css"
     ["$HOME/.config/themes/templates/kitty.template.conf"]="$HOME/.config/kitty/colors.conf"
     ["$HOME/.config/themes/templates/wofi.template.conf"]="$HOME/.config/wofi/style.css"

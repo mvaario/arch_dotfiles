@@ -22,9 +22,9 @@
     "custom/keylock",
     "tray",
     "pulseaudio",
-    "custom/razer",
-    //"battery",
-    //"network",
+    // "custom/razer",
+    // "battery",
+    // "network",
     "custom/notification",
     "custom/power"
     
@@ -147,7 +147,7 @@
 },
 /* -------------------- Razer battery -------------------- */
 
-  // "custom/razer": {
+  "custom/razer": {
     "interval": 60,
     "return-type": "json",
     "exec": "~/.config/waybar/scripts/razer_battery.py"
