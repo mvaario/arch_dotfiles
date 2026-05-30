@@ -128,7 +128,7 @@ done
 #------------------------------------------------------------------------
 # Setup nvidia
 if $nvidia; then
-	install_scripts/nvidia.sh
+  "$BASE_DIR/install_scripts/nvidia.sh"
 fi
 
 
