@@ -94,6 +94,7 @@ PACKAGES=(
 	starship
 	fastfetch
 	btop
+	sddm
 	xdg-desktop-portal-hyprland 	# allow screen sharing
 	libinput-tools 					# For wofi scripts to get devices (does it even work?)
 	

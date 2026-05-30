@@ -8,8 +8,8 @@ export highlight='47EAFF'   # 3 up
 
 # For nautilus and cursor
 export cursor='catppuccin-mocha-sky-cursors'
-export nautilus='Orchis-Teal-Dark-Nord'
-export icons='cyan'
+export gtk_theme='Orchis-Teal-Dark-Nord'
+export folders='cyan'
 export fastfetch='cyan'
 
 export wallpaper='$HOME/.config/themes/wallpapers/metronox.jpg'

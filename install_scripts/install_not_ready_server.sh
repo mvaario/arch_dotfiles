@@ -5,6 +5,7 @@ set -e
 nvidia=true
 
 #------------------------------------------------------------------------
+BASE_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 # Ask for sudo password upfront
 if ! sudo -v; then
   echo "❌ This script requires sudo privileges."
@@ -69,8 +70,9 @@ PACKAGES=(
   openssh
   jq
 
-	kitty
+	
 	hyprland
+  kitty
 	hyprpaper
 	nautilus
 	starship
@@ -104,6 +106,7 @@ echo " "
 echo "📦 Downloading AUR packages..."
 
 AUR_PACKAGES=(
+    papirus-folders
     nautilus-open-any-terminal
     sunshine
 )
@@ -207,25 +210,71 @@ echo " "
 echo "🧰 Applying configuration settings"
 
 # copy config files
-cp -r "$(pwd)/.config" "$HOME/"
-cp -r "$(pwd)/.bashrc" "$HOME/"
+echo "Copying dot files"
+cp -r "$BASE_DIR/.config" "$HOME/"
+cp -r "$BASE_DIR/.bashrc" "$HOME/"
 
 # copy server spesific configs
 cp -r "$(pwd)/.config_server/." "$HOME/.config/"
 
-# Enable ufw
-sudo systemctl enable ufw
-sudo systemctl enable sshd
-sudo ufw allow ssh
+#------------------------------------------------------------------------
+# Copy icons to .icons folder. Used to make custom icons work without permission issues
+echo "Copying icons"
+mkdir -p $HOME/.icons/Papirus-Dark
+cp -a /usr/share/icons/Papirus-Dark $HOME/.icons/Papirus-Dark
+find "$HOME/.icons/Papirus-Dark" -type l -exec rm -v {} +
+cp -an /usr/share/icons/Papirus/* $HOME/.icons/Papirus-Dark
 
-# random stuff for papirus folder icons
+#------------------------------------------------------------------------
+# Enable ufw
+echo "Enabling ufw"
+sudo systemctl enable ufw
+
+# Enable Papirus-Dark
+echo "Enabling icon theme"
 gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark'
 
 # Set terminal for nautilus
+echo "Enabling open-any-terminal"
 gsettings set com.github.stunkymonkey.nautilus-open-any-terminal terminal kitty
 
 # Performance mode
+echo "Enabling performance mode"
 echo 'governor="performance"' | sudo tee /etc/default/cpupower
+
+# Grub timeout and style
+if [ -f "/etc/default/grub" ]; then
+	echo "Setting Grub timeout"
+	GRUB_FILE="/etc/default/grub"
+	sudo sed -i \
+	-e 's/^GRUB_TIMEOUT=.*/GRUB_TIMEOUT=0/' \
+	-e 's/^GRUB_TIMEOUT_STYLE=.*/GRUB_TIMEOUT_STYLE=hidden/' \
+	"$GRUB_FILE"
+
+	sudo grub-mkconfig -o /boot/grub/grub.cfg
+fi
+
+# Link nautilus compare using meld
+echo "Creating nautilus compare with Meld link"
+if [ -d "$HOME/.local/share/nautilus/scripts" ]; then
+	rm -rf $HOME/.local/share/nautilus/scripts
+fi
+
+echo "Creating mousepad compare"
+mkdir -p "$HOME/.local/share/nautilus/scripts"
+[ -e "$HOME/.local/share/nautilus/scripts/Compare with Meld" ] || \
+ln -s "$HOME/.config/nautilus/scripts/nautilus_compare.sh" "$HOME/.local/share/nautilus/scripts/Compare with Meld"
+
+# set mousepad theme
+echo "Setting mousepad theme"
+export DISPLAY=:0
+export XDG_RUNTIME_DIR="/run/user/$(id -u)"
+
+sudo -u "$USER" DISPLAY=:0 XDG_RUNTIME_DIR="/run/user/$(id -u $USER)" gsettings set org.xfce.mousepad.preferences.view color-scheme 'oblivion'
+sudo -u "$USER" DISPLAY=:0 XDG_RUNTIME_DIR="/run/user/$(id -u $USER)" gsettings set org.xfce.mousepad.preferences.view tab-width 4
+sudo -u "$USER" DISPLAY=:0 XDG_RUNTIME_DIR="/run/user/$(id -u $USER)" gsettings set org.xfce.mousepad.preferences.view font-name 'JetBrainsMonoNL Nerd Font Mono 10'
+sudo -u "$USER" DISPLAY=:0 XDG_RUNTIME_DIR="/run/user/$(id -u $USER)" gsettings set org.xfce.mousepad.preferences.view show-line-numbers true
+sudo -u "$USER" DISPLAY=:0 XDG_RUNTIME_DIR="/run/user/$(id -u $USER)" gsettings set org.xfce.mousepad.preferences.window always-show-tabs true
 
 # Autolog in file
 if [ ! -d "/etc/systemd/system/getty@tty1.service.d" ]; then
@@ -238,11 +287,7 @@ ExecStart=
 ExecStart=-/usr/bin/agetty --autologin $USER --noclear %I xterm-kitty" | sudo tee "/etc/systemd/system/getty@tty1.service.d/override.conf" > /dev/null
 
 # enable theme
-~/.config/themes/scripts/apply_theme.sh earthsong.sh
-
-# Add permissions
-sudo chown -R $USER:$USER /var/lib/papirus-folders/
-sudo chown -R $USER:$USER /usr/share/icons/Papirus*
+~/.config/themes/scripts/apply_theme.sh "earthsong" 0
 
 echo "✅ Configuration complete."
 echo ""
@@ -254,7 +299,6 @@ case "$reboot_ans" in
     [Yy]*) echo "♻️ Rebooting..."; sudo reboot;;
     *) echo "❗ Reboot skipped. Please reboot manually later.";;
 esac
-
 
 
 

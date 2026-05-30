@@ -38,6 +38,11 @@ rgb_main=$($HOME/.config/scripts/hex_to_rgb.sh "$main")
 # darken background since kitty is stupid and does not match
 darkenbackground=$($HOME/.config/themes/scripts/darken_background.sh "$background")
 
+# Get zen user.js file location
+MAIN_PROFILE="Default (release)"
+MAIN=$(grep -A5 "Name=$MAIN_PROFILE" ~/.zen/profiles.ini | \
+grep "^Path=" | head -n1 | sed 's/Path=//')
+
 # list of template files and their destination
 declare -A files=(
     ["$HOME/.config/themes/templates/hyprland.template.conf"]="$HOME/.config/hypr/colors_temp.conf"
@@ -51,7 +56,7 @@ declare -A files=(
     ["$HOME/.config/themes/templates/btop_style.template.theme"]="$HOME/.config/btop/themes/btop_style.theme"
     ["$HOME/.config/themes/templates/windows.template.conf"]="$HOME/.config/hypr/conf/window_theme.conf"
     ["$HOME/.config/themes/templates/gtk-4.template.css"]="$HOME/.config/gtk-4.0/gtk.css"
-    ["$HOME/.config/themes/templates/zen_browser.template.js"]="$HOME/.zen/qcjojoq2.Default (release)/user.js"
+    ["$HOME/.config/themes/templates/zen_browser.template.js"]="$HOME/.zen/$MAIN/user.js"
 )
 
 # Loop through the files and apply the theme
@@ -87,7 +92,7 @@ for template in "${!files[@]}"; do
         -e "s,%cursor%,$cursor,g" \
         -e "s,%size%,$size,g" \
         -e "s,%nautilus%,$nautilus,g" \
-        -e "s,%icons%,$icons,g" \
+        -e "s,%folders%,$folders,g" \
         -e "s,%fastfetch%,$fastfetch,g" \
         -e "s,%alpha_hex%,$alpha_hex,g" \
         "$template" > "$dest"
@@ -107,7 +112,7 @@ pkill nautilus
 echo "☑️ Changing folder icons"
 CURRENT_ICONS=$(grep '^Papirus ' "$LOCKFILE" | cut -d' ' -f3-)
 sed -i "s|^Papirus .*|Papirus False|" "$LOCKFILE"
-$HOME/.config/themes/scripts/papirus_folders.sh "$icons" "$CURRENT_ICONS" "$LOCKFILE" &
+$HOME/.config/themes/scripts/papirus_folders.sh "$folders" "$CURRENT_ICONS" "$LOCKFILE" &
 
 #-------------------------------------------------
 # Make blurred background for wlogout
@@ -127,9 +132,11 @@ gsettings set org.gnome.desktop.interface cursor-size "$size"
 sed -i "s|^Cursor .*|Cursor $cursor|" "$LOCKFILE"
 sed -i "s|^Cursor_Size .*|Cursor_Size $size|" "$LOCKFILE"
 echo "✅ Cursor changes"
+
 gsettings set org.gnome.desktop.interface color-scheme "prefer-dark"
-gsettings set org.gnome.desktop.interface gtk-theme "$nautilus"
-echo "✅ Nautilus changes"
+gsettings set org.gnome.desktop.interface gtk-theme "$gtk_theme"
+
+echo "✅ gtk-theme changes"
 
 #-------------------------------------------------
 # Make custom icons for waybar tray

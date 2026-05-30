@@ -20,6 +20,7 @@ FOLDERS=(
     "OpenRGB/themes" 
     "OpenRGB/scripts" 
     "nautilus"
+    "zen"
 )
 
 # Single files to copy
