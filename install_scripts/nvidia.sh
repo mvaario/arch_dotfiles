@@ -3,32 +3,32 @@ echo "🚀 Downloading nvidia packages..."
 GPU_INFO=$(lspci | grep -E "VGA|3D" | grep NVIDIA)
 
 if [ -z "$GPU_INFO" ]; then
-    echo "ERROR: No NVIDIA GPU detected!"
+    echo "ERROR:🛑 No NVIDIA GPU detected!"
     exit 1
 fi
 echo " "
-echo "Detected GPU: $GPU_INFO"
+echo "🔧 Detected GPU: $GPU_INFO"
 
 if echo "$GPU_INFO" | grep -Eiq "RTX 20|RTX 30|RTX 40|RTX 50"; then
-    echo "Installing modern NVIDIA Open drivers..."
+    echo "🎮 Installing modern NVIDIA Open drivers..."
     PACKAGES=(
-      nvidia-open \
-      nvidia-utils \
-      lib32-nvidia-utils \
-      vulkan-icd-loader \
-      lib32-vulkan-icd-loader \
-      libva-nvidia-driver \
-      nvidia-settings \
+      nvidia-open
+      nvidia-utils
+      lib32-nvidia-utils
+      vulkan-icd-loader
+      lib32-vulkan-icd-loader
+      libva-nvidia-driver
+      nvidia-settings
       egl-wayland
     )
 
 elif echo "$GPU_INFO" | grep -Eiq "GTX 10"; then
-    echo "Installing Pascal legacy drivers..."
+    echo "🎮 Installing Pascal legacy drivers..."
     PACKAGES=(
-      vulkan-icd-loader \
-      lib32-vulkan-icd-loader \
-      libva-nvidia-driver \
-      nvidia-settings \
+      vulkan-icd-loader
+      lib32-vulkan-icd-loader
+      libva-nvidia-driver
+      nvidia-settings
       egl-wayland
     )
 
@@ -39,7 +39,8 @@ elif echo "$GPU_INFO" | grep -Eiq "GTX 10"; then
     )
 
 else
-    echo "Unsupported or unknown NVIDIA GPU generation."
+    echo "🛑 Unsupported or unknown NVIDIA GPU generation."
+    exit 1
 fi
 
 # Package installation loop
@@ -68,28 +69,40 @@ for aur_pkg in "${AUR_PACKAGES[@]}"; do
 	fi
 done
 
-
 # Create or update modprobe config
+echo ""
 echo "💾 Writing /etc/modprobe.d/nvidia.conf..."
-echo "options nvidia_drm modeset=1" | sudo tee /etc/modprobe.d/nvidia.conf > /dev/null
-
-
-# Modify mkinitcpio.conf
-echo "🧩 Updating /etc/mkinitcpio.conf..."
-if grep -q '^MODULES=' /etc/mkinitcpio.conf; then
-  sudo sed -i 's/^MODULES=.*/MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)/' /etc/mkinitcpio.conf
+if ! grep -q '^options nvidia_drm modeset=1$' /etc/modprobe.d/nvidia.conf 2>/dev/null; then
+    echo "options nvidia_drm modeset=1" | sudo tee /etc/modprobe.d/nvidia.conf > /dev/null
 else
-  echo "MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)" | sudo tee -a /etc/mkinitcpio.conf
+    echo "nvidia_drm modeset already enabled"
 fi
 
+# Modify mkinitcpio.conf
+if echo "$GPU_INFO" | grep -Eiq "RTX 20|RTX 30|RTX 40|RTX 50"; then
+    echo ""
+    echo "🧩 Updating /etc/mkinitcpio.conf..."
+    if ! grep -q 'MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)' /etc/mkinitcpio.conf; then
+        if grep -q '^MODULES=' /etc/mkinitcpio.conf; then
+            sudo sed -i 's/^MODULES=.*/MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)/' /etc/mkinitcpio.conf
+        else
+            echo "MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)" | sudo tee -a /etc/mkinitcpio.conf
+        fi
+    else
+        echo "Nvidia Modules already done"
+    fi
+fi
 
 # Update /etc/environment
-echo "🌱 Adding environment variables to /etc/environment..."
+echo ""
+echo "🌱 Adding NVIDIA environment variables to /etc/environment..."
 if ! grep -q 'LIBVA_DRIVER_NAME=nvidia' /etc/environment; then
   sudo tee -a /etc/environment > /dev/null <<EOF
-
 # NVIDIA Wayland / VA-API support
 LIBVA_DRIVER_NAME=nvidia
 __GLX_VENDOR_LIBRARY_NAME=nvidia
 EOF
+else
+    echo "Enviroment variables already done"
 fi
+echo ""

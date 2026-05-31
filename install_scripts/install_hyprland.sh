@@ -3,16 +3,20 @@ set -e
 
 # Edit these if nvidia or razer is used
 nvidia=true
+razer=true
+optional_softwares=true
+laptop=true
 
-#------------------------------------------------------------------------
+
+#------------------------------------------------------------------------ 
 BASE_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 # Ask for sudo password upfront
 if ! sudo -v; then
   echo "❌ This script requires sudo privileges."
   exit 1
-fi
+fi 
 
-# Keep sudo alive in the background
+# Keep sudo alive in the background (does not work)
 (
   while true; do
     sleep 30
@@ -46,44 +50,64 @@ echo " "
 echo "🔄 Updating system"
 sudo pacman -Syu
 
-if ! command -v yay &> /dev/null; then
-    echo "📥 Installing yay AUR helper..."
-    git clone https://aur.archlinux.org/yay.git
-    cd yay
-    makepkg -si --noconfirm
-    cd -
-fi
-
-
 #------------------------------------------------------------------------
 echo " "
 echo "🚀 Downloading packages..."
 PACKAGES=(
+	# essentials
 	git
 	neovim
 	hyprpolkitagent
 	ufw
 	pacman-contrib
 
+	# fonts
+	noto-fonts
+	noto-fonts-emoji
+	ttf-jetbrains-mono-nerd
+	ttf-dejavu
+	ttf-liberation
+	ttf-roboto
+	noto-fonts-cjk
 	papirus-icon-theme
-	linux-headers
-  openssh
-  jq
 
-	
+	# audio
+	pipewire
+	pipewire-alsa
+	pipewire-audio
+	pipewire-pulse
+	lib32-libpipewire
+	lib32-pipewire
+	pavucontrol
+	linux-headers
+	jq
+
+	# packages
 	hyprland
-  kitty
+	kitty
+	waybar
 	hyprpaper
+	hyprsunset
+	wofi
 	nautilus
+	swaync
 	starship
 	fastfetch
 	btop
-  ethtool
-  iperf3
-
-  # softwares
-  code
-
+	sddm
+	xdg-desktop-portal-hyprland 	# allow screen sharing
+	libinput-tools 					# For wofi scripts to get devices (does it even work?)
+	
+	# softwares
+	code
+	ristretto 						# Image viewer
+	grim 							# screenshot
+	slurp 							# screenshot
+	gnome-disk-utility
+	mousepad						# easy notepad
+	meld							# mousepad compare
+	
+	# miscs
 	cpupower
 )
 
@@ -100,15 +124,26 @@ for pkg in "${PACKAGES[@]}"; do
     fi
 done
 
+#------------------------------------------------------------------------
+if ! command -v yay &> /dev/null; then
+    echo "📥 Installing yay AUR helper..."
+	sudo pacman -S --needed git base-devel
+    git clone https://aur.archlinux.org/yay.git
+    cd yay
+    makepkg -si --noconfirm
+    cd -
+fi
+
 
 #------------------------------------------------------------------------
 echo " "
 echo "📦 Downloading AUR packages..."
 
 AUR_PACKAGES=(
-    papirus-folders
-    nautilus-open-any-terminal
-    sunshine
+	papirus-folders
+	nautilus-open-any-terminal
+	catppuccin-cursors-mocha
+
 )
 
 # AUR package install
@@ -126,9 +161,75 @@ done
 
 
 #------------------------------------------------------------------------
+mkdir -p ~/.local/share/applications
+
 # Setup nvidia
 if $nvidia; then
-  "$BASE_DIR/install_scripts/nvidia.sh"
+	"$BASE_DIR/install_scripts/nvidia.sh"
+fi
+
+# Setup razer
+if $razer; then
+	"$BASE_DIR/install_scripts/razer.sh"
+	sed -i \
+		-e 's|^[[:space:]]*//[[:space:]]*"custom\/razer"|    "custom\/razer"|' \
+			"$BASE_DIR/.config/waybar/config.jsonc"
+fi
+
+# Setup optional softwares
+if $optional_softwares; then
+	"$BASE_DIR/install_scripts/optional_softwares.sh"
+fi
+
+if $laptop; then
+	echo "💻 Setting up laptop configs"
+    sed -i \
+        -e 's|^[[:space:]]*//[[:space:]]*"battery"|    "battery"|' \
+        -e 's|^[[:space:]]*//[[:space:]]*"network"|    "network"|' \
+        	"$BASE_DIR/.config/waybar/config.jsonc"
+
+	sed -i \
+        -e 's|^[[:space:]]*#[[:space:]]*bind = ,XF86MonBrightnessUp, exec, brightnessctl s 5%+|bind = ,XF86MonBrightnessUp, exec, brightnessctl s 5%+|' \
+		-e 's|^[[:space:]]*#[[:space:]]*bind = ,XF86MonBrightnessDown, exec, brightnessctl s 5%-|bind = ,XF86MonBrightnessDown, exec, brightnessctl s 5%-|' \
+		-e 's|^[[:space:]]*#[[:space:]]*bind = ,XF86AudioLowerVolume, exec, pactl -- set-sink-volume 0 -1%|bind = ,XF86AudioLowerVolume, exec, pactl -- set-sink-volume 0 -1%|' \
+		-e 's|^[[:space:]]*#[[:space:]]*bind = ,XF86AudioRaiseVolume, exec, pactl -- set-sink-volume 0 +1%|bind = ,XF86AudioRaiseVolume, exec, pactl -- set-sink-volume 0 +1%|' \
+		-e 's|^[[:space:]]*#[[:space:]]*bind = ,XF86AudioMute, exec, pactl -- set-sink-mute 0 toggle|bind = ,XF86AudioMute, exec, pactl -- set-sink-mute 0 toggle|' \
+        	"$BASE_DIR/.config/hypr/conf/keybinds.conf"
+	echo ""
+fi
+
+#------------------------------------------------------------------------
+# Get user
+USER=$(logname)
+
+if [ ! -f ~/.local/opt/zen/zen ]; then
+	echo " "
+	echo "📥 Installing latest Zen Browser..."
+	mkdir -p ~/.local/opt/zen
+	
+	# Download the latest version
+	curl -L https://github.com/zen-browser/desktop/releases/latest/download/zen.linux-x86_64.tar.xz -o /tmp/zen-latest.tar.xz
+
+	# Extract
+	tar xf /tmp/zen-latest.tar.xz -C ~/.local/opt/zen --strip-components=1
+
+	# Create desktop entry for wofi
+	cat > ~/.local/share/applications/zen.desktop <<EOF
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Zen Browser
+Exec=/home/$USER/.local/opt/zen/zen %U
+Icon=/home/$USER/.local/opt/zen/browser/chrome/icons/default/default128.png
+Terminal=false
+Categories=Network;WebBrowser;
+EOF
+
+	chmod +x ~/.local/share/applications/zen.desktop
+	update-desktop-database ~/.local/share/applications/
+	
+	# Delete temp file
+	rm /tmp/zen-latest.tar.xz
 fi
 
 
@@ -145,44 +246,6 @@ fi
 
 echo "✅ All packages installed."
 echo " "
-
-
-#------------------------------------------------------------------------
-# Enable wake on lan
-INTERFACE="enp4s0"
-
-cat <<EOF | sudo tee /etc/systemd/system/wol.service > /dev/null
-[Unit]
-Description=Enable Wake-on-LAN
-
-[Service]
-Type=oneshot
-ExecStart=/usr/bin/ethtool -s $INTERFACE wol g
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-sudo systemctl enable wol.service
-
-
-#------------------------------------------------------------------------
-# Enable speed test
-
-cat <<EOF | sudo tee /etc/systemd/system/iperf3.service > /dev/null
-[Unit]
-Description=iPerf3 bandwidth measurement daemon
-After=network.target
-
-[Service]
-ExecStart=/usr/bin/iperf3 -s
-Restart=on-failure
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-sudo systemctl enable iperf3.service
 
 
 #------------------------------------------------------------------------
@@ -214,37 +277,72 @@ echo "Copying dot files"
 cp -r "$BASE_DIR/.config" "$HOME/"
 cp -r "$BASE_DIR/.bashrc" "$HOME/"
 
-# copy server spesific configs
-cp -r "$(pwd)/.config_server/." "$HOME/.config/"
+
+#------------------------------------------------------------------------
+echo "🖥️ Configurating monitors"
+# detect connected monitors
+mapfile -t monitors < <(
+    for m in /sys/class/drm/*/status; do
+        [[ $(<"$m") == "connected" ]] &&
+        basename "$(dirname "$m")" | sed 's/^card[0-9]-//'
+    done
+)
+
+primary="${monitors[0]}"
+secondary="${monitors[1]}"
+# replace first placeholder (required)
+sed -i "s/\bDP-1\b/$primary/g" "$HOME/.config/hypr/hyprland.conf"
+sed -i "s/\bDP-1\b/$primary/g" "$HOME/.config/themes/templates/hyprpaper.template.conf"
+sed -i "s/\bDP-1\b/$primary/g" "$HOME/.config/hypr/conf/autostart.conf"
+sed -i "s/\bDP-1\b/$primary/g" "$HOME/.config/hypr/conf/keyboard.conf"
+sed -i "s/\bDP-1\b/$primary/g" "$HOME/.config/waybar/config.jsonc"
+
+if [[ -n "$secondary" ]]; then
+    # replace second placeholder
+    sed -i "s/\bHDMI-A-1\b/$secondary/g" "$HOME/.config/hypr/hyprland.conf"
+	sed -i "s/\bHDMI-A-1\b/$secondary/g" "$HOME/.config/themes/templates/hyprpaper.template.conf"
+	sed -i "s/\bHDMI-A-1\b/$secondary/g" "$HOME/.config/waybar/config.jsonc"
+else
+    # remove all lines containing HDMI-A-1
+    sed -i '/HDMI-A-1/d' "$HOME/.config/hypr/hyprland.conf"
+	sed -i '/HDMI-A-1/d' "$HOME/.config/waybar/config.jsonc"
+fi
 
 #------------------------------------------------------------------------
 # Copy icons to .icons folder. Used to make custom icons work without permission issues
-echo "Copying icons"
+echo "✨ Copying icons"
 mkdir -p $HOME/.icons/Papirus-Dark
 cp -a /usr/share/icons/Papirus-Dark $HOME/.icons/Papirus-Dark
-find "$HOME/.icons/Papirus-Dark" -type l -exec rm -v {} +
+find "$HOME/.icons/Papirus-Dark" -type l -exec rm -v {} + > /dev/null
 cp -an /usr/share/icons/Papirus/* $HOME/.icons/Papirus-Dark
+echo ""
 
-#------------------------------------------------------------------------
 # Enable ufw
-echo "Enabling ufw"
+echo "🛡️ Enabling ufw"
 sudo systemctl enable ufw
+echo ""
 
 # Enable Papirus-Dark
-echo "Enabling icon theme"
+echo "🎨 Enabling icon theme"
 gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark'
+echo ""
 
 # Set terminal for nautilus
-echo "Enabling open-any-terminal"
+echo "📟 Enabling open-any-terminal"
 gsettings set com.github.stunkymonkey.nautilus-open-any-terminal terminal kitty
+echo ""
 
 # Performance mode
-echo "Enabling performance mode"
+echo "⚙️ Enabling performance mode"
 echo 'governor="performance"' | sudo tee /etc/default/cpupower
+echo ""
+
+# add user to input group, needed to detect mouse inputs
+sudo usermod -aG input $USER
 
 # Grub timeout and style
 if [ -f "/etc/default/grub" ]; then
-	echo "Setting Grub timeout"
+	echo "⏱️ Setting Grub timeout"
 	GRUB_FILE="/etc/default/grub"
 	sudo sed -i \
 	-e 's/^GRUB_TIMEOUT=.*/GRUB_TIMEOUT=0/' \
@@ -255,18 +353,18 @@ if [ -f "/etc/default/grub" ]; then
 fi
 
 # Link nautilus compare using meld
-echo "Creating nautilus compare with Meld link"
+echo "✅ Creating nautilus compare with Meld link"
 if [ -d "$HOME/.local/share/nautilus/scripts" ]; then
 	rm -rf $HOME/.local/share/nautilus/scripts
 fi
 
-echo "Creating mousepad compare"
+echo "✅ Creating mousepad compare"
 mkdir -p "$HOME/.local/share/nautilus/scripts"
 [ -e "$HOME/.local/share/nautilus/scripts/Compare with Meld" ] || \
 ln -s "$HOME/.config/nautilus/scripts/nautilus_compare.sh" "$HOME/.local/share/nautilus/scripts/Compare with Meld"
 
 # set mousepad theme
-echo "Setting mousepad theme"
+echo "✅ Setting mousepad theme"
 export DISPLAY=:0
 export XDG_RUNTIME_DIR="/run/user/$(id -u)"
 
@@ -276,15 +374,6 @@ sudo -u "$USER" DISPLAY=:0 XDG_RUNTIME_DIR="/run/user/$(id -u $USER)" gsettings 
 sudo -u "$USER" DISPLAY=:0 XDG_RUNTIME_DIR="/run/user/$(id -u $USER)" gsettings set org.xfce.mousepad.preferences.view show-line-numbers true
 sudo -u "$USER" DISPLAY=:0 XDG_RUNTIME_DIR="/run/user/$(id -u $USER)" gsettings set org.xfce.mousepad.preferences.window always-show-tabs true
 
-# Autolog in file
-if [ ! -d "/etc/systemd/system/getty@tty1.service.d" ]; then
-    echo "Creating directory for systemd override: /etc/systemd/system/getty@tty1.service.d"
-    sudo mkdir -p "/etc/systemd/system/getty@tty1.service.d"
-fi
-
-echo "[Service]
-ExecStart=
-ExecStart=-/usr/bin/agetty --autologin $USER --noclear %I xterm-kitty" | sudo tee "/etc/systemd/system/getty@tty1.service.d/override.conf" > /dev/null
 
 # enable theme
 ~/.config/themes/scripts/apply_theme.sh "earthsong" 0
@@ -299,6 +388,7 @@ case "$reboot_ans" in
     [Yy]*) echo "♻️ Rebooting..."; sudo reboot;;
     *) echo "❗ Reboot skipped. Please reboot manually later.";;
 esac
+
 
 
 

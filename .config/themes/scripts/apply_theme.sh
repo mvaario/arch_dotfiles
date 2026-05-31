@@ -126,7 +126,9 @@ mv "$HOME/.config/hypr/colors_temp.conf" "$HOME/.config/hypr/colors.conf"
 echo "✅ Hyprland done"
 
 #-------------------------------------------------
-hyprctl setcursor "$cursor" "$size"
+if [[ "$2" != "0" ]]; then
+    hyprctl setcursor "$cursor" "$size"
+fi
 gsettings set org.gnome.desktop.interface cursor-theme "$cursor"
 gsettings set org.gnome.desktop.interface cursor-size "$size"
 sed -i "s|^Cursor .*|Cursor $cursor|" "$LOCKFILE"

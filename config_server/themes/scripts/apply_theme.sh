@@ -1,35 +1,21 @@
 #!/bin/bash
 # Apply selected theme to different moduls
 # Script called by theme_picker.sh
-THEME_FILE="$HOME/.config/themes/colors/$1"
-echo $THEME_FILE
+start_time=$(date +%s%N) # log the time
+
+THEME_FILE="$HOME/.config/themes/colors/$1.sh"
+LOCKFILE="$HOME/.config/themes/theme_switch.lock"
+echo "apply theme" $THEME_FILE
 
 if [ ! -f "$THEME_FILE" ]; then
     echo "Theme not found: $1"
+    # Release the lockfile
+    sed -i "s|^Hyprland .*|Hyprland True|" "$LOCKFILE"
     exit 1
 fi
 
 # Load common colors
 COMMON_FILE="$HOME/.config/themes/common.sh"
-
-#-------------------------------------------------
-# make sure script is not running on the background
-LOCKFILE="$HOME/.config/scripts/theme_switch.lock"
-WAIT_TIME=3
-
-while grep -q " False$" "$LOCKFILE"; do
-  echo "Other instance running"
-  echo "Waiting..."
-  sleep 1
-  WAIT_TIME=$((WAIT_TIME - 1))
-  if [ "$WAIT_TIME" -le 0 ]; then
-    echo "Timeout reached, exiting."
-    exit 1
-  fi
-done
-
-# Empty lockfile if 
-echo "" > "$LOCKFILE"
 
 #-------------------------------------------------
 # No idea why this broke now...
@@ -42,19 +28,20 @@ echo "" > "$LOCKFILE"
 source "$COMMON_FILE"
 source "$THEME_FILE"
 
-#create hex background with opacity
+# create hex background with opacity
 hexopacity="$HOME/.config/scripts/hex_opacity.sh"
 alpha_hex=$("$hexopacity" "$opacity")
 
 # changes color to rgb
 background_rgb_str=$($HOME/.config/scripts/hex_to_rgb.sh "$background")
-rgb_bwhite=$($HOME/.config/scripts/hex_to_rgb.sh "$bwhite")
+rgb_main=$($HOME/.config/scripts/hex_to_rgb.sh "$main")
+# darken background since kitty is stupid and does not match
+darkenbackground=$($HOME/.config/themes/scripts/darken_background.sh "$background")
 
-# List of template files and their destination
+# list of template files and their destination
 declare -A files=(
     ["$HOME/.config/themes/templates/hyprland.template.conf"]="$HOME/.config/hypr/colors_temp.conf"
     ["$HOME/.config/themes/templates/hyprpaper.template.conf"]="$HOME/.config/hypr/hyprpaper.conf"
-    ["$HOME/.config/themes/templates/hyprlock.template.conf"]="$HOME/.config/hypr/hyprlock.conf"
     ["$HOME/.config/themes/templates/waybar.template.css"]="$HOME/.config/waybar/style.css"
     ["$HOME/.config/themes/templates/kitty.template.conf"]="$HOME/.config/kitty/colors.conf"
     ["$HOME/.config/themes/templates/wofi.template.conf"]="$HOME/.config/wofi/style.css"
@@ -64,7 +51,6 @@ declare -A files=(
     ["$HOME/.config/themes/templates/btop_style.template.theme"]="$HOME/.config/btop/themes/btop_style.theme"
     ["$HOME/.config/themes/templates/windows.template.conf"]="$HOME/.config/hypr/conf/window_theme.conf"
     ["$HOME/.config/themes/templates/gtk-4.template.css"]="$HOME/.config/gtk-4.0/gtk.css"
-    ["$HOME/.config/themes/templates/zen_browser.template.js"]="$HOME/.zen/nt0xto0c.Default (release)/user.js"
 )
 
 # Loop through the files and apply the theme
@@ -72,8 +58,9 @@ for template in "${!files[@]}"; do
     dest="${files[$template]}"
     # Use sed to find and replace placeholders
     sed -e "s|%background_rgb_str%|$background_rgb_str|g" \
-        -e "s|%rgb_bwhite%|$rgb_bwhite|g" \
+        -e "s|%rgb_main%|$rgb_main|g" \
         -e "s,%opacity%,$opacity,g" \
+        -e "s,%darkenbackground%,$darkenbackground,g" \
         -e "s,%background%,$background,g" \
         -e "s,%backerground%,$backerground,g" \
         -e "s,%foreground%,$foreground,g" \
@@ -99,37 +86,70 @@ for template in "${!files[@]}"; do
         -e "s,%cursor%,$cursor,g" \
         -e "s,%size%,$size,g" \
         -e "s,%nautilus%,$nautilus,g" \
-        -e "s,%icons%,$icons,g" \
-        -e "s,%name%,$name,g" \
+        -e "s,%folders%,$folders,g" \
+        -e "s,%fastfetch%,$fastfetch,g" \
         -e "s,%alpha_hex%,$alpha_hex,g" \
         "$template" > "$dest"
 done
 
 #-------------------------------------------------
-# Changes folder theme (takes a while....)
+# Changes folder theme
 pkill nautilus
 echo "☑️ Changing folder icons"
-echo "Papirus False" >> "$LOCKFILE"
-$HOME/.config/scripts/papirus_folders.sh "$icons" "$LOCKFILE" &
+CURRENT_ICONS=$(grep '^Papirus ' "$LOCKFILE" | cut -d' ' -f3-)
+sed -i "s|^Papirus .*|Papirus False|" "$LOCKFILE"
+$HOME/.config/themes/scripts/papirus_folders.sh "$folders" "$CURRENT_ICONS" "$LOCKFILE" &
 
 #-------------------------------------------------
 # Hyprland temp file to not show errors when loading themes
 mv "$HOME/.config/hypr/colors_temp.conf" "$HOME/.config/hypr/colors.conf"
 echo "✅ Hyprland done"
 
-hyprctl setcursor "$cursor" "$size"
+#-------------------------------------------------
+if [[ "$2" != "0" ]]; then
+    hyprctl setcursor "$cursor" "$size"
+fi
+
 gsettings set org.gnome.desktop.interface cursor-theme "$cursor"
 gsettings set org.gnome.desktop.interface cursor-size "$size"
+sed -i "s|^Cursor .*|Cursor $cursor|" "$LOCKFILE"
+sed -i "s|^Cursor_Size .*|Cursor_Size $size|" "$LOCKFILE"
 echo "✅ Cursor changes"
 
-gsettings set org.gnome.desktop.interface gtk-theme "$nautilus"
-echo "✅ Nautilus changes"
+gsettings set org.gnome.desktop.interface color-scheme "prefer-dark"
+gsettings set org.gnome.desktop.interface gtk-theme "$gtk_theme"
 
+echo "✅ gtk-theme changes"
 
 #-------------------------------------------------
-pkill hyprpaper
-hyprctl reload
-sleep 0.5
+if [[ "$2" != "0" ]]; then
+    pkill hyprpaper
+    hyprctl reload
 
-hyprpaper &
+    # wait until everything is ready
+    timeout=3000
+    while grep -qP '^(?!Hyprland|OpenRGB).* False$' "$LOCKFILE"; do
+        $HOME/.config/themes/scripts/timeout.sh "$start_time" "$timeout" "$LOCKFILE" 
+    done
+
+    hyprpaper & disown
+
+    #-------------------------------------------------
+    # make sure float state is the same
+    $HOME/.config/swaync/scripts/toggle_float.sh "false" "$LOCKFILE" &
+
+    # Notification timeout
+    timeout=5000
+    while grep -E ' False$' "$LOCKFILE" | grep -vq '^OpenRGB '; do
+        $HOME/.config/themes/scripts/timeout.sh "$start_time" "$timeout" "$LOCKFILE" 
+    done
+fi
 echo "✅ all done"
+
+#-------------------------------------------------
+# Mark to time and notify
+end_time=$(date +%s%N)
+elapsed=$(( ($end_time - $start_time) / 1000000 ))
+sed -i "s|^Theme .*|Theme $1 took ${elapsed} ms|" "$LOCKFILE"
+echo "$1" "Theme activated."
+exit 0

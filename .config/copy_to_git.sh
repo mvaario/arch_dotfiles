@@ -26,6 +26,7 @@ FOLDERS=(
 # Single files to copy
 FILES_TO_COPY=(
     "$HOME/.config/install_scripts|$DEST_ROOT"
+    "$HOME/.config/config_server|$DEST_ROOT"
     "$HOME/.bashrc|$DEST_ROOT"
     "$HOME/.config/Code - OSS/User/settings.json|$DEST_ROOT/.config/Code - OSS/User"
     "$HOME/.config/copy_to_git.sh|$DEST_ROOT/.config"
