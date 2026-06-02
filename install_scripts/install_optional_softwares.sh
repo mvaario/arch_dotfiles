@@ -88,3 +88,7 @@ EOF
 	rm /tmp/gitkraken.tar.gz
 
 fi
+
+#------------------------------------------------------------------------
+echo "✅ Optional softwares installed."
+echo ""

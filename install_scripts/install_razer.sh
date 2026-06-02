@@ -1,5 +1,5 @@
 echo " "
-echo "📦 Downloading razer packages..."
+echo "📦 Downloading razer packages"
 
 PACKAGES=(
     openrazer-daemon 
@@ -27,3 +27,7 @@ USER=$(logname)
 # Random stuff for razer...
 sudo gpasswd -a $USER openrazer
 #sudo gpasswd -a $USER plugdev
+
+#------------------------------------------------------------------------
+echo "✅ Razer configurations done."
+echo ""

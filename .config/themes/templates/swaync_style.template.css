@@ -129,8 +129,8 @@
 /* volume */
 .widget-volume {
     background: transparent;
-    pointer-events: none;
-    pointer-events: none;
+    /*pointer-events: none;
+    pointer-events: none;*/
 }
 
 /* Slider trough (the bar) */

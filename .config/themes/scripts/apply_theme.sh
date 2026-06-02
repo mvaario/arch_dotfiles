@@ -149,9 +149,11 @@ $HOME/.config/themes/scripts/icon_recolor.sh "$foreground" "$CURRENT_COLOR" "$LO
 #-------------------------------------------------
 if [[ "$2" != "0" ]]; then
     pkill swaync
-    pkill hyprpaper
-    pkill waybar
     hyprctl reload
+    pkill -USR2 waybar
+    for monitor in $(hyprctl monitors -j | jq -r '.[].name'); do
+        hyprctl hyprpaper wallpaper "$monitor, $wallpaper, cover"
+    done
 
     # wait until everything is ready
     timeout=3000
@@ -160,8 +162,6 @@ if [[ "$2" != "0" ]]; then
     done
 
     swaync & disown
-    waybar & disown
-    hyprpaper & disown
 
     #-------------------------------------------------
     # make sure float state is the same

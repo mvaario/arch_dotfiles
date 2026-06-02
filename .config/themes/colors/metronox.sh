@@ -12,7 +12,7 @@ export gtk_theme='Orchis-Teal-Dark-Nord'
 export folders='cyan'
 export fastfetch='cyan'
 
-export wallpaper='$HOME/.config/themes/wallpapers/metronox.jpg'
+export wallpaper="$HOME/.config/themes/wallpapers/metronox.jpg"
 
 #openrgb profile
 export openrgb="openrgb_blue"

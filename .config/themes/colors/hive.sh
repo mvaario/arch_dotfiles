@@ -12,7 +12,7 @@ export gtk_theme='Orchis-Teal-Dark-Nord'
 export folders='breeze'
 export fastfetch='cyan'
 
-export wallpaper='$HOME/.config/themes/wallpapers/hive.jpg'
+export wallpaper="$HOME/.config/themes/wallpapers/hive.jpg"
 
 #openrgb profile
 export openrgb="openrgb_white"

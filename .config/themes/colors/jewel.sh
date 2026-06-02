@@ -12,7 +12,7 @@ export gtk_theme='Orchis-Purple-Dark-Nord'
 export folders='magenta'
 export fastfetch='magenta'
 
-export wallpaper='$HOME/.config/themes/wallpapers/jewel.jpg'
+export wallpaper="$HOME/.config/themes/wallpapers/jewel.jpg"
 
 #openrgb profile
 export openrgb="openrgb_purple"

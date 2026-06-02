@@ -12,7 +12,7 @@ export gtk_theme='Orchis-Teal-Dark-Nord'
 export folders='darkcyan'
 export fastfetch='cyan'
 
-export wallpaper='$HOME/.config/themes/wallpapers/midrise.jpg'
+export wallpaper="$HOME/.config/themes/wallpapers/midrise.jpg"
 
 #openrgb profile
 export openrgb="openrgb_blue"

@@ -3,8 +3,8 @@
 echo "Stopping display manager..."
 sudo systemctl stop display-manager
 
-echo "Uninstalling NVIDIA drivers and related packages..."
-sudo pacman -Rcns --noconfirm nvidia nvidia-utils nvidia-settings lib32-nvidia-utils vulkan-icd-loader lib32-vulkan-icd-loader vulkan-tools
+echo "Uninstalling NVIDIA drivers and related packages..." 
+sudo pacman -Rcns --noconfirm nvidia-open nvidia-utils lib32-nvidia-utils vulkan-icd-loader lib32-vulkan-icd-loader nvidia-settings vulkan-tools nvidia-settings egl-wayland nvidia-570xx-dkms nvidia-570xx-utils lib32-nvidia-570xx-utils
 
 echo "Removing leftover config files and kernel modules..."
 sudo rm -f /etc/modprobe.d/nvidia.conf
@@ -40,7 +40,7 @@ echo "Done. Wine and all associated files removed."
 
 echo "Updating system and reinstalling NVIDIA drivers..."
 sudo pacman -Syu --noconfirm
-sudo pacman -S --noconfirm nvidia nvidia-utils nvidia-settings lib32-nvidia-utils vulkan-icd-loader lib32-vulkan-icd-loader vulkan-tools
+#sudo pacman -S --noconfirm nvidia nvidia-utils nvidia-settings lib32-nvidia-utils vulkan-icd-loader lib32-vulkan-icd-loader vulkan-tools
 
 echo "Rebuilding initramfs..."
 sudo mkinitcpio -P

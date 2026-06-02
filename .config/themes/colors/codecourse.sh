@@ -12,7 +12,7 @@ export gtk_theme='Orchis-Teal-Dark-Nord'
 export folders='darkcyan'
 export fastfetch='blue'
 
-export wallpaper='$HOME/.config/themes/wallpapers/codecourse.jpg'
+export wallpaper="$HOME/.config/themes/wallpapers/codecourse.jpg"
 
 #openrgb profile
 export openrgb="openrgb_blue"

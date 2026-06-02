@@ -12,7 +12,7 @@ export gtk_theme='Orchis-Red-Dark-Nord'
 export folders='white'
 export fastfetch='white'
 
-export wallpaper='$HOME/.config/themes/wallpapers/comrade.png'
+export wallpaper="$HOME/.config/themes/wallpapers/comrade.png"
 
 #openrgb profile
 export openrgb="openrgb_white"

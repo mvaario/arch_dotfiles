@@ -1,12 +1,96 @@
 #!/bin/bash
 set -e
+echo " "
+echo " "
+echo " "
 
-# Edit these if nvidia or razer is used
-nvidia=true
-razer=true
-optional_softwares=true
-laptop=true
+read -rp "📦 Install desktop configurations? [Y/n]: " DESKTOP
+DESKTOP=${DESKTOP,,}
 
+if [[ -z "$DESKTOP" || "$DESKTOP" == "y" || "$DESKTOP" == "yes" ]]; then
+	echo "✅ Desktop enabled"
+    desktop=true
+else
+	echo "⏭️ Skipping desktop configurations"
+    desktop=false
+fi
+
+#------------------------------------------------------------------------ 
+echo " "
+read -rp "📦 Install server configurations? [Y/n]: " SERVER
+SERVER=${SERVER,,}
+
+if [[ -z "$SERVER" || "$SERVER" == "y" || "$SERVER" == "yes" ]]; then
+	echo "✅ Server enabled"
+    server=true
+else
+	echo "⏭️ Skipping server configurations"
+    server=false
+fi
+
+#------------------------------------------------------------------------ 
+echo " "
+read -rp "📦 Install laptop configurations? [Y/n]: " LAPTOP
+LAPTOP=${LAPTOP,,}
+
+if [[ -z "$LAPTOP" || "$LAPTOP" == "y" || "$LAPTOP" == "yes" ]]; then
+	echo "✅ Laptop enabled"
+    laptop=true
+else
+	echo "⏭️ Skipping laptop configurations"
+    laptop=false
+fi
+
+#------------------------------------------------------------------------ 
+echo " "
+read -rp "📦 Install NVIDIA configurations? [Y/n]: " NVIDIA
+NVIDIA=${NVIDIA,,}
+
+if [[ -z "$NVIDIA" || "$NVIDIA" == "y" || "$NVIDIA" == "yes" ]]; then
+	echo "✅ Nvidia enabled"
+    nvidia=true
+else
+	echo "⏭️ Skipping nvidia configurations"
+    nvidia=false
+fi
+
+#------------------------------------------------------------------------ 
+echo " "
+read -rp "📦 Install Razer configurations? [Y/n]: " RAZER_SOFTWARES
+RAZER_SOFTWARES=${RAZER_SOFTWARES,,}
+
+if [[ -z "$RAZER_SOFTWARES" || "$RAZER_SOFTWARES" == "y" || "$RAZER_SOFTWARES" == "yes" ]]; then
+	echo "✅ Razer enabled"
+    razer=true
+else
+	echo "⏭️ Skipping razer configurations"
+    razer=false
+fi
+
+#------------------------------------------------------------------------ 
+echo " "
+read -rp "📦 Install optional software? [Y/n]: " OPTIONAL_SOFTWARES
+OPTIONAL_SOFTWARES=${OPTIONAL_SOFTWARES,,}
+
+if [[ -z "$OPTIONAL_SOFTWARES" || "$OPTIONAL_SOFTWARES" == "y" || "$OPTIONAL_SOFTWARES" == "yes" ]]; then
+	echo "✅ Optional software enabled"
+    optional_softwares=true
+else
+	echo "⏭️ Skipping optional software"
+    optional_softwares=false
+fi
+#------------------------------------------------------------------------ 
+
+# Verification
+echo " "
+echo " "
+read -rp "🚀 Continue with installation? [Y/n]: " CONTINUE
+CONTINUE=${CONTINUE,,}
+
+if [[ "$CONTINUE" == "n" || "$CONTINUE" == "no" ]]; then
+    echo "❌ Installation canceled"
+    exit 1
+fi
 
 #------------------------------------------------------------------------ 
 BASE_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -48,67 +132,43 @@ sudo mv /etc/pacman.conf.tmp /etc/pacman.conf
 #------------------------------------------------------------------------
 echo " "
 echo "🔄 Updating system"
-sudo pacman -Syu
+sudo pacman -Syu --noconfirm
 
 #------------------------------------------------------------------------
 echo " "
-echo "🚀 Downloading packages..."
+echo "🚀 Downloading essential packages"
 PACKAGES=(
 	# essentials
 	git
 	neovim
 	hyprpolkitagent
-	ufw
 	pacman-contrib
+	linux-headers
+	jq								# json processor
+	
+	# hyprland
+	hyprland
+	hyprpaper
+	kitty
+	nautilus
+	starship
+	fastfetch
+	papirus-icon-theme
 
 	# fonts
 	noto-fonts
 	noto-fonts-emoji
 	ttf-jetbrains-mono-nerd
-	ttf-dejavu
-	ttf-liberation
-	ttf-roboto
-	noto-fonts-cjk
-	papirus-icon-theme
-
-	# audio
-	pipewire
-	pipewire-alsa
-	pipewire-audio
-	pipewire-pulse
-	lib32-libpipewire
-	lib32-pipewire
-	pavucontrol
-	linux-headers
-	jq
-
-	# packages
-	hyprland
-	kitty
-	waybar
-	hyprpaper
-	hyprsunset
-	wofi
-	nautilus
-	swaync
-	starship
-	fastfetch
-	btop
-	sddm
-	xdg-desktop-portal-hyprland 	# allow screen sharing
-	libinput-tools 					# For wofi scripts to get devices (does it even work?)
 	
 	# softwares
+	btop
 	code
-	ristretto 						# Image viewer
-	grim 							# screenshot
-	slurp 							# screenshot
-	gnome-disk-utility
 	mousepad						# easy notepad
-	meld							# mousepad compare
 	
-	# miscs
+	# misc
+	ufw
 	cpupower
+	meld							# mousepad compare
 )
 
 # Package install
@@ -137,7 +197,7 @@ fi
 
 #------------------------------------------------------------------------
 echo " "
-echo "📦 Downloading AUR packages..."
+echo "📦 Downloading essential AUR packages"
 
 AUR_PACKAGES=(
 	papirus-folders
@@ -159,80 +219,6 @@ for aur_pkg in "${AUR_PACKAGES[@]}"; do
 	fi
 done
 
-
-#------------------------------------------------------------------------
-mkdir -p ~/.local/share/applications
-
-# Setup nvidia
-if $nvidia; then
-	"$BASE_DIR/install_scripts/nvidia.sh"
-fi
-
-# Setup razer
-if $razer; then
-	"$BASE_DIR/install_scripts/razer.sh"
-	sed -i \
-		-e 's|^[[:space:]]*//[[:space:]]*"custom\/razer"|    "custom\/razer"|' \
-			"$BASE_DIR/.config/waybar/config.jsonc"
-fi
-
-# Setup optional softwares
-if $optional_softwares; then
-	"$BASE_DIR/install_scripts/optional_softwares.sh"
-fi
-
-if $laptop; then
-	echo "💻 Setting up laptop configs"
-    sed -i \
-        -e 's|^[[:space:]]*//[[:space:]]*"battery"|    "battery"|' \
-        -e 's|^[[:space:]]*//[[:space:]]*"network"|    "network"|' \
-        	"$BASE_DIR/.config/waybar/config.jsonc"
-
-	sed -i \
-        -e 's|^[[:space:]]*#[[:space:]]*bind = ,XF86MonBrightnessUp, exec, brightnessctl s 5%+|bind = ,XF86MonBrightnessUp, exec, brightnessctl s 5%+|' \
-		-e 's|^[[:space:]]*#[[:space:]]*bind = ,XF86MonBrightnessDown, exec, brightnessctl s 5%-|bind = ,XF86MonBrightnessDown, exec, brightnessctl s 5%-|' \
-		-e 's|^[[:space:]]*#[[:space:]]*bind = ,XF86AudioLowerVolume, exec, pactl -- set-sink-volume 0 -1%|bind = ,XF86AudioLowerVolume, exec, pactl -- set-sink-volume 0 -1%|' \
-		-e 's|^[[:space:]]*#[[:space:]]*bind = ,XF86AudioRaiseVolume, exec, pactl -- set-sink-volume 0 +1%|bind = ,XF86AudioRaiseVolume, exec, pactl -- set-sink-volume 0 +1%|' \
-		-e 's|^[[:space:]]*#[[:space:]]*bind = ,XF86AudioMute, exec, pactl -- set-sink-mute 0 toggle|bind = ,XF86AudioMute, exec, pactl -- set-sink-mute 0 toggle|' \
-        	"$BASE_DIR/.config/hypr/conf/keybinds.conf"
-	echo ""
-fi
-
-#------------------------------------------------------------------------
-# Get user
-USER=$(logname)
-
-if [ ! -f ~/.local/opt/zen/zen ]; then
-	echo " "
-	echo "📥 Installing latest Zen Browser..."
-	mkdir -p ~/.local/opt/zen
-	
-	# Download the latest version
-	curl -L https://github.com/zen-browser/desktop/releases/latest/download/zen.linux-x86_64.tar.xz -o /tmp/zen-latest.tar.xz
-
-	# Extract
-	tar xf /tmp/zen-latest.tar.xz -C ~/.local/opt/zen --strip-components=1
-
-	# Create desktop entry for wofi
-	cat > ~/.local/share/applications/zen.desktop <<EOF
-[Desktop Entry]
-Version=1.0
-Type=Application
-Name=Zen Browser
-Exec=/home/$USER/.local/opt/zen/zen %U
-Icon=/home/$USER/.local/opt/zen/browser/chrome/icons/default/default128.png
-Terminal=false
-Categories=Network;WebBrowser;
-EOF
-
-	chmod +x ~/.local/share/applications/zen.desktop
-	update-desktop-database ~/.local/share/applications/
-	
-	# Delete temp file
-	rm /tmp/zen-latest.tar.xz
-fi
-
-
 #------------------------------------------------------------------------
 if [ ! -d "$HOME/.themes/Orchis-Dark-Nord" ]; then
 	echo " "
@@ -243,10 +229,61 @@ if [ ! -d "$HOME/.themes/Orchis-Dark-Nord" ]; then
 	cd -
 	rm -rf /tmp/Orchis-theme
 fi
+#------------------------------------------------------------------------
+mkdir -p ~/.local/share/applications
+
+# copy config files
+echo "Copying dot files"
+cp -r "$BASE_DIR/.config" "$HOME/"
+cp -r "$BASE_DIR/.bashrc" "$HOME/"
+
+# Setup server
+if $server; then
+	"$BASE_DIR/install_scripts/install_server.sh" "$BASE_DIR"
+fi
+
+# install desktop
+if $desktop; then
+	"$BASE_DIR/install_scripts/install_desktop.sh"
+fi
+
+# Setup nvidia
+if $nvidia; then
+	"$BASE_DIR/install_scripts/install_nvidia.sh"
+fi
+
+# Setup razer
+if $razer; then
+	"$BASE_DIR/install_scripts/install_razer.sh"
+	sed -i \
+		-e 's|^[[:space:]]*//[[:space:]]*"custom\/razer"|    "custom\/razer"|' \
+			"$HOME/.config/waybar/config.jsonc"
+fi
+
+# Setup optional softwares
+if $optional_softwares; then
+	"$BASE_DIR/install_scripts/install_optional_softwares.sh"
+fi
+
+if $laptop; then
+	echo "💻 Setting up laptop configs"
+    sed -i \
+        -e 's|^[[:space:]]*//[[:space:]]*"battery"|    "battery"|' \
+        -e 's|^[[:space:]]*//[[:space:]]*"network"|    "network"|' \
+        	"$HOME/.config/waybar/config.jsonc"
+
+	sed -i \
+        -e 's|^[[:space:]]*#[[:space:]]*bind = ,XF86MonBrightnessUp, exec, brightnessctl s 5%+|bind = ,XF86MonBrightnessUp, exec, brightnessctl s 5%+|' \
+		-e 's|^[[:space:]]*#[[:space:]]*bind = ,XF86MonBrightnessDown, exec, brightnessctl s 5%-|bind = ,XF86MonBrightnessDown, exec, brightnessctl s 5%-|' \
+		-e 's|^[[:space:]]*#[[:space:]]*bind = ,XF86AudioLowerVolume, exec, pactl -- set-sink-volume 0 -1%|bind = ,XF86AudioLowerVolume, exec, pactl -- set-sink-volume 0 -1%|' \
+		-e 's|^[[:space:]]*#[[:space:]]*bind = ,XF86AudioRaiseVolume, exec, pactl -- set-sink-volume 0 +1%|bind = ,XF86AudioRaiseVolume, exec, pactl -- set-sink-volume 0 +1%|' \
+		-e 's|^[[:space:]]*#[[:space:]]*bind = ,XF86AudioMute, exec, pactl -- set-sink-mute 0 toggle|bind = ,XF86AudioMute, exec, pactl -- set-sink-mute 0 toggle|' \
+        	"$HOME/.config/hypr/conf/keybinds.conf"
+	echo ""
+fi
 
 echo "✅ All packages installed."
 echo " "
-
 
 #------------------------------------------------------------------------
 # Update HOOKS line
@@ -256,6 +293,7 @@ else
   echo 'HOOKS=(base autodetect udev microcode block filesystems keyboard)' | sudo tee -a /etc/mkinitcpio.conf
 fi
 
+#------------------------------------------------------------------------
 # Set COMPRESSION="cat"
 if grep -q '^COMPRESSION=' /etc/mkinitcpio.conf; then
   sudo sed -i 's/^COMPRESSION=.*/COMPRESSION="cat"/' /etc/mkinitcpio.conf
@@ -269,16 +307,7 @@ echo "🛠️ Rebuilding initramfs..."
 sudo mkinitcpio -P
 
 #------------------------------------------------------------------------
-echo " "
-echo "🧰 Applying configuration settings"
-
-# copy config files
-echo "Copying dot files"
-cp -r "$BASE_DIR/.config" "$HOME/"
-cp -r "$BASE_DIR/.bashrc" "$HOME/"
-
-
-#------------------------------------------------------------------------
+echo ""
 echo "🖥️ Configurating monitors"
 # detect connected monitors
 mapfile -t monitors < <(
@@ -310,6 +339,7 @@ fi
 
 #------------------------------------------------------------------------
 # Copy icons to .icons folder. Used to make custom icons work without permission issues
+echo ""
 echo "✨ Copying icons"
 mkdir -p $HOME/.icons/Papirus-Dark
 cp -a /usr/share/icons/Papirus-Dark $HOME/.icons/Papirus-Dark
@@ -337,9 +367,7 @@ echo "⚙️ Enabling performance mode"
 echo 'governor="performance"' | sudo tee /etc/default/cpupower
 echo ""
 
-# add user to input group, needed to detect mouse inputs
-sudo usermod -aG input $USER
-
+#------------------------------------------------------------------------
 # Grub timeout and style
 if [ -f "/etc/default/grub" ]; then
 	echo "⏱️ Setting Grub timeout"
@@ -350,21 +378,22 @@ if [ -f "/etc/default/grub" ]; then
 	"$GRUB_FILE"
 
 	sudo grub-mkconfig -o /boot/grub/grub.cfg
+	echo ""
 fi
 
 # Link nautilus compare using meld
-echo "✅ Creating nautilus compare with Meld link"
+echo "🗂️ Creating nautilus compare with Meld"
 if [ -d "$HOME/.local/share/nautilus/scripts" ]; then
 	rm -rf $HOME/.local/share/nautilus/scripts
 fi
-
-echo "✅ Creating mousepad compare"
 mkdir -p "$HOME/.local/share/nautilus/scripts"
 [ -e "$HOME/.local/share/nautilus/scripts/Compare with Meld" ] || \
 ln -s "$HOME/.config/nautilus/scripts/nautilus_compare.sh" "$HOME/.local/share/nautilus/scripts/Compare with Meld"
+echo ""
 
+#------------------------------------------------------------------------
 # set mousepad theme
-echo "✅ Setting mousepad theme"
+echo "📋 Setting mousepad theme"
 export DISPLAY=:0
 export XDG_RUNTIME_DIR="/run/user/$(id -u)"
 
@@ -374,11 +403,16 @@ sudo -u "$USER" DISPLAY=:0 XDG_RUNTIME_DIR="/run/user/$(id -u $USER)" gsettings 
 sudo -u "$USER" DISPLAY=:0 XDG_RUNTIME_DIR="/run/user/$(id -u $USER)" gsettings set org.xfce.mousepad.preferences.view show-line-numbers true
 sudo -u "$USER" DISPLAY=:0 XDG_RUNTIME_DIR="/run/user/$(id -u $USER)" gsettings set org.xfce.mousepad.preferences.window always-show-tabs true
 
-
+#------------------------------------------------------------------------
 # enable theme
+echo ""
+mkdir -p "$HOME/.config/btop/themes"
+mkdir -p "$HOME/.config/gtk-3.0"
+mkdir -p "$HOME/.config/gtk-4.0"
 ~/.config/themes/scripts/apply_theme.sh "earthsong" 0
 
-echo "✅ Configuration complete."
+echo ""
+echo "✅ Hyprland configuration complete."
 echo ""
 
 #------------------------------------------------------------------------

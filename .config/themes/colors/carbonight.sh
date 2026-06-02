@@ -12,7 +12,7 @@ export gtk_theme='Orchis-Grey-Dark-Nord'
 export folders='black'
 export fastfetch='black'
 
-export wallpaper='$HOME/.config/themes/wallpapers/carbonight.png'
+export wallpaper="$HOME/.config/themes/wallpapers/carbonight.png"
 
 #openrgb profile
 export openrgb="openrgb_white"

@@ -21,6 +21,8 @@ FOLDERS=(
     "OpenRGB/scripts" 
     "nautilus"
     "zen"
+    "gtk-3.0"
+    "gtk-4.0"
 )
 
 # Single files to copy
@@ -30,10 +32,6 @@ FILES_TO_COPY=(
     "$HOME/.bashrc|$DEST_ROOT"
     "$HOME/.config/Code - OSS/User/settings.json|$DEST_ROOT/.config/Code - OSS/User"
     "$HOME/.config/copy_to_git.sh|$DEST_ROOT/.config"
-    "$HOME/.config/exclude.txt|$DEST_ROOT/.config"
-    "/etc/mkinitcpio.conf|$DEST_ROOT/etc"
-    "/etc/modprobe.d/nvidia.conf|$DEST_ROOT/etc/modprobe.d"
-    "/etc/pacman.conf|$DEST_ROOT/etc"
 )
 
 # Check excludes

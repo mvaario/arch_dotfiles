@@ -12,7 +12,7 @@ export gtk_theme='Orchis-Orange-Dark-Nord'
 export folders='orange'
 export fastfetch='yellow'
 
-export wallpaper='$HOME/.config/themes/wallpapers/earthsong.png'
+export wallpaper="$HOME/.config/themes/wallpapers/earthsong.png"
 
 #openrgb profile
 export openrgb="openrgb_orange"

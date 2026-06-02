@@ -12,7 +12,7 @@ export gtk_theme='Orchis-Teal-Dark-Nord'
 export folders='nordic'
 export fastfetch='cyan'
 
-export wallpaper='$HOME/.config/themes/wallpapers/signalrain.jpg'
+export wallpaper="$HOME/.config/themes/wallpapers/signalrain.jpg"
 
 #openrgb profile
 export openrgb="openrgb_blue"

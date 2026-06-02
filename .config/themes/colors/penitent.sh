@@ -12,7 +12,7 @@ export gtk_theme='Orchis-Green-Dark-Nord'
 export folders='green'
 export fastfetch='green'
 
-export wallpaper='$HOME/.config/themes/wallpapers/penitent.jpg'
+export wallpaper="$HOME/.config/themes/wallpapers/penitent.jpg"
 
 #openrgb profile
 export openrgb="openrgb_green"
