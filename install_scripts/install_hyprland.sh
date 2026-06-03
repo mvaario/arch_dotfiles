@@ -1,85 +1,16 @@
 #!/bin/bash
 set -e
+BASE_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+
 echo " "
 echo " "
 echo " "
-
-read -rp "📦 Install desktop configurations? [Y/n]: " DESKTOP
-DESKTOP=${DESKTOP,,}
-
-if [[ -z "$DESKTOP" || "$DESKTOP" == "y" || "$DESKTOP" == "yes" ]]; then
-	echo "✅ Desktop enabled"
-    desktop=true
-else
-	echo "⏭️ Skipping desktop configurations"
-    desktop=false
-fi
-
-#------------------------------------------------------------------------ 
-echo " "
-read -rp "📦 Install server configurations? [Y/n]: " SERVER
-SERVER=${SERVER,,}
-
-if [[ -z "$SERVER" || "$SERVER" == "y" || "$SERVER" == "yes" ]]; then
-	echo "✅ Server enabled"
-    server=true
-else
-	echo "⏭️ Skipping server configurations"
-    server=false
-fi
-
-#------------------------------------------------------------------------ 
-echo " "
-read -rp "📦 Install laptop configurations? [Y/n]: " LAPTOP
-LAPTOP=${LAPTOP,,}
-
-if [[ -z "$LAPTOP" || "$LAPTOP" == "y" || "$LAPTOP" == "yes" ]]; then
-	echo "✅ Laptop enabled"
-    laptop=true
-else
-	echo "⏭️ Skipping laptop configurations"
-    laptop=false
-fi
-
-#------------------------------------------------------------------------ 
-echo " "
-read -rp "📦 Install NVIDIA configurations? [Y/n]: " NVIDIA
-NVIDIA=${NVIDIA,,}
-
-if [[ -z "$NVIDIA" || "$NVIDIA" == "y" || "$NVIDIA" == "yes" ]]; then
-	echo "✅ Nvidia enabled"
-    nvidia=true
-else
-	echo "⏭️ Skipping nvidia configurations"
-    nvidia=false
-fi
-
-#------------------------------------------------------------------------ 
-echo " "
-read -rp "📦 Install Razer configurations? [Y/n]: " RAZER_SOFTWARES
-RAZER_SOFTWARES=${RAZER_SOFTWARES,,}
-
-if [[ -z "$RAZER_SOFTWARES" || "$RAZER_SOFTWARES" == "y" || "$RAZER_SOFTWARES" == "yes" ]]; then
-	echo "✅ Razer enabled"
-    razer=true
-else
-	echo "⏭️ Skipping razer configurations"
-    razer=false
-fi
-
-#------------------------------------------------------------------------ 
-echo " "
-read -rp "📦 Install optional software? [Y/n]: " OPTIONAL_SOFTWARES
-OPTIONAL_SOFTWARES=${OPTIONAL_SOFTWARES,,}
-
-if [[ -z "$OPTIONAL_SOFTWARES" || "$OPTIONAL_SOFTWARES" == "y" || "$OPTIONAL_SOFTWARES" == "yes" ]]; then
-	echo "✅ Optional software enabled"
-    optional_softwares=true
-else
-	echo "⏭️ Skipping optional software"
-    optional_softwares=false
-fi
-#------------------------------------------------------------------------ 
+desktop=$("$BASE_DIR/install_scripts/get_user_settings.sh" "desktop")
+server=$("$BASE_DIR/install_scripts/get_user_settings.sh" "server")
+laptop=$("$BASE_DIR/install_scripts/get_user_settings.sh" "laptop")
+NVIDIA=$("$BASE_DIR/install_scripts/get_user_settings.sh" "NVIDIA")
+razer=$("$BASE_DIR/install_scripts/get_user_settings.sh" "razer")
+optional_softwares=$("$BASE_DIR/install_scripts/get_user_settings.sh" "optional software")
 
 # Verification
 echo " "
@@ -93,7 +24,6 @@ if [[ "$CONTINUE" == "n" || "$CONTINUE" == "no" ]]; then
 fi
 
 #------------------------------------------------------------------------ 
-BASE_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 # Ask for sudo password upfront
 if ! sudo -v; then
   echo "❌ This script requires sudo privileges."
