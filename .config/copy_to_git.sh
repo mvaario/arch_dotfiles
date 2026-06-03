@@ -20,7 +20,7 @@ FOLDERS=(
     "OpenRGB/themes" 
     "OpenRGB/scripts" 
     "nautilus"
-    "zen"
+    "zen/scripts"
     "gtk-3.0"
     "gtk-4.0"
 )

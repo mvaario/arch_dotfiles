@@ -8,7 +8,7 @@ echo " "
 desktop=$("$BASE_DIR/install_scripts/get_user_settings.sh" "desktop")
 server=$("$BASE_DIR/install_scripts/get_user_settings.sh" "server")
 laptop=$("$BASE_DIR/install_scripts/get_user_settings.sh" "laptop")
-NVIDIA=$("$BASE_DIR/install_scripts/get_user_settings.sh" "NVIDIA")
+nvidia=$("$BASE_DIR/install_scripts/get_user_settings.sh" "NVIDIA")
 razer=$("$BASE_DIR/install_scripts/get_user_settings.sh" "razer")
 optional_softwares=$("$BASE_DIR/install_scripts/get_user_settings.sh" "optional software")
 
@@ -167,14 +167,19 @@ echo "Copying dot files"
 cp -r "$BASE_DIR/.config" "$HOME/"
 cp -r "$BASE_DIR/.bashrc" "$HOME/"
 
+# install desktop
+if $desktop; then
+	"$BASE_DIR/install_scripts/install_desktop.sh"
+fi
+
 # Setup server
 if $server; then
 	"$BASE_DIR/install_scripts/install_server.sh" "$BASE_DIR"
 fi
 
-# install desktop
-if $desktop; then
-	"$BASE_DIR/install_scripts/install_desktop.sh"
+# Setup laptop softwares
+if $laptop; then
+	"$BASE_DIR/install_scripts/install_optional_softwares.sh"
 fi
 
 # Setup nvidia
@@ -185,31 +190,11 @@ fi
 # Setup razer
 if $razer; then
 	"$BASE_DIR/install_scripts/install_razer.sh"
-	sed -i \
-		-e 's|^[[:space:]]*//[[:space:]]*"custom\/razer"|    "custom\/razer"|' \
-			"$HOME/.config/waybar/config.jsonc"
 fi
 
 # Setup optional softwares
 if $optional_softwares; then
 	"$BASE_DIR/install_scripts/install_optional_softwares.sh"
-fi
-
-if $laptop; then
-	echo "💻 Setting up laptop configs"
-    sed -i \
-        -e 's|^[[:space:]]*//[[:space:]]*"battery"|    "battery"|' \
-        -e 's|^[[:space:]]*//[[:space:]]*"network"|    "network"|' \
-        	"$HOME/.config/waybar/config.jsonc"
-
-	sed -i \
-        -e 's|^[[:space:]]*#[[:space:]]*bind = ,XF86MonBrightnessUp, exec, brightnessctl s 5%+|bind = ,XF86MonBrightnessUp, exec, brightnessctl s 5%+|' \
-		-e 's|^[[:space:]]*#[[:space:]]*bind = ,XF86MonBrightnessDown, exec, brightnessctl s 5%-|bind = ,XF86MonBrightnessDown, exec, brightnessctl s 5%-|' \
-		-e 's|^[[:space:]]*#[[:space:]]*bind = ,XF86AudioLowerVolume, exec, pactl -- set-sink-volume 0 -1%|bind = ,XF86AudioLowerVolume, exec, pactl -- set-sink-volume 0 -1%|' \
-		-e 's|^[[:space:]]*#[[:space:]]*bind = ,XF86AudioRaiseVolume, exec, pactl -- set-sink-volume 0 +1%|bind = ,XF86AudioRaiseVolume, exec, pactl -- set-sink-volume 0 +1%|' \
-		-e 's|^[[:space:]]*#[[:space:]]*bind = ,XF86AudioMute, exec, pactl -- set-sink-mute 0 toggle|bind = ,XF86AudioMute, exec, pactl -- set-sink-mute 0 toggle|' \
-        	"$HOME/.config/hypr/conf/keybinds.conf"
-	echo ""
 fi
 
 echo "✅ All packages installed."
@@ -275,12 +260,15 @@ mkdir -p $HOME/.icons/Papirus-Dark
 cp -a /usr/share/icons/Papirus-Dark $HOME/.icons/Papirus-Dark
 find "$HOME/.icons/Papirus-Dark" -type l -exec rm -v {} + > /dev/null
 cp -an /usr/share/icons/Papirus/* $HOME/.icons/Papirus-Dark
+cp -r "$BASE_DIR/.config/Icons" "$HOME/.icons/Icons"
 echo ""
 
 # Enable ufw
 echo "🛡️ Enabling ufw"
-sudo systemctl enable ufw
+sudo systemctl enable ufw > /dev/null
+sudo ufw --force enable > /dev/null
 echo ""
+
 
 # Enable Papirus-Dark
 echo "🎨 Enabling icon theme"
@@ -294,7 +282,7 @@ echo ""
 
 # Performance mode
 echo "⚙️ Enabling performance mode"
-echo 'governor="performance"' | sudo tee /etc/default/cpupower
+echo 'governor="performance"' | sudo tee /etc/default/cpupower > /dev/null
 echo ""
 
 #------------------------------------------------------------------------

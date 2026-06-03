@@ -53,6 +53,22 @@ echo " "
 cp -r "$BASE_DIR/config_server/." "$HOME/.config/"
 
 #------------------------------------------------------------------------
+echo "🛡️ Block internet allowing LAN 🌐"
+sudo ufw default deny outgoing > /dev/null
+sudo ufw default deny incoming > /dev/null
+
+IFACE=$(ip route | awk '/default/ {print $5; exit}')
+SUBNET=$(ip -o -f inet addr show "$IFACE" | awk '{print $4}')
+
+echo "🖧 Detected subnet: $SUBNET"
+sudo ufw allow from "$SUBNET" > /dev/null
+
+# Edit update script to enable internet
+sed -i -e 's|^[[:space:]]*#sudo ufw default deny outgoing|sudo ufw default deny outgoing|' "$HOME/.config/swaync/scripts/update_script.sh"
+sed -i -e 's|^[[:space:]]*#sudo ufw default allow outgoing|sudo ufw default allow outgoing|' "$HOME/.config/swaync/scripts/update_script.sh"
+echo ""
+
+#------------------------------------------------------------------------
 echo "Enabling Wake-on_LAN 🌐"
 INTERFACE=$(ip route | awk '/default/ {print $5; exit}')
 

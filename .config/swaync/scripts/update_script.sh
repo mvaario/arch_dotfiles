@@ -8,6 +8,9 @@ echo "-------------------------------"
 # Ask for sudo upfront
 sudo -v
 
+# Allow internet
+#sudo ufw default allow outgoing
+
 echo ""
 echo "🔄 Updating official packages..."
 sudo pacman -Syu --noconfirm
@@ -36,6 +39,9 @@ fi
 echo ""
 echo "🧾 Trimming journal logs (keep 100MB)..."
 sudo journalctl --vacuum-size=100M
+
+# Block internet only for server
+#sudo ufw default deny outgoing
 
 echo ""
 echo "✅ All done!"

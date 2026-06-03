@@ -3,15 +3,15 @@ CURRENT_PROFIEL=$2
 LOCKFILE=$3
 
 if [ "$CURRENT_PROFILE" = "$FOLDERS" ]; then
-    echo "Current papirus folders already loaded"
+    echo "☑️ Current papirus folders already loaded"
     sed -i "s|^Papirus .*|Papirus True $FOLDERS|" "$LOCKFILE"
 else
-    /usr/bin/papirus-folders -C "$FOLDERS" --theme Papirus-Dark
+    /usr/bin/papirus-folders -C "$FOLDERS" --theme Papirus-Dark > /dev/null
     #Check errors
     if [ $? -eq 0 ]; then
         # Mark Papirus finish
         sed -i "s|^Papirus .*|Papirus True $FOLDERS|" "$LOCKFILE"
     else
-        echo "Papirus folder command failed"
+        echo "❌ Papirus folder command failed"
     fi
 fi

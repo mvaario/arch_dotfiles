@@ -7,7 +7,7 @@ if [ ! -f "$PROFILE" ]; then
 fi
 
 if [ "$CURRENT_PROFILE" = "$1" ]; then
-    echo "Current profile already loaded"
+    echo "☑️ Current profile already loaded"
     sed -i "s|^OpenRGB .*|OpenRGB True $2|" "$LOCKFILE"
     exit 0
 fi
@@ -27,11 +27,13 @@ stdbuf -oL -eL /usr/bin/openrgb --profile "$PROFILE" 2>&1 | {
         if [[ "$line" == *"Profile loaded successfully"* ]]; then
             # Mark openrgb finish
             sed -i "s|^OpenRGB .*|OpenRGB True $1|" "$LOCKFILE"
+            echo "✅ OpenRGB done"
             break
         fi
 
         if [ $elapsed -gt 5000 ]; then
             # Timeout
+            echo "❌ Error while loading OpenRGB profile"
             sed -i "s|^OpenRGB .*|OpenRGB timeout when loading profile $1|" "$LOCKFILE"
             pkill openrgb
             break

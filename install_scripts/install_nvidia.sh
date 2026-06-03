@@ -80,7 +80,7 @@ echo "💾 Writing /etc/modprobe.d/nvidia.conf..."
 if ! grep -q '^options nvidia_drm modeset=1$' /etc/modprobe.d/nvidia.conf 2>/dev/null; then
     echo "options nvidia_drm modeset=1" | sudo tee /etc/modprobe.d/nvidia.conf > /dev/null
 else
-    echo "nvidia_drm modeset already enabled"
+    echo "☑️ nvidia_drm modeset already enabled"
 fi
 echo ""
 
@@ -94,7 +94,7 @@ if ! grep -q 'MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)' /etc/mkinit
         echo "MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)" | sudo tee -a /etc/mkinitcpio.conf
     fi
 else
-    echo "Nvidia Modules already done"
+    echo "☑️ Nvidia Modules already done"
 fi
 echo ""
 
@@ -108,7 +108,7 @@ LIBVA_DRIVER_NAME=nvidia
 __GLX_VENDOR_LIBRARY_NAME=nvidia
 EOF
 else
-    echo "Enviroment variables already done"
+    echo "☑️ Enviroment variables already done"
 fi
 echo ""
 

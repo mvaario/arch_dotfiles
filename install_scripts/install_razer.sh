@@ -28,6 +28,10 @@ USER=$(logname)
 sudo gpasswd -a $USER openrazer
 #sudo gpasswd -a $USER plugdev
 
+sed -i -e 's|^[[:space:]]*//[[:space:]]*"custom\/razer"|    "custom\/razer"|' \
+        "$HOME/.config/waybar/config.jsonc"
+
+
 #------------------------------------------------------------------------
 echo "✅ Razer configurations done."
 echo ""

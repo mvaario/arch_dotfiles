@@ -9,7 +9,7 @@ if grep -q " False$" "$LOCKFILE"; then
     exit 1
 fi
 
-# Lock the lockfile
+# Lock hyprland
 sed -i "s|^Hyprland .*|Hyprland False|" "$LOCKFILE"
 
 # Close wofi if it's already running

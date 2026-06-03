@@ -21,7 +21,7 @@ fi
 MAX_W=1200
 MAX_H=700
 if [[ "$CURRENT_STATE" = "off" && "$SWITCH_STATE" = "true" ]]; then
-    echo "setting floating ON"
+    echo "☑️ setting floating ON"
     hyprctl clients -j | jq -c '.[] | {addr: .address, w: .size[0], h: .size[1], x: .at[0], y: .at[1]}' |
     while read -r win; do
         addr=$(jq -r '.addr' <<< "$win")
@@ -48,7 +48,7 @@ if [[ "$CURRENT_STATE" = "off" && "$SWITCH_STATE" = "true" ]]; then
     # Notification
     notify-send "Floating on"
 elif [[ "$CURRENT_STATE" = "on" && "$SWITCH_STATE" = "true" ]]; then
-    echo "setting floating OFF"
+    echo "☑️ setting floating OFF"
 
     # Array of all active workspaces
     mapfile -t current_workspaces < <(hyprctl monitors -j | jq -r '.[] | .activeWorkspace.id')
@@ -72,7 +72,7 @@ elif [[ "$CURRENT_STATE" = "on" && "$SWITCH_STATE" = "true" ]]; then
     notify-send "Floating off"
 else
     if [ "$CURRENT_STATE" = "off" ]; then
-        echo "keeping floating OFF"
+        echo "☑️ keeping floating OFF"
 
         # Make global float rule
         hyprctl keyword windowrule match:class .*, float 0
@@ -82,7 +82,7 @@ else
         hyprctl reload
 
     else
-        echo "keeping floating ON"
+        echo "☑️ keeping floating ON"
         
         # Make global float rule
         hyprctl keyword windowrule match:class .*, float 1

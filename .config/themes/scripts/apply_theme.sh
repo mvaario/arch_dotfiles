@@ -5,8 +5,11 @@ start_time=$(date +%s%N) # log the time
 
 THEME_FILE="$HOME/.config/themes/colors/$1.sh"
 LOCKFILE="$HOME/.config/themes/theme_switch.lock"
-echo "apply theme" $THEME_FILE
 
+# Lock hyprland
+sed -i "s|^Hyprland .*|Hyprland False|" "$LOCKFILE"
+
+echo "apply theme" $THEME_FILE
 if [ ! -f "$THEME_FILE" ]; then
     echo "Theme not found: $1"
     # Release the lockfile
@@ -39,8 +42,8 @@ rgb_main=$($HOME/.config/scripts/hex_to_rgb.sh "$main")
 darkenbackground=$($HOME/.config/themes/scripts/darken_background.sh "$background")
 
 # Get zen user.js file location
-MAIN_PROFILE="Default (release)"
-MAIN=$(grep -A5 "Name=$MAIN_PROFILE" ~/.zen/profiles.ini | \
+MAIN_PROFILE=$(whoami)
+MAIN=$(grep -A5 "Name=$MAIN_PROFILE" ~/.config/zen/profiles.ini | \
 grep "^Path=" | head -n1 | sed 's/Path=//')
 
 # list of template files and their destination
@@ -56,7 +59,7 @@ declare -A files=(
     ["$HOME/.config/themes/templates/btop_style.template.theme"]="$HOME/.config/btop/themes/btop_style.theme"
     ["$HOME/.config/themes/templates/windows.template.conf"]="$HOME/.config/hypr/conf/window_theme.conf"
     ["$HOME/.config/themes/templates/gtk-4.template.css"]="$HOME/.config/gtk-4.0/gtk.css"
-    ["$HOME/.config/themes/templates/zen_browser.template.js"]="$HOME/.zen/$MAIN/user.js"
+    ["$HOME/.config/themes/templates/zen_browser.template.js"]="$HOME/.config/zen/$MAIN/user.js"
 )
 
 # Loop through the files and apply the theme
@@ -116,9 +119,9 @@ $HOME/.config/themes/scripts/papirus_folders.sh "$folders" "$CURRENT_ICONS" "$LO
 
 #-------------------------------------------------
 # Make blurred background for wlogout
-CURRENT_WALLPAPER=$(grep '^Wlogout ' "$LOCKFILE" | cut -d' ' -f3-)
-sed -i "s|^Wlogout .*|Wlogout False|" "$LOCKFILE"
-python3 $HOME/.config/themes/scripts/blur_wallpaper.py "$wallpaper" "$background_rgb_str" "$opacity" "$CURRENT_WALLPAPER" "$LOCKFILE" &
+#CURRENT_WALLPAPER=$(grep '^Wlogout ' "$LOCKFILE" | cut -d' ' -f3-)
+#sed -i "s|^Wlogout .*|Wlogout False|" "$LOCKFILE"
+#python3 $HOME/.config/themes/scripts/blur_wallpaper.py "$wallpaper" "$background_rgb_str" "$opacity" "$CURRENT_WALLPAPER" "$LOCKFILE" &
 
 #-------------------------------------------------
 # Hyprland temp file to not show errors when loading themes
@@ -133,15 +136,16 @@ gsettings set org.gnome.desktop.interface cursor-theme "$cursor"
 gsettings set org.gnome.desktop.interface cursor-size "$size"
 sed -i "s|^Cursor .*|Cursor $cursor|" "$LOCKFILE"
 sed -i "s|^Cursor_Size .*|Cursor_Size $size|" "$LOCKFILE"
-echo "✅ Cursor changes"
+echo "☑️ Cursor changes"
 
 gsettings set org.gnome.desktop.interface color-scheme "prefer-dark"
 gsettings set org.gnome.desktop.interface gtk-theme "$gtk_theme"
 
-echo "✅ gtk-theme changes"
+echo "☑️ gtk-theme changes"
 
 #-------------------------------------------------
 # Make custom icons for waybar tray
+echo "☑️ Recoloring icons"
 CURRENT_COLOR=$(grep '^Recolor ' "$LOCKFILE" | cut -d' ' -f3-)
 sed -i "s|^Recolor .*|Recolor False|" "$LOCKFILE"
 $HOME/.config/themes/scripts/icon_recolor.sh "$foreground" "$CURRENT_COLOR" "$LOCKFILE" $

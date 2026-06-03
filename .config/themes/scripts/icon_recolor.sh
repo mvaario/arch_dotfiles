@@ -11,14 +11,14 @@ SRC="$HOME/.icons/Icons"
 DST="$HOME/.icons/Papirus-Dark/16x16/apps"
 
 if [ "$CURRENT_COLOR" = "$COLOR" ]; then
-    echo "Current colors already loaded"
+    echo "☑️ Current colors already loaded"
     sed -i "s|^Recolor .*|Recolor True $COLOR|" "$LOCKFILE"
 else
     for icon in "$SRC"/*.svg; do
         filename=$(basename "$icon")
         if [[ ! -f "$DST/$filename" ]]; then
             cp -an "$icon" "$DST"
-            echo "Copied missing file to DST: $filename"
+            echo "☑️ Copied missing file to DST: $filename"
         fi
         sed -E \
             -e "s/fill:currentColor/fill:$COLOR/g" \
@@ -29,10 +29,10 @@ else
     #Check errors
     if [ $? -eq 0 ]; then
         # Mark Recoloring finish
-        echo "Recoloring done"
+        echo "✅ Recoloring done"
         sed -i "s|^Recolor .*|Recolor True $COLOR|" "$LOCKFILE"
     else
-        echo "Error while recoloring"
+        echo "❌ Error while recoloring"
     fi
 fi
 
