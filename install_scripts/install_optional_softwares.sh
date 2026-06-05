@@ -90,10 +90,5 @@ EOF
 fi
 
 #------------------------------------------------------------------------
-# VLC darktheme and disable codec
-sed -i -e 's|^[[:space:]]*#qt-dark-palette=0|qt-dark-palette=1|' "$HOME/.config/vlc/vlcrc"
-sed -i -e 's|^[[:space:]]*#avcodec-hw=any|avcodec-hw=none|' "$HOME/.config/vlc/vlcrc"
-
-#------------------------------------------------------------------------
 echo "✅ Optional softwares installed."
 echo ""

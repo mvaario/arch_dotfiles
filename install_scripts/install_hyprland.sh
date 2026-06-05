@@ -260,7 +260,7 @@ mkdir -p $HOME/.icons/Papirus-Dark
 cp -a /usr/share/icons/Papirus-Dark $HOME/.icons/Papirus-Dark
 find "$HOME/.icons/Papirus-Dark" -type l -exec rm -v {} + > /dev/null
 cp -an /usr/share/icons/Papirus/* $HOME/.icons/Papirus-Dark
-cp -r "$BASE_DIR/.config/Icons" "$HOME/.icons/Icons"
+cp -r "$BASE_DIR/Icons" "$HOME/.icons/Icons"
 echo ""
 
 # Enable ufw
