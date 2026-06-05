@@ -38,8 +38,8 @@
                     "label": "",
                     "type": "toggle",
                     "active": false,
-                    "command": "sh -c 'if mullvad status | grep \"Connected\" > /dev/null; then mullvad disconnect; else mullvad connect; fi'",
-                    "update-command": "sh -c 'mullvad status | grep \"Connected\" > /dev/null && echo true || echo false'"
+                    "command": "~/.config/swaync/scripts/vpn.sh connect",
+                    "update-command": "~/.config/swaync/scripts/vpn.sh"
                 },
                 {
                     "label": "",
