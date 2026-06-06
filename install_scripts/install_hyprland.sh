@@ -299,6 +299,17 @@ if [ -f "/etc/default/grub" ]; then
 	echo ""
 fi
 
+# Systemd-boot timeout
+if [ -f "/boot/loader/loader.conf" ]; then
+	echo "⏱️ Setting Systemd-boot timeout"
+	SYSTEMD_FILE="/boot/loader/loader.conf"
+	sudo sed -i \
+	-e 's/^timeout.*/timeout 0/' \
+	"$SYSTEMD_FILE"
+	echo ""
+fi
+
+#------------------------------------------------------------------------
 # Link nautilus compare using meld
 echo "🗂️ Creating nautilus compare with Meld"
 if [ -d "$HOME/.local/share/nautilus/scripts" ]; then
