@@ -9,6 +9,11 @@ sed -i "s|^OpenRGB .*|OpenRGB False|" "$LOCKFILE"
 PROFILE=$(<"$HOME/.config/OpenRGB/cache_profile")
 $HOME/.config/OpenRGB/scripts/openrgb_profile.sh "$PROFILE" "none" "$LOCKFILE" &
 
+# reset lockfile
+sed -i "s|^Hyprland .*|Hyprland True|" "$LOCKFILE"
+sed -i "s|^Papirus .*|Papirus True|" "$LOCKFILE"
+sed -i "s|^Recolor .*|Recolor True|" "$LOCKFILE"
+
 # Create wofi theme images
 $HOME/.config/themes/scripts/resize_wallpaper.sh &
 

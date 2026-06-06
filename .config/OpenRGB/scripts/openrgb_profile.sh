@@ -1,8 +1,13 @@
 PROFILE="$HOME/.config/OpenRGB/themes/$1.orp"
 CURRENT_PROFILE=$2
 LOCKFILE=$3
+if ! command -v openrgb >/dev/null 2>&1; then
+    echo "❌ OpenRGB is not installed"
+    exit 1
+fi
+
 if [ ! -f "$PROFILE" ]; then
-    echo "Profile not found: $PROFILE"
+    echo "❌ Profile not found: $PROFILE"
     exit 1
 fi
 

@@ -161,7 +161,7 @@ if [[ "$2" != "0" ]]; then
 
     # wait until everything is ready
     timeout=3000
-    while grep -qP '^(?!Hyprland|OpenRGB).* False$' "$LOCKFILE"; do
+    while grep -vE '^(Hyprland|OpenRGB)' "$LOCKFILE" | grep -qE '\bFalse\b'; do
         $HOME/.config/themes/scripts/timeout.sh "$start_time" "$timeout" "$LOCKFILE" 
     done
 
@@ -173,7 +173,7 @@ if [[ "$2" != "0" ]]; then
 
     # Notification timeout
     timeout=5000
-    while grep -E ' False$' "$LOCKFILE" | grep -vq '^OpenRGB '; do
+    while grep -vE '^OpenRGB' "$LOCKFILE" | grep -qE '\bFalse\b'; do
         $HOME/.config/themes/scripts/timeout.sh "$start_time" "$timeout" "$LOCKFILE" 
     done
 fi

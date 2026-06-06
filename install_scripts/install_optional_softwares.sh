@@ -38,6 +38,7 @@ done
 AUR_PACKAGES=(
 	xone-dkms-git 			# xbox controller
 	xone-dongle-firmware    # xbox controller
+    gitkraken               # Git client
 )
 
 # AUR package install
@@ -54,39 +55,36 @@ for aur_pkg in "${AUR_PACKAGES[@]}"; do
 done
 
 #------------------------------------------------------------------------
-if [[ ! -d ~/.local/opt/gitkraken ]]; then
-    # Get user
-    USER=$(logname)
+# Check latest Proton-GE version
+latest=$(curl -s https://api.github.com/repos/GloriousEggroll/proton-ge-custom/releases/latest | jq -r '.tag_name')
 
-	echo " "
-	echo "🔀 Installing latest GitKranker..."
-    mkdir ~/.local/opt
-	mkdir ~/.local/opt/gitkraken
+# Check installed Proton-GE version
+installed=$(find ~/.steam/root/compatibilitytools.d \
+    -maxdepth 1 \
+    -type d \
+    -name "GE-Proton*" \
+    -printf '%f\n' 2>/dev/null \
+    | sort -V \
+    | tail -n1)
 
-	# Download the latest version
-	curl -L https://release.gitkraken.com/linux/gitkraken-amd64.tar.gz -o /tmp/gitkraken.tar.gz
+if [[ "$latest" != "$installed" ]]; then
+    echo " "
+    echo "🔀 Installing latest Proton-GE"
+    mkdir -p "$HOME/.steam/steam/compatibilitytools.d"
 
-	# Extract
-	tar -xzf /tmp/gitkraken.tar.gz -C ~/.local/opt/gitkraken --strip-components=1
-	
-	# Create desktop entry for wofi
-	cat > ~/.local/share/applications/gitkraken.desktop <<EOF
-[Desktop Entry]
-Version=1.0
-Type=Application
-Name=GitKraken
-Exec=/home/$USER/.local/opt/gitkraken/gitkraken
-Icon=/home/$USER/.local/opt/gitkraken/gitkraken.png
-Terminal=false
-Categories=Development;Git;
-EOF
+    # Download latest version
+    latest_url=$(curl -s https://api.github.com/repos/GloriousEggroll/proton-ge-custom/releases/latest \
+    | grep browser_download_url \
+    | grep '\.tar\.gz"' \
+    | cut -d '"' -f 4)
 
-	chmod +x ~/.local/share/applications/gitkraken.desktop
-	update-desktop-database ~/.local/share/applications/
+    curl -L "$latest_url" -o /tmp/proton-ge.tar.gz
 
-	# Delete temp file
-	rm /tmp/gitkraken.tar.gz
+    # Extract
+    tar -xzf /tmp/proton-ge.tar.gz -C "$HOME/.steam/steam/compatibilitytools.d"
 
+    # Delete temp file
+	rm /tmp/proton-ge.tar.gz
 fi
 
 #------------------------------------------------------------------------

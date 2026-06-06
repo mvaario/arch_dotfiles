@@ -52,6 +52,9 @@ echo " "
 # copy server spesific configs
 cp -r "$BASE_DIR/config_server/." "$HOME/.config/"
 
+# enable ssh
+systemctl enable sshd
+
 #------------------------------------------------------------------------
 echo "🛡️ Block internet allowing LAN 🌐"
 sudo ufw default deny outgoing > /dev/null

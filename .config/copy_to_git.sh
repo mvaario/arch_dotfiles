@@ -14,15 +14,12 @@ FOLDERS=(
     "scripts" 
     "themes" 
     "waybar" 
-    "wlogout" 
     "wofi" 
     "swaync" 
     "OpenRGB/themes" 
     "OpenRGB/scripts" 
     "nautilus"
     "zen/scripts"
-    "gtk-3.0"
-    "gtk-4.0"
 )
 
 # Single files to copy
