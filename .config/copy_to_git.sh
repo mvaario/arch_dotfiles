@@ -29,6 +29,7 @@ FILES_TO_COPY=(
     "$HOME/.bashrc|$DEST_ROOT"
     "$HOME/.config/Code - OSS/User/settings.json|$DEST_ROOT/.config/Code - OSS/User"
     "$HOME/.config/copy_to_git.sh|$DEST_ROOT/.config"
+    "$HOME/.config/sddm/Arch_sddm|$DEST_ROOT"
 )
 
 # Check excludes

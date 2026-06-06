@@ -60,6 +60,7 @@ declare -A files=(
     ["$HOME/.config/themes/templates/windows.template.conf"]="$HOME/.config/hypr/conf/window_theme.conf"
     ["$HOME/.config/themes/templates/gtk-4.template.css"]="$HOME/.config/gtk-4.0/gtk.css"
     ["$HOME/.config/themes/templates/zen_browser.template.js"]="$HOME/.config/zen/$MAIN/user.js"
+    ["$HOME/.config/themes/templates/Main.template.qml"]="/usr/share/sddm/themes/Arch_sddm/Main.qml"
 )
 
 # Loop through the files and apply the theme
@@ -111,7 +112,6 @@ $HOME/.config/OpenRGB/scripts/openrgb_profile.sh "$openrgb" "$CURRENT_PROFILE" "
 
 #-------------------------------------------------
 # Changes folder theme
-pkill nautilus
 echo "☑️ Changing folder icons"
 CURRENT_ICONS=$(grep '^Papirus ' "$LOCKFILE" | cut -d' ' -f3-)
 sed -i "s|^Papirus .*|Papirus False|" "$LOCKFILE"
@@ -127,6 +127,10 @@ $HOME/.config/themes/scripts/papirus_folders.sh "$folders" "$CURRENT_ICONS" "$LO
 # Hyprland temp file to not show errors when loading themes
 mv "$HOME/.config/hypr/colors_temp.conf" "$HOME/.config/hypr/colors.conf"
 echo "✅ Hyprland done"
+
+#-------------------------------------------------
+# Copy sddm background
+cp -r $wallpaper /usr/share/sddm/themes/Arch_sddm/backgrounds/background.jpg
 
 #-------------------------------------------------
 if [[ "$2" != "0" ]]; then

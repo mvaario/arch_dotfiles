@@ -88,6 +88,12 @@ fi
 sudo usermod -aG input $USER
 
 #------------------------------------------------------------------------
+# copy sddm theme file
+sudo mkdir -p /usr/share/sddm/themes/Arch_sddm/backgrounds
+sudo chown -R $USER:$USER /usr/share/sddm/themes/Arch_sddm
+cp -r "$BASE_DIR/Arch_sddm" "/usr/share/sddm/themes/"
+
+#------------------------------------------------------------------------
 # ufw settings
 sudo ufw default deny incoming
 sudo ufw default allow outgoing
