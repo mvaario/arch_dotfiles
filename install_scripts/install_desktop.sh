@@ -88,10 +88,13 @@ fi
 sudo usermod -aG input $USER
 
 #------------------------------------------------------------------------
-# copy sddm theme file
+# configure sddm theme file
 sudo mkdir -p /usr/share/sddm/themes/Arch_sddm/backgrounds
 sudo chown -R $USER:$USER /usr/share/sddm/themes/Arch_sddm
 cp -r "$BASE_DIR/Arch_sddm" "/usr/share/sddm/themes/"
+sudo sed -i -e 's/^Current=*/Current=Arch_sddm/' "$/etc/sddm.conf.d/theme.conf"
+
+sudo systemctl enable sddm.service
 
 #------------------------------------------------------------------------
 # ufw settings
