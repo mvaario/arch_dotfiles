@@ -100,7 +100,7 @@ if [ ! -f /etc/sddm.conf.d/theme.conf ]; then
     echo "[Theme] 
 Current=Arch_sddm" | sudo tee /etc/sddm.conf.d/theme.conf > /dev/null
 else
-    sudo sed -i -e 's/^Current=*/Current=Arch_sddm/' "/etc/sddm.conf.d/theme.conf"
+    sudo sed -i -e 's|^Current=.*|Current=Arch_sddm|' "/etc/sddm.conf.d/theme.conf"
 fi
 
 sudo systemctl enable sddm.service

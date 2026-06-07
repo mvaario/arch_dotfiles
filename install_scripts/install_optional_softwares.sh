@@ -58,7 +58,7 @@ done
 latest=$(curl -s https://api.github.com/repos/GloriousEggroll/proton-ge-custom/releases/latest | jq -r '.tag_name')
 
 # Check installed Proton-GE version
-installed=$(find ~/.local/share/Steam/compatibilitytools.d \
+installed=$(find $HOME/.steam/steam/compatibilitytools.d \
     -maxdepth 1 \
     -type d \
     -name "GE-Proton*" \

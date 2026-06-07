@@ -188,5 +188,7 @@ echo "✅ all done"
 end_time=$(date +%s%N)
 elapsed=$(( ($end_time - $start_time) / 1000000 ))
 sed -i "s|^Theme .*|Theme $1 took ${elapsed} ms|" "$LOCKFILE"
-notify-send "$1" "Theme activated."
+if [[ "$2" != "0" ]]; then
+    notify-send "$1" "Theme activated."
+fi
 exit 0
