@@ -156,20 +156,12 @@ $HOME/.config/themes/scripts/icon_recolor.sh "$foreground" "$CURRENT_COLOR" "$LO
 
 #-------------------------------------------------
 if [[ "$2" != "0" ]]; then
-    pkill swaync
     hyprctl reload
     pkill -USR2 waybar
     for monitor in $(hyprctl monitors -j | jq -r '.[].name'); do
         hyprctl hyprpaper wallpaper "$monitor, $wallpaper, cover"
     done
-
-    # wait until everything is ready
-    timeout=3000
-    while grep -vE '^(Hyprland|OpenRGB)' "$LOCKFILE" | grep -qE '\bFalse\b'; do
-        $HOME/.config/themes/scripts/timeout.sh "$start_time" "$timeout" "$LOCKFILE" 
-    done
-
-    swaync & disown
+    swaync-client --reload-css
 
     #-------------------------------------------------
     # make sure float state is the same
