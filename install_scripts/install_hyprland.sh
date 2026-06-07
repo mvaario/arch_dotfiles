@@ -169,7 +169,7 @@ cp -r "$BASE_DIR/.bashrc" "$HOME/"
 
 # install desktop
 if $desktop; then
-	"$BASE_DIR/install_scripts/install_desktop.sh"
+	"$BASE_DIR/install_scripts/install_desktop.sh" "$BASE_DIR"
 fi
 
 # Setup server

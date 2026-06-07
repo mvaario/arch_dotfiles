@@ -2,9 +2,12 @@ echo " "
 echo "🖥️ Configurating desktop"
 echo " "
 echo "🚀 Downloading packages desktop enviroment"
+
+BASE_DIR="$1"
 PACKAGES=(
     # desktop
     sddm							# Display manager
+    qt5-graphicaleffects            # Blur effect on sddm
     waybar
     hyprsunset
     swaync
@@ -92,7 +95,13 @@ sudo usermod -aG input $USER
 sudo mkdir -p /usr/share/sddm/themes/Arch_sddm/backgrounds
 sudo chown -R $USER:$USER /usr/share/sddm/themes/Arch_sddm
 cp -r "$BASE_DIR/Arch_sddm" "/usr/share/sddm/themes/"
-sudo sed -i -e 's/^Current=*/Current=Arch_sddm/' "$/etc/sddm.conf.d/theme.conf"
+if [ ! -f /etc/sddm.conf.d/theme.conf ]; then
+    sudo mkdir -p /etc/sddm.conf.d
+    echo "[Theme] 
+Current=Arch_sddm" | sudo tee /etc/sddm.conf.d/theme.conf > /dev/null
+else
+    sudo sed -i -e 's/^Current=*/Current=Arch_sddm/' "/etc/sddm.conf.d/theme.conf"
+fi
 
 sudo systemctl enable sddm.service
 
