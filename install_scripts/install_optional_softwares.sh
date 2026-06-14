@@ -35,8 +35,8 @@ for pkg in "${PACKAGES[@]}"; do
 done
 
 AUR_PACKAGES=(
-	xone-dkms-git 			# xbox controller
-	xone-dongle-firmware    # xbox controller
+	#xone-dkms-git 			# xbox controller
+	#xone-dongle-firmware    # xbox controller
     gitkraken               # Git client
 )
 

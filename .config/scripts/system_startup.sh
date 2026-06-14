@@ -1,6 +1,9 @@
 # Delete old fastch animations
 rm ~/.config/fastfetch/frames/fastfetch_anim.lock
 
+# check monitors
+$HOME/.config/scripts/check_monitors &
+
 # Enable last OpenRGB profile 
 # Edit lockfile
 LOCKFILE="$HOME/.config/themes/theme_switch.lock"

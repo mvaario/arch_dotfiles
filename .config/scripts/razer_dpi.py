@@ -1,47 +1,53 @@
 #!/usr/bin/env python3
 import openrazer.client
 
-def get_dpi_stage(device_index=0):
+DPI_X=600
+DPI_Y=600
+HZ=1000
+
+def get_devices():
     client = openrazer.client.DeviceManager()
     devices = client.devices
-    if len(devices) <= device_index:
+    if len(devices) == 0:
         print("Device index out of range")
         return
 
-    device = devices[device_index]
-    print(f"Current DPI (X, Y): {device.dpi}")
-    print(f"with polling rate: {device.poll_rate}")
-    print("")
+    for device in devices:
+        print(f"{device}: DPI: {device.dpi[0]} Hz: {device.poll_rate}")
+        print("")
 
-    return device
+    return devices
 
-def set_dpi(device, dpi_x=600, dpi_y=600):
+def update(devices):
+    for device in devices:
+        update_values = None
+        while update_values not in {"", "0", "1", "n", "y"}:
+            update_values = input(f"Update {device} values: ").lower()
+        
+        if update_values in {"", "1" or "y"}:
+            set_dpi(device)
+            set_polling_rate(device)
+
+    return
+
+def set_dpi(device):
     try:
-        device.dpi = (dpi_x, dpi_y)
-        print(f"DPI set to X: {dpi_x}, Y: {dpi_y}")
+        device.dpi = (DPI_X, DPI_Y)
+        print(f"DPI set to X: {DPI_X}, Y: {DPI_Y} for {device}")
     except Exception as e:
         print("Error setting DPI:", e)
     return
 
-def set_polling_rate(device, hz=1000):
+def set_polling_rate(device):
     try:
-        device.poll_rate = hz
-        print(f"with polling rate: {hz}")
+        device.poll_rate = HZ
+        print(f"with polling rate: {HZ} for {device}")
     except Exception as e:
         print("Error setting polling rate:", e)
     return
 
 if __name__ == "__main__":
-    device = get_dpi_stage()
-    bupdate_values = input("Set new values? ")
+    devices = get_devices()
 
-    try:
-        bupdate_values = int(bupdate_values)
-        if bupdate_values == 1:
-            set_dpi(device)
-            set_polling_rate(device)
-    except:
-        quit()
-
-
+    update(devices)
 

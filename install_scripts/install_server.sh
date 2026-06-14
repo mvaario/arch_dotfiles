@@ -5,9 +5,11 @@ BASE_DIR="$1"
 echo " "
 echo "🚀 Downloading server packages"
 PACKAGES=(
-    openssh
-    ethtool
-    iperf3
+    openssh     # ssh access
+    ethtool     # wake-on-lan
+    iperf3      # speed test
+
+    jellyfin    # media server
 )
 
 # Package install
@@ -25,27 +27,6 @@ done
 
 #------------------------------------------------------------------------
 echo " "
-echo "📦 Downloading server AUR packages"
-
-AUR_PACKAGES=(
-    sunshine
-)
-
-# AUR package install
-for aur_pkg in "${AUR_PACKAGES[@]}"; do
-    echo "📥 Installing $aur_pkg from AUR..."
-    if ! yay -S --noconfirm --needed "$aur_pkg"; then
-        echo "❌ Failed to install: $aur_pkg"
-        read -p "⚠️  Continue anyway? (y/N): " yn
-        case "$yn" in
-            [Yy]*) echo "⏩ Continuing...";;
-            *) echo "🛑 Exiting script."; exit 1;;
-        esac
-	fi
-done
-
-#------------------------------------------------------------------------
-echo " "
 echo "🧰 Applying server configuration"
 echo " "
 
@@ -53,25 +34,24 @@ echo " "
 cp -r "$BASE_DIR/config_server/." "$HOME/.config/"
 
 # enable ssh
-systemctl enable sshd
+sudo systemctl enable sshd
+
+# enable jellyfin
+sudo systemctl enable jellyfin
 
 #------------------------------------------------------------------------
-echo "🛡️ Block internet allowing LAN 🌐"
-sudo ufw default deny outgoing > /dev/null
+echo "🛡️ Allowing ssh and jellyfish 🌐"
+sudo ufw default allow outgoing > /dev/null
 sudo ufw default deny incoming > /dev/null
+sudo ufw allow from 192.168.1.0/24 to any port 22 proto tcp     # allow SSH LAN
+sudo ufw allow from 192.168.1.0/24 to any port 8096 proto tcp   # allow jellyfis LAN
 
-IFACE=$(ip route | awk '/default/ {print $5; exit}')
-SUBNET=$(ip -o -f inet addr show "$IFACE" | awk '{print $4}')
+sudo ufw allow from 10.8.0.0/24 to any port 22 proto tcp        # allow SSH outside LAN
+sudo ufw allow from 10.8.0.0/24 to any port 8096 proto tcp      # allow jellyfish outside LAN
 
-echo "🖧 Detected subnet: $SUBNET"
-sudo ufw allow from "$SUBNET" > /dev/null
-
-# Edit update script to enable internet
-sed -i -e 's|^[[:space:]]*#sudo ufw default deny outgoing|sudo ufw default deny outgoing|' "$HOME/.config/swaync/scripts/update_script.sh"
-sed -i -e 's|^[[:space:]]*#sudo ufw default allow outgoing|sudo ufw default allow outgoing|' "$HOME/.config/swaync/scripts/update_script.sh"
 echo ""
-
 #------------------------------------------------------------------------
+
 echo "Enabling Wake-on_LAN 🌐"
 INTERFACE=$(ip route | awk '/default/ {print $5; exit}')
 
@@ -137,17 +117,6 @@ ExecStart=
 ExecStart=-/usr/bin/agetty --autologin $USER --noclear %I xterm-kitty" | sudo tee "/etc/systemd/system/getty@tty1.service.d/override.conf" > /dev/null
 echo ""
 
-#------------------------------------------------------------------------
-# Auto start hyprland
-echo "🖥️ Enabling Hyprland auto-start"
-if ! grep -q "exec start-hyprland" ~/.bash_profile 2>/dev/null; then
-cat << 'EOF' >> ~/.bash_profile
-if [ -z "$DISPLAY" ] && [ "$(tty)" = "/dev/tty1" ]; then
-    exec start-hyprland
-fi
-EOF
-fi
-echo ""
 #------------------------------------------------------------------------
 echo "✅ Server configurations done."
 echo ""

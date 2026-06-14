@@ -1,5 +1,4 @@
 #!/bin/bash
-
 set -euo pipefail
 
 echo "🧼 Arch System Update & Cleanup"
@@ -8,16 +7,13 @@ echo "-------------------------------"
 # Ask for sudo upfront
 sudo -v
 
-# Allow internet
-#sudo ufw default allow outgoing
-
 echo ""
 echo "🔄 Updating official packages..."
 sudo pacman -Syu --noconfirm
 
 echo ""
 echo "🔄 Updating AUR packages..."
-yay -Sua --noconfirm --answerdiff None --answerclean None
+#yay -Sua --noconfirm --answerdiff None --answerclean None
 
 if command -v flatpak &>/dev/null; then
     echo "🔃 Updating Flatpaks..."
@@ -29,7 +25,7 @@ fi
 latest=$(curl -s https://api.github.com/repos/GloriousEggroll/proton-ge-custom/releases/latest | jq -r '.tag_name')
 
 # Check installed Proton-GE version
-installed=$(find ~/.steam/root/compatibilitytools.d \
+installed=$(find $HOME/.steam/steam/compatibilitytools.d \
     -maxdepth 1 \
     -type d \
     -name "GE-Proton*" \
@@ -72,9 +68,6 @@ yay -Yc --noconfirm
 echo ""
 echo "🧾 Trimming journal logs (keep 100MB)..."
 sudo journalctl --vacuum-size=100M
-
-# Block internet only for server
-#sudo ufw default deny outgoing
 
 echo ""
 echo "✅ All done!"
