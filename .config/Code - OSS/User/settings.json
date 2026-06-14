@@ -24,11 +24,10 @@
     "workbench.activityBar.location": "hidden",
     "window.menuStyle": "custom",
     "window.titleBarStyle": "native",
-    "chat.agentsControl.enabled": false,
+    "chat.agentsControl.enabled": "hidden",
     "workbench.layoutControl.enabled": false,
     "workbench.navigationControl.enabled": false,
     "window.commandCenter": false,
-    "window.menuBarVisibility": "toggle",
 
     /*"workbench.colorCustomizations": {
         "editor.foreground": "#C6B5E3",

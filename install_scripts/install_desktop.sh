@@ -239,13 +239,7 @@ sudo -u "$USER" DISPLAY=:0 XDG_RUNTIME_DIR="/run/user/$(id -u $USER)" gsettings 
 sudo -u "$USER" DISPLAY=:0 XDG_RUNTIME_DIR="/run/user/$(id -u $USER)" gsettings set org.xfce.mousepad.preferences.view show-line-numbers true
 sudo -u "$USER" DISPLAY=:0 XDG_RUNTIME_DIR="/run/user/$(id -u $USER)" gsettings set org.xfce.mousepad.preferences.window always-show-tabs true
 
-#------------------------------------------------------------------------
-# enable theme
-echo ""
-mkdir -p "$HOME/.config/btop/themes"
-mkdir -p "$HOME/.config/gtk-3.0"
-mkdir -p "$HOME/.config/gtk-4.0"
-~/.config/themes/scripts/apply_theme.sh "earthsong" 0
+
 
 #------------------------------------------------------------------------
 echo "✅ Desktop configurations done."

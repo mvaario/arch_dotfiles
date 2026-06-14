@@ -204,7 +204,18 @@ if [ -f "/boot/loader/loader.conf" ]; then
 fi
 
 #------------------------------------------------------------------------
+# enable desktop theme
+if $desktop; then
+	mkdir -p "$HOME/.config/btop/themes"
+	mkdir -p "$HOME/.config/gtk-3.0"
+	mkdir -p "$HOME/.config/gtk-4.0"
+	~/.config/themes/scripts/apply_theme.sh "earthsong" 0
+	echo ""
+fi
+
+#------------------------------------------------------------------------
 # Ask to reboot
+sleep 1
 read -p "🔁 Reboot now to apply changes? (y/N): " reboot_ans
 case "$reboot_ans" in
     [Yy]*) echo "♻️ Rebooting..."; sudo reboot;;
