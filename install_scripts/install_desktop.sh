@@ -64,16 +64,6 @@ for pkg in "${PACKAGES[@]}"; do
 done
 
 #------------------------------------------------------------------------
-if ! command -v yay &> /dev/null; then
-    echo "📥 Installing yay AUR helper..."
-	sudo pacman -S --needed git base-devel
-    git clone https://aur.archlinux.org/yay.git
-    cd yay
-    makepkg -si --noconfirm
-    cd -
-fi
-
-#------------------------------------------------------------------------
 echo " "
 echo "📦 Downloading essential AUR packages"
 echo "Skipping for couple days"

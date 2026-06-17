@@ -5,11 +5,12 @@ BASE_DIR="$1"
 echo " "
 echo "🚀 Downloading server packages"
 PACKAGES=(
-    openssh     # ssh access
-    ethtool     # wake-on-lan
-    iperf3      # speed test
+    openssh         # ssh access
+    ethtool         # wake-on-lan
+    iperf3          # speed test
 
-    jellyfin    # media server
+    jellyfin-server # media server
+    jellyfin-web    # web UI
 )
 
 # Package install

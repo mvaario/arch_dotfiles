@@ -65,6 +65,16 @@ echo "🔄 Updating system"
 sudo pacman -Syu --noconfirm
 
 #------------------------------------------------------------------------
+if ! command -v yay &> /dev/null; then
+    echo "📥 Installing yay AUR helper..."
+	sudo pacman -S --needed git base-devel
+    git clone https://aur.archlinux.org/yay.git
+    cd yay
+    makepkg -si --noconfirm
+    cd -
+fi
+
+#------------------------------------------------------------------------
 echo " "
 echo "🚀 Downloading essential packages"
 PACKAGES=(
