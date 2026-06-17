@@ -1,11 +1,12 @@
 {
   "layer": "bottom",
   "position": "top",
-  "height": 40,
+  "height": 32,
   "spacing": 0,
   "margin-left": 2,
   "margin-right": 2,
   "margin-top": 0,
+  "margin-bottom": 2,
   "exclusive": true,
   "gtk-layer-shell": true,
   "passthrough": false,
@@ -27,7 +28,6 @@
     // "network",
     "custom/notification",
     "custom/power"
-    
   ],
   
 /* -------------------- ***** -------------------- */
@@ -39,10 +39,8 @@
   },
 /* -------------------- ***** -------------------- */
 
-
   "hyprland/workspaces": {
     "format": "{id}",
-    "on-click": "activate",
     "all-outputs": true,
     "disable-scroll": true,
     "active-only": false,

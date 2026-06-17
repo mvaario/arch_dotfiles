@@ -144,6 +144,11 @@ Rectangle {
                 border.color: "#%main%"
                 border.width: 1
 
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: passwordField.forceActiveFocus()
+                }
+
                 TextInput {
                     id: passwordField
                     anchors.centerIn: parent
@@ -152,6 +157,8 @@ Rectangle {
                     echoMode: TextInput.Password
                     focus: true
                     horizontalAlignment: Text.AlignHCenter
+
+                    onActiveFocusChanged: console.log("password focus:", activeFocus)
                 }
             }
 

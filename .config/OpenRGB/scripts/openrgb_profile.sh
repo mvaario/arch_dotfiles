@@ -12,7 +12,7 @@ if [ ! -f "$PROFILE" ]; then
 fi
 
 if [ "$CURRENT_PROFILE" = "$1" ]; then
-    echo "☑️ Current profile already loaded"
+    echo "✅ Current OpenRGB profile already loaded"
     sed -i "s|^OpenRGB .*|OpenRGB True $2|" "$LOCKFILE"
     exit 0
 fi

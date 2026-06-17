@@ -9,7 +9,8 @@ LOCKFILE="$HOME/.config/themes/theme_switch.lock"
 # Lock hyprland
 sed -i "s|^Hyprland .*|Hyprland False|" "$LOCKFILE"
 
-echo "apply theme" $THEME_FILE
+echo "Applying theme $1 from:" $THEME_FILE
+echo ""
 if [ ! -f "$THEME_FILE" ]; then
     echo "Theme not found: $1"
     # Release the lockfile
@@ -102,7 +103,6 @@ for template in "${!files[@]}"; do
         "$template" > "$dest"
 done
 
-
 #-------------------------------------------------
 # Load openRGB profile (takes a while....)
 echo "☑️ Changing OpenRGB profile"
@@ -122,30 +122,33 @@ $HOME/.config/themes/scripts/papirus_folders.sh "$folders" "$CURRENT_ICONS" "$LO
 #CURRENT_WALLPAPER=$(grep '^Wlogout ' "$LOCKFILE" | cut -d' ' -f3-)
 #sed -i "s|^Wlogout .*|Wlogout False|" "$LOCKFILE"
 #python3 $HOME/.config/themes/scripts/blur_wallpaper.py "$wallpaper" "$background_rgb_str" "$opacity" "$CURRENT_WALLPAPER" "$LOCKFILE" &
+#echo ""
 
 #-------------------------------------------------
 # Hyprland temp file to not show errors when loading themes
+echo "☑️ Settings hyprland colors"
 mv "$HOME/.config/hypr/colors_temp.conf" "$HOME/.config/hypr/colors.conf"
-echo "✅ Hyprland done"
+
 
 #-------------------------------------------------
 # Copy sddm background
+echo "☑️ Copying SDDM background"
 cp -r $wallpaper /usr/share/sddm/themes/Arch_sddm/backgrounds/background.jpg
 
 #-------------------------------------------------
 if [[ "$2" != "0" ]]; then
-    hyprctl setcursor "$cursor" "$size"
+    echo "☑️ Setting cursor theme"
+    hyprctl setcursor "$cursor" "$size" &>/dev/null
 fi
 gsettings set org.gnome.desktop.interface cursor-theme "$cursor"
 gsettings set org.gnome.desktop.interface cursor-size "$size"
 sed -i "s|^Cursor .*|Cursor $cursor|" "$LOCKFILE"
 sed -i "s|^Cursor_Size .*|Cursor_Size $size|" "$LOCKFILE"
-echo "☑️ Cursor changes"
 
+echo "☑️ Setting gtk-theme"
 gsettings set org.gnome.desktop.interface color-scheme "prefer-dark"
 gsettings set org.gnome.desktop.interface gtk-theme "$gtk_theme"
 
-echo "☑️ gtk-theme changes"
 
 #-------------------------------------------------
 # Make custom icons for waybar tray
@@ -153,15 +156,20 @@ echo "☑️ Recoloring icons"
 CURRENT_COLOR=$(grep '^Recolor ' "$LOCKFILE" | cut -d' ' -f3-)
 sed -i "s|^Recolor .*|Recolor False|" "$LOCKFILE"
 $HOME/.config/themes/scripts/icon_recolor.sh "$foreground" "$CURRENT_COLOR" "$LOCKFILE" $
+echo ""
 
 #-------------------------------------------------
 if [[ "$2" != "0" ]]; then
-    hyprctl reload
+    output=$(hyprctl reload)
+    echo "✅ hyprland: $output"
+
     pkill -USR2 waybar
     for monitor in $(hyprctl monitors -j | jq -r '.[].name'); do
-        hyprctl hyprpaper wallpaper "$monitor, $wallpaper, cover"
+        hyprctl hyprpaper wallpaper "$monitor, $wallpaper, cover" 
     done
-    swaync-client --reload-css
+
+    output=$(swaync-client --reload-css)
+    echo "✅ swaync: $output"
 
     #-------------------------------------------------
     # make sure float state is the same
@@ -174,6 +182,7 @@ if [[ "$2" != "0" ]]; then
     done
 fi
 echo "✅ all done"
+echo ""
 
 #-------------------------------------------------
 # Mark to time and notify

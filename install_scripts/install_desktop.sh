@@ -10,6 +10,7 @@ PACKAGES=(
 	hyprland                        # Window manager
 	hyprpaper                       # Wallpaper
     hyprsunset                      # Night light
+    kitty                           # Terminal
     waybar                          # bar                           
 	nautilus                        # file manager
     swaync                          # notification center

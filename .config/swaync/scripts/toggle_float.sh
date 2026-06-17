@@ -30,17 +30,17 @@ if [[ "$CURRENT_STATE" = "off" && "$SWITCH_STATE" = "true" ]]; then
         x=$(jq -r '.x' <<< "$win")
         y=$(jq -r '.y' <<< "$win")
 
-        hyprctl dispatch setfloating address:$addr
+        hyprctl dispatch setfloating address:$addr &>/dev/null
         if (( width > MAX_W || height > MAX_H )); then
             width=$MAX_W
             height=$MAX_H
         fi
-        hyprctl dispatch resizewindowpixel exact "$width" "$height",address:$addr
-        hyprctl dispatch movewindowpixel exact "$x" "$y",address:$addr
+        hyprctl dispatch resizewindowpixel exact "$width" "$height",address:$addr &>/dev/null
+        hyprctl dispatch movewindowpixel exact "$x" "$y",address:$addr &>/dev/null
     done
 
     # Make glabal float rule
-    hyprctl keyword windowrule match:class .*, float 1
+    hyprctl keyword windowrule match:class .*, float 1 &>/dev/null
 
     # save state
     echo "on" > "$STATE_FILE"
@@ -55,18 +55,18 @@ elif [[ "$CURRENT_STATE" = "on" && "$SWITCH_STATE" = "true" ]]; then
 
     hyprctl clients -j | jq -r '.[] | "\(.address) \(.workspace.id)"' | while read -r addr ws; do
         # Not sure if this need to be done in window_float.sh
-        hyprctl dispatch settiled address:$addr
-        hyprctl dispatch movetoworkspacesilent $ws,address:$addr
+        hyprctl dispatch settiled address:$addr &>/dev/null
+        hyprctl dispatch movetoworkspacesilent $ws,address:$addr &>/dev/null
     done
 
     # Remove global float rule
-    hyprctl keyword windowrule match:class .*, float 0
+    hyprctl keyword windowrule match:class .*, float 0 &>/dev/null
 
     # save state
     echo "off" > "$STATE_FILE"
 
     # need to reload to make normal float rules to work
-    hyprctl reload
+    hyprctl reload &>/dev/null
 
     # Notification
     notify-send "Floating off"
@@ -75,17 +75,18 @@ else
         echo "☑️ keeping floating OFF"
 
         # Make global float rule
-        hyprctl keyword windowrule match:class .*, float 0
+        hyprctl keyword windowrule match:class .*, float 0 &>/dev/null
+
         echo "off" > "$STATE_FILE"
 
         # need to reload to make normal float rules to work
-        hyprctl reload
+        hyprctl reload &>/dev/null
 
     else
         echo "☑️ keeping floating ON"
         
         # Make global float rule
-        hyprctl keyword windowrule match:class .*, float 1
+        hyprctl keyword windowrule match:class .*, float 1 &>/dev/null
         echo "on" > "$STATE_FILE"
     fi
 fi

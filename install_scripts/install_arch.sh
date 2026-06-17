@@ -75,7 +75,6 @@ PACKAGES=(
 	linux-headers
 	jq								# json processor
 	
-	kitty
 	starship
 	fastfetch
 

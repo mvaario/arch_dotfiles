@@ -2,32 +2,31 @@
   min-height: 0;
   min-width: 0;
   font-family: "JetBrainsMonoNL Nerd Font Propo";
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
 }
 
 /* -------------------- main -------------------- */
-
 window#waybar {
     background: rgba(%background_rgb_str%,%opacity%);
     transition-property: background;
     transition-duration: .5s; 
     box-shadow: none;
-    /*border-top: 1px solid #%main%;
+    /*border-top: 1px solid #%main%;*/
     border-left: 1px solid #%main%;
-    border-right: 1px solid #%main%;*/
+    border-right: 1px solid #%main%;
     border-bottom: 1px solid #%main%;
-    border-radius: 50px;
+    border-radius: 20px;
     color: #%foreground%;
-    
 }
 /* -------------------- ***** -------------------- */
+
 
 /* ----------------- workspaces ------------------ */
 #workspaces button {
     /* top  right  bottom  left */
     padding: 0rem 0.1rem 0rem 0.1rem;
-    margin: 0.6rem 0.2rem 0.6rem 0.2rem;
+    margin: 0.5rem 0.1rem 0.5rem 0.1rem;
     border: none;
     border-radius: 0px;  
     background: none;
@@ -45,22 +44,23 @@ window#waybar {
 
 #workspaces button.active {   
     color: #%highlight%;
-    box-shadow: inset 0 -3px 0 0px #%highlight%;
+    box-shadow: inset 0 -2px 0 0px #%highlight%;
 }
 
 /* -------------------- ***** -------------------- */
 
+
 /* ------------------- modules ------------------- */
 #custom-logo {
   /* top  right  bottom  left */
-  margin: 0.1rem 1rem 0rem 1.5rem;
+  margin: 0rem 0.3rem 0rem 1rem;
   color: #%main%;
   font-size: 16px;
 }
 
 #cpu {
   /* top  right  bottom  left */
-  margin: 0rem 0.5rem 0rem 1rem;
+  margin: 0rem 0.5rem 0rem 0.3rem;
 }
 #memory {
   /* top  right  bottom  left */
@@ -111,7 +111,7 @@ tooltip {
 
 #custom-power {
   /* top  right  bottom  left */
-  margin: 0rem 1.5rem 0.2rem 0.5rem;
+  margin: 0rem 1rem 0rem 0.5rem;
   color: #%main%;
 }
 

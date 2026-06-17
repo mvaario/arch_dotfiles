@@ -11,7 +11,7 @@ SRC="$HOME/.icons/Icons"
 DST="$HOME/.icons/Papirus-Dark/16x16/apps"
 
 if [ "$CURRENT_COLOR" = "$COLOR" ]; then
-    echo "☑️ Current colors already loaded"
+    echo "✅ Icon colors already loaded"
     sed -i "s|^Recolor .*|Recolor True $COLOR|" "$LOCKFILE"
 else
     for icon in "$SRC"/*.svg; do
@@ -29,7 +29,7 @@ else
     #Check errors
     if [ $? -eq 0 ]; then
         # Mark Recoloring finish
-        echo "✅ Recoloring done"
+        echo "✅ Icons recoloring done"
         sed -i "s|^Recolor .*|Recolor True $COLOR|" "$LOCKFILE"
     else
         echo "❌ Error while recoloring"
