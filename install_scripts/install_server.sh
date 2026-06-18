@@ -5,6 +5,8 @@ BASE_DIR="$1"
 echo " "
 echo "🚀 Downloading server packages"
 PACKAGES=(
+    kitty-terminfo  # terminal command
+
     openssh         # ssh access
     ethtool         # wake-on-lan
     iperf3          # speed test
@@ -42,7 +44,7 @@ sudo systemctl enable jellyfin
 
 #------------------------------------------------------------------------
 echo "🛡️ Allowing ssh and jellyfish 🌐"
-sudo ufw default allow outgoing > /dev/null
+sudo ufw default deny outgoing > /dev/null
 sudo ufw default deny incoming > /dev/null
 sudo ufw allow from 192.168.1.0/24 to any port 22 proto tcp     # allow SSH LAN
 sudo ufw allow from 192.168.1.0/24 to any port 8096 proto tcp   # allow jellyfis LAN

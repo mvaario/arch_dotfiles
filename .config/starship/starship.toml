@@ -1,0 +1,19 @@
+format = """
+$directory\
+$git_branch\
+$cmd_duration\
+$line_break\
+$character"""
+
+[directory]
+style = "#A8C8F0"
+
+[git_branch]
+style = "#2E7CDC"
+
+[cmd_duration]
+style = "#A8C8F0"
+
+[character]
+success_symbol = "[❯](#2E7CDC)"
+error_symbol = "[❯](#ba0e2e)"

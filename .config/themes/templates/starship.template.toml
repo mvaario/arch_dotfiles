@@ -1,0 +1,19 @@
+format = """
+$directory\
+$git_branch\
+$cmd_duration\
+$line_break\
+$character"""
+
+[directory]
+style = "#%foreground%"
+
+[git_branch]
+style = "#%main%"
+
+[cmd_duration]
+style = "#%foreground%"
+
+[character]
+success_symbol = "[❯](#%main%)"
+error_symbol = "[❯](#%red%)"

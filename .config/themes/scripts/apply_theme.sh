@@ -62,6 +62,7 @@ declare -A files=(
     ["$HOME/.config/themes/templates/gtk-4.template.css"]="$HOME/.config/gtk-4.0/gtk.css"
     ["$HOME/.config/themes/templates/zen_browser.template.js"]="$HOME/.config/zen/$MAIN/user.js"
     ["$HOME/.config/themes/templates/Main.template.qml"]="/usr/share/sddm/themes/Arch_sddm/Main.qml"
+    ["$HOME/.config/themes/templates/starship.template.toml"]="$HOME/.config/starship/starship.toml"
 )
 
 # Loop through the files and apply the theme

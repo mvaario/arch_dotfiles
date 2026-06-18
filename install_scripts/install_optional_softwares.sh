@@ -1,17 +1,16 @@
 echo " "
 echo "🎮 Downloading optional softwares..."
 PACKAGES=(
-    lact                        # GPU overclocking
+    lact                # GPU overclocking
     steam
     discord
     lutris
     gamemode   
-    openrgb                     # RGB control
+    openrgb             # RGB control
     
-    moonlight-qt                # Remote connection to server
-    wakeonlan                   # Allow to start server remotetly
+    wakeonlan           # Allow to start server remotetly
 
-    pycharm-community-edition
+    freecad             # 3D Modeler
 
     vlc
     vlc-plugin-x264
