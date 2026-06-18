@@ -5,12 +5,11 @@ start_time=$(date +%s%N) # log the time
 
 THEME_FILE="$HOME/.config/themes/colors/$1.sh"
 LOCKFILE="$HOME/.config/themes/theme_switch.lock"
-echo "apply theme" $THEME_FILE
 
+echo "Applying theme $1 from:" $THEME_FILE
+echo ""
 if [ ! -f "$THEME_FILE" ]; then
     echo "Theme not found: $1"
-    # Release the lockfile
-    sed -i "s|^Hyprland .*|Hyprland True|" "$LOCKFILE"
     exit 1
 fi
 
@@ -40,17 +39,11 @@ darkenbackground=$($HOME/.config/themes/scripts/darken_background.sh "$backgroun
 
 # list of template files and their destination
 declare -A files=(
-    ["$HOME/.config/themes/templates/hyprland.template.conf"]="$HOME/.config/hypr/colors_temp.conf"
-    ["$HOME/.config/themes/templates/hyprpaper.template.conf"]="$HOME/.config/hypr/hyprpaper.conf"
-    ["$HOME/.config/themes/templates/waybar.template.css"]="$HOME/.config/waybar/style.css"
     ["$HOME/.config/themes/templates/kitty.template.conf"]="$HOME/.config/kitty/colors.conf"
-    ["$HOME/.config/themes/templates/wofi.template.conf"]="$HOME/.config/wofi/style.css"
-    ["$HOME/.config/themes/templates/swaync_style.template.css"]="$HOME/.config/swaync/style.css"
     ["$HOME/.config/themes/templates/fastfetch.template.conf"]="$HOME/.config/fastfetch/colors.conf"
     ["$HOME/.config/themes/templates/fastfetch_config.template.jsonc"]="$HOME/.config/fastfetch/config.jsonc"
     ["$HOME/.config/themes/templates/btop_style.template.theme"]="$HOME/.config/btop/themes/btop_style.theme"
-    ["$HOME/.config/themes/templates/windows.template.conf"]="$HOME/.config/hypr/conf/window_theme.conf"
-    ["$HOME/.config/themes/templates/gtk-4.template.css"]="$HOME/.config/gtk-4.0/gtk.css"
+    ["$HOME/.config/themes/templates/starship.template.toml"]="$HOME/.config/starship/starship.toml"
 )
 
 # Loop through the files and apply the theme
@@ -93,63 +86,12 @@ for template in "${!files[@]}"; do
 done
 
 #-------------------------------------------------
-# Changes folder theme
-pkill nautilus
-echo "☑️ Changing folder icons"
-CURRENT_ICONS=$(grep '^Papirus ' "$LOCKFILE" | cut -d' ' -f3-)
-sed -i "s|^Papirus .*|Papirus False|" "$LOCKFILE"
-$HOME/.config/themes/scripts/papirus_folders.sh "$folders" "$CURRENT_ICONS" "$LOCKFILE" &
-
-#-------------------------------------------------
-# Hyprland temp file to not show errors when loading themes
-mv "$HOME/.config/hypr/colors_temp.conf" "$HOME/.config/hypr/colors.conf"
-echo "✅ Hyprland done"
-
-#-------------------------------------------------
-if [[ "$2" != "0" ]]; then
-    hyprctl setcursor "$cursor" "$size"
-fi
-
-gsettings set org.gnome.desktop.interface cursor-theme "$cursor"
-gsettings set org.gnome.desktop.interface cursor-size "$size"
-sed -i "s|^Cursor .*|Cursor $cursor|" "$LOCKFILE"
-sed -i "s|^Cursor_Size .*|Cursor_Size $size|" "$LOCKFILE"
-echo "✅ Cursor changes"
-
-gsettings set org.gnome.desktop.interface color-scheme "prefer-dark"
-gsettings set org.gnome.desktop.interface gtk-theme "$gtk_theme"
-
-echo "✅ gtk-theme changes"
-
-#-------------------------------------------------
-if [[ "$2" != "0" ]]; then
-    pkill hyprpaper
-    hyprctl reload
-
-    # wait until everything is ready
-    timeout=3000
-    while grep -qP '^(?!Hyprland|OpenRGB).* False$' "$LOCKFILE"; do
-        $HOME/.config/themes/scripts/timeout.sh "$start_time" "$timeout" "$LOCKFILE" 
-    done
-
-    hyprpaper & disown
-
-    #-------------------------------------------------
-    # make sure float state is the same
-    $HOME/.config/swaync/scripts/toggle_float.sh "false" "$LOCKFILE" &
-
-    # Notification timeout
-    timeout=5000
-    while grep -E ' False$' "$LOCKFILE" | grep -vq '^OpenRGB '; do
-        $HOME/.config/themes/scripts/timeout.sh "$start_time" "$timeout" "$LOCKFILE" 
-    done
-fi
 echo "✅ all done"
+echo ""
 
 #-------------------------------------------------
 # Mark to time and notify
 end_time=$(date +%s%N)
 elapsed=$(( ($end_time - $start_time) / 1000000 ))
 sed -i "s|^Theme .*|Theme $1 took ${elapsed} ms|" "$LOCKFILE"
-echo "$1" "Theme activated."
 exit 0

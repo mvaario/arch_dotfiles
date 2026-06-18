@@ -6,14 +6,14 @@ $line_break\
 $character"""
 
 [directory]
-style = "#A8C8F0"
+style = "#B5DFE3"
 
 [git_branch]
-style = "#2E7CDC"
+style = "#4AB2BF"
 
 [cmd_duration]
-style = "#A8C8F0"
+style = "#B5DFE3"
 
 [character]
-success_symbol = "[❯](#2E7CDC)"
+success_symbol = "[❯](#4AB2BF)"
 error_symbol = "[❯](#ba0e2e)"

@@ -86,6 +86,12 @@ for aur_pkg in "${AUR_PACKAGES[@]}"; do
 	fi
 done
 
+
+#------------------------------------------------------------------------
+# copy config files
+echo "Copying base dotfiles files"
+cp -r "$BASE_DIR/config_desktop/." "$HOME/.config/"
+
 #------------------------------------------------------------------------
 if [ ! -d "$HOME/.themes/Orchis-Dark-Nord" ]; then
 	echo " "

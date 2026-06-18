@@ -52,7 +52,7 @@
         "**/lact": true,
         "**/libreoffice": true,
         "**/menus": true,
-        "**/Mousepad": true,
+        "**/Mousepad": false,
         "**/Moonlight Game Streaming Project": true,
         "**/mozilla": true,
         "**/Mullvad VPN": true,
@@ -60,13 +60,17 @@
         "**/papirus-folders": true,
         "**/paradox-launcher-v2": true,
         "**/pulse": true,
-        "**/ristretto": true,
+        "**/ristretto": false,
         "**/systemd": true,
         "**/unity3d": true,
         "**/via-nativia": true,
         "**/VirtualBox": true,
-        "**/vlc": true,
+        "**/vlc": false,
         "**/xfce4": true,
         "**/yay": true
+    },
+    "workbench.editorAssociations": {
+        "{git,gitlens,chat-editing-snapshot-text-model,copilot,git-graph,git-graph-3}:/**/*.qrc": "default",
+        "*.qrc": "qt-core.qrcEditor"
     }
 }

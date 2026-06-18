@@ -23,7 +23,7 @@
     "custom/keylock",
     "tray",
     "pulseaudio",
-    // "custom/razer",
+    "custom/razer",
     // "battery",
     // "network",
     "custom/notification",

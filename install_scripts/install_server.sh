@@ -28,6 +28,7 @@ for pkg in "${PACKAGES[@]}"; do
     fi
 done
 
+
 #------------------------------------------------------------------------
 echo " "
 echo "🧰 Applying server configuration"

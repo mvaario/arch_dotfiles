@@ -85,6 +85,7 @@ PACKAGES=(
 	linux-headers
 	jq								# json processor
 	
+	# theme
 	starship
 	fastfetch
 
@@ -94,11 +95,11 @@ PACKAGES=(
 	ttf-jetbrains-mono-nerd
 	
 	# softwares
-	btop
+	btop						# resource monitor
 
 	# misc
-	ufw
-	cpupower
+	ufw							# firewall
+	cpupower					# power saving tool
 )
 
 # Package install
@@ -118,8 +119,8 @@ done
 mkdir -p ~/.local/share/applications
 
 # copy config files
-echo "Copying dot files"
-cp -r "$BASE_DIR/.config" "$HOME/"
+echo "Copying base dotfiles files"
+cp -r "$BASE_DIR/config_base/." "$HOME/.config/"
 cp -r "$BASE_DIR/.bashrc" "$HOME/"
 
 # install desktop
@@ -214,13 +215,12 @@ fi
 
 #------------------------------------------------------------------------
 # enable desktop theme
-if $desktop; then
-	mkdir -p "$HOME/.config/btop/themes"
-	mkdir -p "$HOME/.config/gtk-3.0"
-	mkdir -p "$HOME/.config/gtk-4.0"
-	~/.config/themes/scripts/apply_theme.sh "earthsong" 0
-	echo ""
-fi
+mkdir -p "$HOME/.config/btop/themes"
+mkdir -p "$HOME/.config/gtk-3.0"
+mkdir -p "$HOME/.config/gtk-4.0"
+~/.config/themes/scripts/apply_theme.sh "earthsong" 0
+echo ""
+
 
 #------------------------------------------------------------------------
 # Ask to reboot
