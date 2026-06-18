@@ -52,6 +52,13 @@ for aur_pkg in "${AUR_PACKAGES[@]}"; do
 	fi
 done
 
+
+#------------------------------------------------------------------------
+# Copy optional configs
+echo "Copying optional config files"
+cp -r "$BASE_DIR/config_optional/." "$HOME/.config/"
+cp -r "$HOME/.config/vlc/init/vlcrc" "$HOME/.config/vlc/vlcrc"
+
 #------------------------------------------------------------------------
 # Check latest Proton-GE version
 latest=$(curl -s https://api.github.com/repos/GloriousEggroll/proton-ge-custom/releases/latest | jq -r '.tag_name')

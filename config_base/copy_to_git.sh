@@ -18,12 +18,12 @@ copy_files() {
                 path="${path#*/}"
             fi
 
+            copy_success=true
             if should_exclude "$file"; then
                 #echo "Excluded: $path"
                 continue
             fi
-            copy_success=true
-
+            
             mkdir -p "$destination/$(dirname "$path")"
             cp -a "$file" "$destination/$path"
         done < <(find "$source/$item" -type f)
@@ -31,6 +31,7 @@ copy_files() {
         if $copy_success; then
             echo "Copied: $item → ${destination#$HOME/arch_dotfiles/}/$item"
         else
+            echo ""
             echo "❌ Failed to copy: $item"
             read -p "⚠️  Continue anyway? (y/N): " yn
             case "$yn" in
@@ -60,18 +61,20 @@ DESTINATION="$HOME/arch_dotfiles/config_base"
 
 ITEMS=(
     btop
+    exclude.txt
     fastfetch
     starship
     scripts
     themes
     copy_to_git.sh
+    
 )
 
 copy_files "$SOURCE" "$DESTINATION"
 
 
 #------------------------------------------------------------------------
-# copy base files
+# copy single files
 SOURCE="$HOME"
 DESTINATION="$HOME/arch_dotfiles"
 
@@ -118,10 +121,11 @@ copy_files "$SOURCE" "$DESTINATION"
 #------------------------------------------------------------------------
 # copy optional config files
 SOURCE="$HOME/.config"
-DESTINATION="$HOME/arch_dotfiles/.config"
+DESTINATION="$HOME/arch_dotfiles/config_optional"
 
 ITEMS=(
     OpenRGB
+    vlc/init/vlcrc
 )
 
 copy_files "$SOURCE" "$DESTINATION"

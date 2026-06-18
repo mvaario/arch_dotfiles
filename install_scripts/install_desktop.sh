@@ -89,7 +89,7 @@ done
 
 #------------------------------------------------------------------------
 # copy config files
-echo "Copying base dotfiles files"
+echo "Copying desktop config files"
 cp -r "$BASE_DIR/config_desktop/." "$HOME/.config/"
 
 #------------------------------------------------------------------------

@@ -9,7 +9,6 @@ hypr/hyprlock.conf
 hypr/hyprpaper.conf
 hypr/float_state_temp
 kitty/colors.conf
-scripts/old
 swaync/style.css
 themes/images/
 waybar/razer_battery_level
@@ -17,3 +16,8 @@ waybar/style.css
 waybar/razer_battery_notification
 wlogout/background/wallpaper.jpg
 wofi/style.css
+OpenRGB/logs/
+OpenRGB/cache_profile
+OpenRGB/OpenRGB.json
+OpenRGB/sizes.ors
+themes/theme_switch.lock

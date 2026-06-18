@@ -119,7 +119,7 @@ done
 mkdir -p ~/.local/share/applications
 
 # copy config files
-echo "Copying base dotfiles files"
+echo "Copying base config files"
 cp -r "$BASE_DIR/config_base/." "$HOME/.config/"
 cp -r "$BASE_DIR/.bashrc" "$HOME/"
 
